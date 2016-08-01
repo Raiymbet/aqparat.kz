@@ -19,13 +19,15 @@
 
                             @foreach($news as $index => $new)
                                 <div class="col-xs-12 col-sm-12 col-md-4 news-thumbnail text-justify pull-left @if($index%3==0) clear-left @endif">
-                                    <img class="img-responsive image-main-news" src="{{ asset($new->avatar_picture) }}">
-                                    <h5>{{ $new->title }}</h5>
-                                    <p class="news-datetime">{{ $new->created_at }}</p>
-                                    <div class="small statistics-style">
-                                        <span><i class="fa fa-eye"></i>{{ $new->views }}</span>
-                                        <span><i class="fa fa-comment"></i>{{ $new->comments_count() }}</span>
-                                    </div>
+                                    <a href="{{ url('/newsread/'.$new->id) }}">
+                                        <img class="img-responsive image-main-news" src="{{ asset($new->avatar_picture) }}">
+                                        <h5>{{ $new->title }}</h5>
+                                        <p class="news-datetime">{{ $new->created_at }}</p>
+                                        <div class="small statistics-style">
+                                            <span><i class="fa fa-eye"></i>{{ $new->views }}</span>
+                                            <span><i class="fa fa-comment"></i>{{ $new->comments_count() }}</span>
+                                        </div>
+                                    </a>
                                 </div>
                             @endforeach
                         </div>

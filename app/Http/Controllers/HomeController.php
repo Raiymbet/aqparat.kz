@@ -75,4 +75,25 @@ class HomeController extends Controller
             'columnists' => $columnists
         ]);
     }
+
+    function currency_nbk_get_rates() {
+        $url = "http://www.nationalbank.kz/rss/rates_all.xml";
+        $dataObj = simplexml_load_file($url);
+        $result = array();
+        if ($dataObj){
+            foreach ($dataObj->channel->item as $item){
+                $result[] = array(
+                    'title' => $item->title,
+                    'pubDate' => $item->pubDate,
+                    'description' => $item->description,
+                    'quant' => $item->quant,
+                    'index' => $item->index,
+                    'change' => $item->change
+                );
+            }
+        }
+
+        return $result;
+    }
+
 }

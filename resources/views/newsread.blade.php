@@ -16,16 +16,13 @@
                     </div>
                     <div class="panel-body">
                         <div class="">
-                            <select class="pull-right">
-                                <option selected>{{ $new->language }}</option>
+                            <select id="select_translate" class="pull-right">
+                                <option value="{{ $new->id }}" selected>{{ $new->language }}</option>
                                 @foreach($translates as $translate)
-                                    <option>{!! $translate->news->language !!}</option>
+                                    <option value="{!! $translate->news->id !!}">{!! $translate->news->language !!}</option>
                                 @endforeach
                             </select>
-                            <h3>{{ $new->title }}<br>
-                                <small><strong>Авторы және күні:</strong>
-                                    {{ \App\Admin::find($new->author_id)->name }} {{ $new->created_at }}</small>
-                            </h3>
+                            <h3 id="new_title">{{ $new->title }}</h3>
                         </div>
                         <div id="new_text_content">
                             <br>
@@ -33,7 +30,17 @@
                                 <img class="img-responsive" src="{{ URL::asset($new->avatar_picture) }}" alt="News">
                             @endif
                             <br>
-                            {!! $new->text !!}
+                            <span id="new_text">{!! $new->text !!}</span>
+                            <br>
+                            <span class="pull-right">
+                                <p id="new_author">
+                                    <small>
+                                        <strong>Авторы: </strong> <a href="#">{{ \App\Admin::find($new->author_id)->name }}</a>
+                                        <br>
+                                        <strong>Күні: </strong>{{ $new->created_at }}
+                                    </small>
+                                </p>
+                            </span>
                         </div>
                     </div>
                     <div class="panel-body panel-statistics text-muted">
@@ -624,8 +631,34 @@
 @endsection
 
 @section('script')
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+
     <script type="text/javascript">
-        $.get();
+        $('#select_translate').change( function () {
+            //console.log($(this).val());
+            $.get('{{ url('/newsread/translate') }}'+'/'+$(this).val(), function(data) {
+                //console.log(data);
+                $('#new_title').html(data.title);
+                $('#new_text').html(data.text);
+                if(data.language == 'ru'){
+                    $('#new_author').html('<small><strong>Автор: </strong>'+'{{ \App\Admin::find($new->author_id)->name }}'+
+                            '<br><strong>Дата: </strong>'+data.created_at+'</small>');
+                }
+                else if(data.language == 'kz'){
+                    $('#new_author').html('<small>'+
+                            '<strong>Авторы: </strong> <a href="#">{{ \App\Admin::find($new->author_id)->name }}</a>'+
+                            '<br>'+
+                            '<strong>Күні: </strong>{{ $new->created_at }}'+
+                            '</small>');
+                }else if(data.language == 'en'){
+                    $('#new_author').html('<small>'+
+                            '<strong>Author: </strong> <a href="#">{{ \App\Admin::find($new->author_id)->name }}</a>'+
+                            '<br>'+
+                            '<strong>Date: </strong>{{ $new->created_at }}'+
+                            '</small>');
+                }
+            });
+        });
 
         $('#comment_form').submit( function (event) {
             event.preventDefault();

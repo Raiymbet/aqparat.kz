@@ -20,6 +20,7 @@ Route::group(['middleware' => ['web']], function () {
      *Басты бетті жаңалықтармен қайтару
      */
     Route::get('/','HomeController@getHome');
+    Route::get('/currency', 'HomeController@currency_nbk_get_rates');
     Route::get('/about', 'HomeController@getAbout');
     Route::get('/columnist/{columnistId}', 'HomeController@getColumnist');
 
@@ -35,14 +36,11 @@ Route::group(['middleware' => ['web']], function () {
 
     Route::get('/newsread/{newId}', 'NewController@getReadNew');
     Route::post('/newsread/{newId}', 'NewController@postComment');
+    Route::get('/newsread/translate/{newId}', 'NewController@getTranslate');
     Route::get('/newsread/{newId}/islikedbyme', 'NewController@isLikedByMe');
     Route::post('/newsread/{newId}/like', 'NewController@like');
-
     Route::get('/categorynews/{categoryId}', 'NewController@getCategoryNews');
-
-    Route::get('/search', function () {
-        return view('search', ['categories' => \App\Category::all()]);
-    });
+    Route::get('/search', 'NewController@getSearch');
 
 
     /**

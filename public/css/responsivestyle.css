@@ -407,11 +407,14 @@ p .quote {
     color: #FFFFFF;
     border-right: 1px solid rgba(213, 222, 233, 0.44);
     border-left: 1px solid rgba(213, 222, 233, 0.44);
-    background: rgba(0, 60, 128, 0.82);
+    background: #2e5f97;
     cursor: pointer;
 }
 .header-link:hover, .header-link:active {
     background: #829cba;
+}
+i.fa.fa-stack-1x {
+    color: #2e5f97;
 }
 .small-logo {
     display: none;
@@ -973,14 +976,16 @@ canvas {
 textarea{
     resize: none;
 }
-.textarea-infocus,input[type=text]{
+.textarea-infocus,input[type=text], input[type=datetime-local]{
     width:100%;
     padding: 10px;
     border-radius: 0;
     /*border:1px solid #7ac9b7;*/
 }
-
-input[type=text]:focus,textarea:focus {
+select.form-control{
+    border-radius: 0;
+}
+input[type=text]:focus,textarea:focus, select:focus {
     border-color: #4697e4;
 }
 

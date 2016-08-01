@@ -96,7 +96,7 @@
                                     <div>
                                         <p>{{ $post->text }}</p>
                                         @if($post->news_id != null)
-                                            <a href="{{ url('/news/'.$post->news_id) }}">Мақаланы оқу...</a>
+                                            <a href="{{ url('/newsread/'.$post->news_id) }}">Мақаланы оқу...</a>
                                         @endif
                                     </div>
                                 </div>
@@ -317,7 +317,5 @@
 @endsection
 
 @section('script')
-    <script type="text/javascript">
-
-    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
 @endsection

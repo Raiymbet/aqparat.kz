@@ -67,6 +67,27 @@ class NewController extends Controller
         ]);
     }
 
+    public function getSearch()
+    {
+        $columnists = $this->admin_repository->getColumnists();
+        $last_news = $this->new_repository->getLastNews();
+        $last_posts = $this->post_repository->getLastPosts();
+        $more_readed_news = $this->new_repository->getMoreReadedNews();
+        return view('search', [
+            'categories' => \App\Category::all(),
+            'columnists' => $columnists,
+            'last_news' => $last_news,
+            'last_posts' => $last_posts,
+            'more_readed_news' => $more_readed_news,
+        ]);
+    }
+
+    public function getTranslate($id)
+    {
+        $new = News::find($id);
+        return $new;
+    }
+
     public function postComment(Request $request, $id)
     {
         $this->validate($request, [

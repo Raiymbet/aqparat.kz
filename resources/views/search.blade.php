@@ -19,30 +19,24 @@
 
                             <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
                                 <div class="form-group">
-                                    <div class="input-group">
-                                        <input class="form-control" type="text" placeholder="Жаңалықты іздеу...">
-                                        <div class="input-group-btn">
-                                            <button class="btn btn-info">
-                                                <i class="fa fa-search"></i>
-                                            </button>
-                                        </div>
+                                    <label class="col-xs-3 col-sm-3 col-md-2 col-lg-2 control-label">Мәтіні:</label>
+                                    <div class="col-xs-9 col-sm-9 col-md-10 col-lg-10">
+                                        <input class="form-control" type="text" placeholder="Жаңалық мәтіні...">
                                     </div>
                                 </div>
                             </div>
 
                             <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
                                 <div class="form-group">
-                                    <label class="col-xs-4 col-sm-4 col-md-4 col-lg-4 control-label">Санаты:</label>
-                                    <div class="col-xs-8 col-sm-8 col-md-8 col-lg-8">
+                                    <label class="col-xs-3 col-sm-3 col-md-4 col-lg-4 control-label">Санаты:</label>
+                                    <div class="col-xs-9 col-sm-9 col-md-8 col-lg-8">
                                         <select class="form-control" name="new_category">
-                                            <option selected="">Барлығы</option>
-                                            <option>Қазақстан</option>
-                                            <option>Әлем</option>
-                                            <option>Саясат</option>
-                                            <option>Экономика</option>
-                                            <option>Қоғам</option>
-                                            <option>Мәдениет</option>
-                                            <option>Спорт</option>
+                                            <option value="all" selected="">Барлығы</option>
+                                            @foreach($categories as $category)
+                                                <option value="{{ $category->id }}">
+                                                    {{ $category->name }}
+                                                </option>
+                                            @endforeach
                                         </select>
                                     </div>
                                 </div>
@@ -50,8 +44,8 @@
 
                             <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
                                 <div class="form-group">
-                                    <label class="col-xs-4 col-sm-4 col-md-4 col-lg-4 control-label">Уақыты:</label>
-                                    <div class="col-xs-8 col-sm-8 col-md-8 col-lg-8">
+                                    <label class="col-xs-3 col-sm-3 col-md-4 col-lg-4 control-label">Уақыты:</label>
+                                    <div class="col-xs-9 col-sm-9 col-md-8 col-lg-8">
                                         <input type="datetime-local" class="form-control" placeholder="Уақытын көрсетіңіз">
                                     </div>
                                 </div>
@@ -282,7 +276,7 @@
                 </div>
             </div>
 
-            <div class="col-xs-12 col-sm-12 col-md-6 col-lg-3">
+            <div class="col-xs-12 col-sm-12 col-md-6 col-lg-3 pull-right">
                 <div class="hpanel hblue">
                     <div class="panel-heading hbuilt">
                         <h6 class="text-center">Соңғы жаңалықтар</h6>
@@ -290,47 +284,21 @@
                     <div class="panel-body" style="overflow-x: scroll">
                         <div id="last-news">
                             <ul class="list-unstyled" id="last-news-list">
-                                <li>
-                                    <span class="news-datetime">Шілде 01, 09:45</span>
-                                    <p>Террористы планировали захват заложников в аэропорту Стамбула - СМИ</p>
-                                </li>
-                                <li>
-                                    <span class="news-datetime">Шілде 01, 09:45</span>
-                                    <p>Террористы планировали захват заложников в аэропорту Стамбула - СМИ</p>
-                                </li>
-                                <li>
-                                    <span class="news-datetime">Шілде 01, 09:45</span>
-                                    <p>Террористы планировали захват заложников в аэропорту Стамбула - СМИ</p>
-                                </li>
-                                <li>
-                                    <span class="news-datetime">Шілде 01, 09:45</span>
-                                    <p>Террористы планировали захват заложников в аэропорту Стамбула - СМИ</p>
-                                </li>
-                                <li>
-                                    <span class="news-datetime">Шілде 01, 09:45</span>
-                                    <p>Террористы планировали захват заложников в аэропорту Стамбула - СМИ</p>
-                                </li>
-
-                                <li>
-                                    <span class="news-datetime">Шілде 01, 09:45</span>
-                                    <p>Террористы планировали захват заложников в аэропорту Стамбула - СМИ</p>
-                                </li>
-
-                                <li>
-                                    <span class="news-datetime">Шілде 01, 09:45</span>
-                                    <p>Террористы планировали захват заложников в аэропорту Стамбула - СМИ</p>
-                                </li>
-                                <li>
-                                    <span class="news-datetime">Шілде 01, 09:45</span>
-                                    <p>Террористы планировали захват заложников в аэропорту Стамбула - СМИ</p>
-                                </li>
+                                @foreach($last_news as $last_new)
+                                    <li>
+                                        <a href="{{ url('/newsread/'.$last_new->id) }}">
+                                            <span class="news-datetime">{{ $last_new->created_at }}</span>
+                                            <p>{{ $last_new->title }}</p>
+                                        </a>
+                                    </li>
+                                @endforeach
                             </ul>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <div class="col-xs-12 col-sm-12 col-md-6 col-lg-3">
+            <div class="col-xs-12 col-sm-12 col-md-6 col-lg-3 pull-right">
                 <div class="hpanel hgreen">
                     <div class="panel-heading hbuilt">
                         <h6 class="text-center">Көп оқылғандар</h6>
@@ -338,92 +306,41 @@
                     <div class="panel-body panel-scrollbar">
                         <div id="more-reads-news">
                             <ul class="list-unstyled" id="more-reads-news-list">
-                                <li>
-                                    <span class="news-datetime">Шілде 01, 09:45</span>
-                                    <p>Террористы планировали захват заложников в аэропорту Стамбула - СМИ</p>
-                                </li>
-                                <li>
-                                    <span class="news-datetime">Шілде 01, 09:45</span>
-                                    <p>Террористы планировали захват заложников в аэропорту Стамбула - СМИ</p>
-                                </li>
-                                <li>
-                                    <span class="news-datetime">Шілде 01, 09:45</span>
-                                    <p>Террористы планировали захват заложников в аэропорту Стамбула - СМИ</p>
-                                </li>
-                                <li>
-                                    <span class="news-datetime">Шілде 01, 09:45</span>
-                                    <p>Террористы планировали захват заложников в аэропорту Стамбула - СМИ</p>
-                                </li>
-                                <li>
-                                    <span class="news-datetime">Шілде 01, 09:45</span>
-                                    <p>Террористы планировали захват заложников в аэропорту Стамбула - СМИ</p>
-                                </li>
-
-                                <li>
-                                    <span class="news-datetime">Шілде 01, 09:45</span>
-                                    <p>Террористы планировали захват заложников в аэропорту Стамбула - СМИ</p>
-                                </li>
-
-                                <li>
-                                    <span class="news-datetime">Шілде 01, 09:45</span>
-                                    <p>Террористы планировали захват заложников в аэропорту Стамбула - СМИ</p>
-                                </li>
-                                <li>
-                                    <span class="news-datetime">Шілде 01, 09:45</span>
-                                    <p>Террористы планировали захват заложников в аэропорту Стамбула - СМИ</p>
-                                </li>
+                                @foreach($more_readed_news as $more_readed_new)
+                                    <li>
+                                        <a href="{{url('/newsread/'.$more_readed_new->id)}}">
+                                            <span class="news-datetime">{{ $more_readed_new->created_at }}</span>
+                                            <p>{{ $more_readed_new->title }}</p>
+                                        </a>
+                                    </li>
+                                @endforeach
                             </ul>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <div id="" class="col-xs-12 col-sm-12 col-md-6 col-lg-3">
+            <div id="" class="col-xs-12 col-sm-12 col-md-6 col-lg-3 pull-right">
                 <div class="hpanel horange">
                     <div class="panel-heading hbuilt">
                         <h6 class="text-center">Жолдамалар</h6>
                     </div>
-                    <div class="panel-body" style="overflow-y: scroll;">
+                    <div class="panel-body" style="overflow-x: scroll">
                         <ul class="list-unstyled" id="posts-list">
-                            <li>
-                                <span><i class="fa fa-pencil-square-o fa-lg"></i></span>
-                                <span class="news-datetime">Шілде 01, 09:45</span>
-                                <p>Террористы планировали захват заложников в аэропорту Стамбула - СМИ</p>
-                            </li>
-                            <li>
-                                <span><i class="fa fa-square-o fa-lg"></i></span>
-                                <span class="news-datetime">Шілде 01, 09:45</span>
-                                <p>Террористы планировали захват заложников в аэропорту Стамбула - СМИ</p>
-                            </li>
-                            <li>
-                                <span><i class="fa fa-check-square-o fa-lg"></i></span>
-                                <span class="news-datetime">Шілде 01, 09:45</span>
-                                <p>Террористы планировали захват заложников в аэропорту Стамбула - СМИ</p>
-                            </li>
-                            <li>
-                                <span><i class="fa fa-check-square-o fa-lg"></i></span>
-                                <span class="news-datetime">Шілде 01, 09:45</span>
-                                <p>Террористы планировали захват заложников в аэропорту Стамбула - СМИ</p>
-                            </li>
-                            <li>
-                                <span><i class="fa fa-ban fa-lg"></i></span>
-                                <span class="news-datetime">Шілде 01, 09:45</span>
-                                <p>Террористы планировали захват заложников в аэропорту Стамбула - СМИ</p>
-                            </li>
-                            <li>
-                                <span><i class="fa fa-check-square-o fa-lg"></i></span>
-                                <span class="news-datetime">Шілде 01, 09:45</span>
-                                <p>Террористы планировали захват заложников в аэропорту Стамбула - СМИ</p>
-                            </li>
-                            <li>
-                                <span><i class="fa fa-check-square-o fa-lg"></i></span>
-                                <span class="news-datetime">Шілде 01, 09:45</span>
-                                <p>Террористы планировали захват заложников в аэропорту Стамбула - СМИ</p>
-                            </li>
+                            @foreach($last_posts as $last_post)
+                                <li>
+                                    <a href="#">
+                                        <span><i class="fa fa-check-square-o fa-lg"></i></span>
+                                        <span class="news-datetime">{{ $last_post->created_at }}</span>
+                                        <p>{{ $last_post->text }}</p>
+                                    </a>
+                                </li>
+                            @endforeach
                         </ul>
                     </div>
                 </div>
             </div>
+
         </div>
     </div>
 @endsection
