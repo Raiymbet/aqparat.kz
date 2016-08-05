@@ -37,10 +37,14 @@ class News extends Model
     }
 
     public function SliderNew(){
-        return $this->hasOne(SliderNew::class);
+        return $this->belongsTo(SliderNew::class,'new_id');
     }
 
     public function translates(){
         return $this->hasMany(Translate::class, 'news_id');
+    }
+
+    public function category(){
+        return $this->belongsTo(Category::class, 'category_id');
     }
 }

@@ -14,6 +14,7 @@ use App\Admin;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\Storage;
+use Intervention\Image\Facades\Image;
 use Validator;
 use App\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\ThrottlesLogins;
@@ -146,17 +147,42 @@ class AdminNewsController extends Controller
     }
 
     public function getSetAsSliderNew(Request $request, $id){
+        $destinationOfImage = 'data0\\images\\';
+        $destinationOfThumbnail = 'data0\\tooltips\\';
+
         $new = News::find($id);
-        $slider = SliderNew::where('new_id', $id)->get();
-        if(count($slider)>0)
-            return "Жаңалық слайд жаңалығы ретінде таңдалып қойылған!";
-        else{
+        $sliders = SliderNew::all();
+        if(SliderNew::where('new_id', $new->id)->exists()){
+            $message = "Жаңалық слайд ретінде таңдалып қойылған!";
+            $message_type = "error";
+        }else if(count($sliders)>=6){
+            $slider = SliderNew::orderBy('updated_at', 'asc')->first();
+            //Delete image and thumbnail from slider
+            File::delete(public_path($destinationOfImage.$slider->news->id.'.jpg'));
+            File::delete(public_path($destinationOfThumbnail.$slider->news->id.'.jpg'));
+            //Create new image and thumbnail for slider
+            $image = Image::make(public_path($new->avatar_picture));
+            $image->resize(1600, 900)->save(public_path($destinationOfImage.$new->id.'.jpg'));
+            $image->resize(85, 48)->save(public_path($destinationOfThumbnail.$new->id.'.jpg'));
+            //update slider data
+            $slider->new_id = $new->id;
+            $slider->save();
+
+            $message = "Жаңалық слайды ретінде қабылданып жаңартылды.";
+            $message_type = "success";
+        }else{
+            $image = Image::make(public_path(''.$new->avatar_picture));
+            $image->resize(1600, 900)->save(public_path($destinationOfImage.$new->id.'.jpg'));
+            $image->resize(85, 48)->save(public_path($destinationOfThumbnail.$new->id.'.jpg'));
+
             $slider = new SliderNew();
             $slider->new_id = $new->id;
             $slider->save();
 
-            return "OK";
+            $message = "Жаңалық слайд жаңалығы ретінде қабылданды.";
+            $message_type = "success";
         }
+        return  response()->json(['message_type' => $message_type, 'message' => $message]);
     }
 
     public function getSetAsMainNew(Request $request, $id){

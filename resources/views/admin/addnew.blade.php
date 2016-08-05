@@ -34,8 +34,8 @@
                         <div class="form-group">
                             <select id="language" class="form-control" name="language">
                                 <option selected value="kz">KZ</option>
-                                <option value="ru">RU</option>
-                                <option value="en">EN</option>
+                                <option disabled value="ru">RU</option>
+                                <option disabled value="en">EN</option>
                             </select>
                         </div>
                         <div class="form-group">
@@ -100,20 +100,6 @@
                         });
                     }
                 });
-                /*$.post("{{url('/admin/new/add')}}", {
-                    title: title,
-                    category: category,
-                    language: language,
-                    text: text
-                }).done(function(data) {
-                    swal({
-                        title: "Сәтті жұмыс!",
-                        text: data,
-                        type: "success"
-                    },function(){
-                        location.reload();
-                    });
-                });*/
 
             }else{
                 swal("Oops...", "Жаңалық мәліметтерін толықтырыңыз.", "error");

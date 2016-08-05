@@ -15,6 +15,6 @@ class SliderNew extends Model
     protected $hidden = ['new_id'];
 
     public function news(){
-        return $this->belongsTo(News::class);
+        return $this->hasOne(News::class,'id', 'new_id');
     }
 }

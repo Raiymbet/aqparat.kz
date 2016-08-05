@@ -38,9 +38,10 @@ Route::group(['middleware' => ['web']], function () {
     Route::post('/newsread/{newId}', 'NewController@postComment');
     Route::get('/newsread/translate/{newId}', 'NewController@getTranslate');
     Route::get('/newsread/{newId}/islikedbyme', 'NewController@isLikedByMe');
-    Route::post('/newsread/{newId}/like', 'NewController@like');
+    Route::post('/like/{new}', 'NewController@like');
     Route::get('/categorynews/{categoryId}', 'NewController@getCategoryNews');
     Route::get('/search', 'NewController@getSearch');
+    Route::post('/search', 'NewController@postSearch');
 
 
     /**
@@ -51,6 +52,7 @@ Route::group(['middleware' => ['web']], function () {
     Route::get('/admin/logout', 'AdminAuth\AuthController@getLogout');
 
     Route::get('/admin', 'AdminController@adminHome');
+    Route::get('/admin/profile', 'AdminController@getProfile');
 
     Route::get('/admin/posts', 'AdminPostsController@getPosts');
     Route::get('/admin/posts/accept/{postId}', 'AdminPostsController@getAccept');
@@ -84,11 +86,5 @@ Route::group(['middleware' => ['web']], function () {
     Route::post('/admin/categories', 'AdminCategoriesController@postAdd');
     Route::get('/admin/categories/delete/{categoryId}', 'AdminCategoriesController@getDestroy');
     Route::post('/admin/categories/edit/{categoryId}', 'AdminCategoriesController@postEdit');
-    /*
-    Route::delete('/admin/posts/{post}', 'AdminPostsController@destroy');
-    Route::accept('/admin/posts/{post}', 'AdminPostsController@accept');
-    Route::post('/admin/new/add');
-    Route::post('/admin/categories');
-    Route::delete('/admin/posts/{postId}');
-    */
+
 });

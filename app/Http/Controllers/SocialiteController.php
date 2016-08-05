@@ -36,7 +36,7 @@ class SocialiteController extends Controller{
     {
         if($social_user = Socialite::driver($provider)->user()){
             //dd($social_user);
-            $authUser = $this->findOrCreateUser($social_user);
+            $authUser = $this->findOrCreateUser($social_user, $provider);
             Auth::login($authUser, true);
             return redirect()->to('/');
         }else{
@@ -50,16 +50,17 @@ class SocialiteController extends Controller{
         return redirect('/');
     }
 
-    private function findOrCreateUser($user)
+    private function findOrCreateUser($user, $provider)
     {
-        if ($authUser = User::where('email', $user->email)->first()) {
+        if ($authUser = User::where('email', $user->email)->where('provider', $provider)->first()) {
             return $authUser;
         }
 
         return User::create([
             'name' => $user->name,
             'email' => $user->email,
-            'avatar' => $user->avatar
+            'avatar' => $user->avatar,
+            'provider' => $provider
         ]);
     }
 }

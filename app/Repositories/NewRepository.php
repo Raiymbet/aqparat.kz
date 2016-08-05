@@ -28,10 +28,18 @@ class NewRepository
     }
 
     public function getSliderNews(){
-        return SliderNew::orderBy('created_at', 'desc')->get();
+        return SliderNew::orderBy('updated_at', 'desc')->get();
     }
 
     public function getMainNews(){
         return News::where('language', 'kz')->where('ismainnew', true)->orderBy('created_at', 'desc')->simplePaginate(6);
+    }
+
+    public function getSearchNews($text, $category, $date){
+        return News::where('language', '=', 'kz')
+            ->where('text', 'LIKE', '%'.$text.'%')
+            ->orWhere('title', 'LIKE', '%'.$text.'%')
+            ->orderBy('created_at', 'desc')
+            ->paginate(6);
     }
 }

@@ -47,9 +47,18 @@
                         <div class="row">
                             <div class="pull-right">
                                 <span><i class="fa fa-eye fa-lg"></i> {{ $new->views }}</span>
-                                <span class="margin-left-20"><a href="#comments"><i class="fa fa-comment fa-lg"></i> {{ $new->comments_count() }}</a></span>
-                                <span  class="margin-left-20"><i role="button" class="fa fa-heart fa-lg"></i> {{ $new->likes }}</span>
-                                <span class="margin-left-20"><i role="button" class="fa fa-share-alt fa-lg"></i> {{ $new->shares }}</span>
+                                <a href="#comments" class="text-muted">
+                                    <span class="margin-left-20">
+                                        <i class="fa fa-comment fa-lg"></i> {{ $new->comments_count() }}
+                                    </span>
+                                </a>
+                                <a role="button" onclick="like()">
+                                    <span id="like" class="margin-left-20">
+                                        <i role="button" class="fa fa-heart fa-lg"></i>
+                                        <span id="new_likes">{{ $new->likes }}</span>
+                                    </span>
+                                </a>
+                                <span id="share" class="margin-left-20"><i role="button" class="fa fa-share-alt fa-lg"></i> {{ $new->shares }}</span>
                             </div>
                         </div>
                     </div>
@@ -632,8 +641,32 @@
 
 @section('script')
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
-
     <script type="text/javascript">
+        $.get('{{ url('/newsread/'.$new->id.'/islikedbyme') }}', function (data) {
+            //console.log(data);
+            if(data=='true'){
+                $('#like').addClass('liked');
+            }else{
+                $('#like').addClass('disliked');
+            }
+        });
+
+        function like(){
+            $.post("{{ url('/like/'.$new->id) }}").done( function (data) {
+                //console.log(data);
+                if(data.like=='liked'){
+                    if($('#like').hasClass('disliked')){
+                        $('#like').removeClass('disliked').addClass('liked');
+                    }
+                }else{
+                    if($('#like').hasClass('liked')){
+                        $('#like').removeClass('liked').addClass('disliked');
+                    }
+                }
+                $('#new_likes').html(data.likes);
+            });
+        }
+
         $('#select_translate').change( function () {
             //console.log($(this).val());
             $.get('{{ url('/newsread/translate') }}'+'/'+$(this).val(), function(data) {
@@ -665,16 +698,16 @@
 
             $comment = $('#comment-textarea').val();
             if($comment){
-                @if(Auth::guest()){
+                    @if(Auth::guest()){
                     window.location.replace('{{url('/login')}}');
                 }@else
                     $.post("{{ url('/newsread/'.$new->id) }}", {
-                        comment : $comment
-                    }).done( function (data) {
-                        $('#comment-textarea').val('');
-                        $('#comment-result').removeClass().addClass('text-success').html(data);
+                    comment : $comment
+                }).done( function (data) {
+                    $('#comment-textarea').val('');
+                    $('#comment-result').removeClass().addClass('text-success').html(data);
                     console.log(data);
-                    });
+                });
                 @endif
             }else{
                 $('#comment-result').removeClass().addClass('text-danger').html("Пікір енгізіңіз!");

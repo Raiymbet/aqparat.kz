@@ -116,17 +116,17 @@
     <aside id="menu">
         <div id="navigation">
             <div class="profile-picture">
-                <a href="#">
+                <a href="{{ url('/admin/profile') }}">
                     <img src="{{ URL::asset(Auth::guard('admin')->user()->avatar) }}" class="img-circle m-b" alt="Profile image">
+                    <div class="stats-label text-color">
+                        <span class="font-extra-bold font-uppercase">{{ Auth::guard('admin')->user()->name }}</span>
+                        <small>{{ Auth::guard('admin')->user()->type }}</small>
+                    </div>
                 </a>
-
-                <div class="stats-label text-color">
-                    <span class="font-extra-bold font-uppercase">{{ Auth::guard('admin')->user()->name }}</span>
-                </div>
             </div>
 
             <ul class="nav" id="side-menu">
-                <li class="active">
+                <li class="">
                     <a href="{{ url('/admin') }}"><span class="nav-label">Dashboard</span></a>
                 </li>
                 <li>
@@ -134,7 +134,6 @@
                     <ul class="nav nav-second-level">
                         <li><a href="{{ url('/admin/news') }}">Жаңалықтар тізімі</a></li>
                         <li><a href="{{ url('/admin/new/add') }}">Жаңалық қосу</a></li>
-                        <!--<li><a href="{{ url('/admin/new/settings') }}">Конфигурация</a></li>-->
                         <li><a href="{{ url('/admin/new/search') }}">Іздеу</a></li>
                     </ul>
                 </li>

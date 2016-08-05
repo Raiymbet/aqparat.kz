@@ -553,10 +553,10 @@
 
         function set_as_sliderNew(id){
             $.get('{{ url('/admin/news/slider') }}'+'/'+id, function(data) {
-                if(data=="OK"){
-                    swal("Қабылданды!", "Жаңалық слайд жаңалығы ретінде сәтті таңдалды.", "success");
+                if(data.message_type == 'success'){
+                    swal("Қабылданды!", data.message, "success");
                 }else{
-                    swal("Woops...", data, "error");
+                    swal("Woops...", data.message, "error");
                 }
             });
         }

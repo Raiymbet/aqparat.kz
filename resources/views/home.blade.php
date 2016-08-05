@@ -34,24 +34,38 @@
                             <div id="wowslider-container0">
                                 <div class="ws_images">
                                     <ul>
-
-                                        <li><img src="data0/images/_48351578_640x360worldnews.jpg" alt="News 1" title="News 1" id="wows0_0"/></li>
+                                        @foreach($slider_news as $index => $slider_new)
+                                            <li>
+                                                <img src="data0/images/{{ $slider_new->news->id }}.jpg"
+                                                     alt="{{ $slider_new->news->title }}" title="{{ $slider_new->news->title }}"
+                                                     id="wows0_{{ $index }}">
+                                            </li>
+                                        @endforeach
+                                        <!--<li><img src="data0/images/_48351578_640x360worldnews.jpg" alt="News 1" title="News 1" id="wows0_0"/></li>
                                         <li><img src="data0/images/getarticleimage.jpg" alt="GetArticleImage" title="GetArticleImage" id="wows0_1"/></li>
                                         <li><img src="data0/images/news.jpg" alt="news" title="news" id="wows0_2"/></li>
                                         <li><img src="data0/images/news_765x350px.jpg" alt="jquery slideshow" title="News4" id="wows0_3"/></li>
-                                        <li><img src="data0/images/news_events.jpg_687647283.jpg" alt="News 5" title="News 5" id="wows0_4"/></li>
+                                        <li><img src="data0/images/news_events.jpg_687647283.jpg" alt="News 5" title="News 5" id="wows0_4"/></li>-->
                                     </ul>
                                 </div>
                                 <div class="ws_bullets">
                                     <div>
-                                        <a href="#" title="News 1"><span><img src="data0/tooltips/_48351578_640x360worldnews.jpg" alt="News 1"/>1</span></a>
+                                        @foreach($slider_news as $index => $slider_new)
+                                            <a href="#" title="{{ $slider_new->news->title }}">
+                                                <span>
+                                                    <img src="data0/tooltips/{{ $slider_new->news->id }}.jpg" alt="{{ $slider_new->news->title }}">
+                                                    {{ $index }}
+                                                </span>
+                                            </a>
+                                        @endforeach
+                                        <!--<a href="#" title="News 1"><span><img src="data0/tooltips/_48351578_640x360worldnews.jpg" alt="News 1"/>1</span></a>
                                         <a href="#" title="GetArticleImage"><span><img src="data0/tooltips/getarticleimage.jpg" alt="GetArticleImage"/>2</span></a>
                                         <a href="#" title="news"><span><img src="data0/tooltips/news.jpg" alt="news"/>3</span></a>
                                         <a href="#" title="News4"><span><img src="data0/tooltips/news_765x350px.jpg" alt="News4"/>4</span></a>
-                                        <a href="#" title="News 5"><span><img src="data0/tooltips/news_events.jpg_687647283.jpg" alt="News 5"/>5</span></a>
+                                        <a href="#" title="News 5"><span><img src="data0/tooltips/news_events.jpg_687647283.jpg" alt="News 5"/>5</span></a>-->
                                     </div>
                                 </div>
-                                <div class="ws_script" style="position:absolute;left:-99%">by WOWSlider.com v8.7</div>
+                                <!--<div class="ws_script" style="position:absolute;left:-99%">by WOWSlider.com v8.7</div>-->
                                 <div class="ws_shadow"></div>
                             </div>
                             <script type="text/javascript" src="{{ URL::asset('engine0/wowslider.js') }}"></script>
@@ -74,10 +88,12 @@
                         </div>
                         <div class="panel-body hblue">
                             <div class="row row-with-margin">
+                                <?php $colors = array('text-green', 'text-red', 'text-blue', 'text-orange');?>
                                 @foreach($main_news as $index => $main_new)
                                     <div class="col-xs-12 col-sm-12 col-md-4 news-thumbnail text-justify pull-left @if($index%3==0) clear-left @endif">
                                         <a href="{{ url('/newsread/'.$main_new->id) }}">
                                             <img class="img-responsive image-main-news" src="{{ asset($main_new->avatar_picture) }}">
+                                            <h5 class="{{ $colors[$index%4] }}">{{ $main_new->category->name }}</h5>
                                             <h5>{{ $main_new->title }}</h5>
                                             <p class="news-datetime">{{ $main_new->created_at }}</p>
                                             <div class="small statistics-style">

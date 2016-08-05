@@ -53,7 +53,7 @@
             <!--<img class="menu-btn" src="{{ URL::asset('img/menu_btn.png') }}">-->
             </a>
 
-            <div class="col-sm-5 col-md-5 padding-10">
+            <div class="col-sm-5 col-md-5 p-xxss">
                 <form class="" action="{{ url('/search') }}" method="GET">
                     {{ csrf_field() }}
                     <div class="form-group no-margin">
@@ -85,10 +85,10 @@
     </nav>
 
     <div id="header-second">
-        <div class="col-sidebar p-xs">
-            <span id="datebox">Сенбі, Шілде 09, 2016</span>
+        <div class="col-sidebar p-xxs">
+            <span id="datebox" style="padding-left: 10px">Сенбі, Шілде 09, 2016</span>
         </div>
-        <div class="col-lg-7" style="padding: 0">
+        <div class="col-sm-7 col-md-6 col-lg-7" style="padding: 0">
             <nav role="navigation" class="">
                 <ul class="list-unstyled list-inline" id="second-header-list">
                     <li>
@@ -128,7 +128,7 @@
                 </ul>
             </nav>
         </div>
-        <div class="col-lg-3 p-xs text-right">
+        <div class="col-lg-3 p-xxs text-right">
             <span class="">USD: 456</span>
             <span class="m-l-sm">EUR: 659</span>
             <span class="m-l-sm">RUB: 5.4</span>
@@ -145,7 +145,7 @@
     <div id="sidebar-wrapper">
         <ul class="sidebar-nav nav-pills nav-stacked" id="menu">
 
-            <li class="active">
+            <li class="">
                 <a href="{{ url('/') }}">
                         <span class="fa-stack fa-lg pull-left">
                             <i class="fa fa-newspaper-o fa-stack-1x "></i>
@@ -202,7 +202,7 @@
                         <span class="fa-stack fa-lg pull-left">
                             <i class="fa fa-paper-plane-o fa-stack-1x "></i>
                         </span>
-                    Жолдамаларым
+                    Хабарларым
                 </a>
             </li>
         </ul>
@@ -289,5 +289,6 @@
     });
 </script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+@y
 </body>
 </html>

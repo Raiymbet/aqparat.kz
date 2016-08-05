@@ -28,6 +28,12 @@ class AdminController extends Controller
     {
         return view('admin.home');
     }
+
+    public function getProfile()
+    {
+        return view('admin.profile');
+    }
+
     public function getNews(Request $request)
     {
         return view('admin.news');

@@ -27,6 +27,7 @@ class RouteServiceProvider extends ServiceProvider
     {
         //
         $router->model('post', 'App\Post');
+        $router->model('new', 'App\News');
         parent::boot($router);
     }
 

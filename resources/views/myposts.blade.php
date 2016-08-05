@@ -29,21 +29,17 @@
 
                             <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
                                 <div class="form-group">
-                                    <div class="input-group">
+                                    <label class="col-xs-3 col-sm-3 col-md-2 col-lg-2 control-label">Мәтіні:</label>
+                                    <div class="col-xs-9 col-sm-9 col-md-10 col-lg-10">
                                         <input name="post" class="form-control" type="text" placeholder="Жолдаманы іздеу...">
-                                        <div class="input-group-btn">
-                                            <button class="btn btn-info">
-                                                <i class="fa fa-search"></i>
-                                            </button>
-                                        </div>
                                     </div>
                                 </div>
                             </div>
 
                             <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
                                 <div class="form-group">
-                                    <label class="col-xs-4 col-sm-4 col-md-4 col-lg-4 control-label">Күйі:</label>
-                                    <div class="col-xs-8 col-sm-8 col-md-8 col-lg-8">
+                                    <label class="col-xs-3 col-sm-3 col-md-4 col-lg-4 control-label">Күйі:</label>
+                                    <div class="col-xs-9 col-sm-9 col-md-8 col-lg-8">
                                         <select class="form-control" name="status">
                                             <option value="all" selected="selected">Барлығы</option>
                                             <option value="">Өңделмеген</option>
@@ -57,9 +53,17 @@
 
                             <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
                                 <div class="form-group">
-                                    <label class="col-xs-4 col-sm-4 col-md-4 col-lg-4 control-label">Уақыты:</label>
-                                    <div class="col-xs-8 col-sm-8 col-md-8 col-lg-8">
+                                    <label class="col-xs-3 col-sm-3 col-md-4 col-lg-4 control-label">Уақыты:</label>
+                                    <div class="col-xs-9 col-sm-9 col-md-8 col-lg-8">
                                         <input name="datetime" type="datetime-local" class="form-control" placeholder="Уақытын көрсетіңіз">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                                <div class="form-group">
+                                    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                                        <button class="btn btn-info pull-right" type="submit">Іздеу</button>
                                     </div>
                                 </div>
                             </div>

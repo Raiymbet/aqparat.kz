@@ -14,7 +14,7 @@ class CreateSlidernewsTable extends Migration
     {
         Schema::create('slidernews', function (Blueprint $table) {
             $table->increments('id');
-            $table->integer('news_id');
+            $table->integer('new_id');
             $table->timestamps();
 
             /* Foregin Keys */

@@ -14,6 +14,9 @@
     padding-left: 5px;
 }
 /* MARGINS & PADDINGS */
+.p-xxss{
+    padding: 4px;
+}
 .p-xxs {
     padding: 5px !important;
 }
@@ -334,7 +337,7 @@ p .quote {
 #header {
     background-color: rgba(0, 60, 128, 0.82);
     display: block;
-    height: 96px;
+    height: 72px;
     margin: 0;
     padding: 0;
     position: relative;
@@ -343,7 +346,7 @@ p .quote {
     background: #829cba;
     color: #FFFFFF;
     display: block;
-    height: 40px;
+    height: 30px;
     margin: 0;
     padding: 0;
     position: relative;
@@ -368,7 +371,7 @@ p .quote {
     border-left: 1px solid rgba(213, 222, 233, 0.44);
     cursor: pointer;
     text-align: center;
-    padding: 10px;
+    padding: 5px;
 }
 #second-header-list li:last-child{
     border-right: 1px solid rgba(213, 222, 233, 0.44);
@@ -401,7 +404,7 @@ p .quote {
     text-align: center;
 }
 .header-link {
-    padding: 18px 26px 17px 26px;
+    padding: 11px 18px 11px 18px;
     font-size: 14px;
     float: left;
     color: #FFFFFF;
@@ -473,6 +476,9 @@ i.fa.fa-stack-1x {
 }
 .navbar-nav > li:last-child > a {
     padding-right: 35px;
+}
+.navbar {
+    min-height: 40px;
 }
 
 /* Mobile navbar */
@@ -658,11 +664,14 @@ i.fa.fa-stack-1x {
 .content {
     padding: 20px 0 0 0;
     min-width: 320px;
+    max-width: 1170px;
+    margin-right: auto;
+    margin-left: auto;
 }
 
 /* Toggle Styles */
 #wrapper {
-    padding-top: 96px;
+    padding-top: 74px;
     padding-left: 0;
     -webkit-transition: all 0.5s ease;
     -moz-transition: all 0.5s ease;
@@ -1002,10 +1011,16 @@ input[type=text]:focus,textarea:focus, select:focus {
 .clear-left{
     clear: left;
 }
+.liked{
+    color: #3498db;
+}
+.disliked{
+    color: #777;
+}
 
 
 .logo{
-    height: 55px;
+    height: 42px;
     width: 210px;
 }
 .news-thumbnail{
@@ -1114,6 +1129,9 @@ input[type=text]:focus,textarea:focus, select:focus {
     padding: 10px 20px;
     border-bottom: none;
 }
+.filter-item .panel-body:last-child{
+    border-bottom: 1px solid #e4e5e7;
+}
 .filter-item a {
     color: #333;
 }
@@ -1135,7 +1153,18 @@ input[type=text]:focus,textarea:focus, select:focus {
      border-bottom: 1px solid #e4e5e7;
      margin-bottom: 25px;
 }
-
+.pagination > .active > a,
+.pagination > .active > span,
+.pagination > .active > a:hover,
+.pagination > .active > span:hover,
+.pagination > .active > a:focus,
+.pagination > .active > span:focus {
+    background-color: #3498db;
+    border-color: #258cd1;
+    color: #fff;
+    cursor: default;
+    z-index: 2;
+}
 @media (max-width: 768px){
     .blog-article-box .panel-body {
         padding: 15px;
