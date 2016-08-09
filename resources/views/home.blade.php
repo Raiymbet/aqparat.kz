@@ -12,7 +12,7 @@
         <div class="content">
             <div class="row">
 
-                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-7">
+                <div class="col-xs-12 col-sm-12 col-md-8 col-lg-7">
                     <div class="hpanel">
                         <div class="panel-body">
                             <form id="post_form">
@@ -162,7 +162,7 @@
                     </div>
                 </div>
 
-                <div class="col-xs-12 col-sm-12 col-md-6 col-lg-3">
+                <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3">
                     <div class="hpanel hblue">
                         <div class="panel-heading hbuilt">
                             <h6 class="text-center">Соңғы жаңалықтар</h6>
@@ -184,7 +184,7 @@
                     </div>
                 </div>
 
-                <div class="col-xs-12 col-sm-12 col-md-6 col-lg-2">
+                <div class="col-xs-12 col-sm-6 col-md-4 col-lg-2">
                     <div class="hpanel hred">
                         <div class="panel-heading hbuilt">
                             <h6 class="text-center">Жарнама</h6>
@@ -197,7 +197,7 @@
                     </div>
                 </div>
 
-                <div class="col-xs-12 col-sm-12 col-md-6 col-lg-3">
+                <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3">
                     <div class="hpanel hgreen">
                         <div class="panel-heading hbuilt">
                             <h6 class="text-center">Көп оқылғандар</h6>
@@ -219,7 +219,7 @@
                     </div>
                 </div>
 
-                <div id="" class="col-xs-12 col-sm-12 col-md-6 col-lg-3">
+                <div id="" class="col-xs-12 col-sm-6 col-md-4 col-lg-3">
                     <div class="hpanel horange">
                         <div class="panel-heading hbuilt">
                             <h6 class="text-center">Жолдамалар</h6>

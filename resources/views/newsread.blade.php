@@ -35,7 +35,14 @@
                             <span class="pull-right">
                                 <p id="new_author">
                                     <small>
-                                        <strong>Авторы: </strong> <a href="#">{{ \App\Admin::find($new->author_id)->name }}</a>
+                                        <strong>Авторы: </strong>
+                                        @if($new->author->type=='columnist')
+                                            <a href="{{ url('/columnist/'.$new->author->id) }}">
+                                                {{ $new->author->name }}
+                                            </a>
+                                        @else
+                                            {{ $new->author->name }}
+                                        @endif
                                         <br>
                                         <strong>Күні: </strong>{{ $new->created_at }}
                                     </small>
@@ -53,7 +60,7 @@
                                     </span>
                                 </a>
                                 <a role="button" onclick="like()">
-                                    <span id="like" class="margin-left-20">
+                                    <span id="like" class="margin-left-20 disliked">
                                         <i role="button" class="fa fa-heart fa-lg"></i>
                                         <span id="new_likes">{{ $new->likes }}</span>
                                     </span>
@@ -642,29 +649,33 @@
 @section('script')
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
     <script type="text/javascript">
-        $.get('{{ url('/newsread/'.$new->id.'/islikedbyme') }}', function (data) {
-            //console.log(data);
-            if(data=='true'){
-                $('#like').addClass('liked');
-            }else{
-                $('#like').addClass('disliked');
-            }
-        });
+        @if(!Auth::guest())
+            $.get('{{ url('/newsread/'.$new->id.'/islikedbyme') }}', function (data) {
+                console.log(data);
+                if(data=='true'){
+                    $('#like').removeClass('disliked').addClass('liked');
+                }
+            });
+        @endif
 
         function like(){
-            $.post("{{ url('/like/'.$new->id) }}").done( function (data) {
-                //console.log(data);
-                if(data.like=='liked'){
-                    if($('#like').hasClass('disliked')){
-                        $('#like').removeClass('disliked').addClass('liked');
+            @if(Auth::guest())
+                window.location.replace('{{url('/login')}}');
+            @else
+                $.post("{{ url('/like/'.$new->id) }}").done( function (data) {
+                    //console.log(data);
+                    if(data.like=='liked'){
+                        if($('#like').hasClass('disliked')){
+                            $('#like').removeClass('disliked').addClass('liked');
+                        }
+                    }else{
+                        if($('#like').hasClass('liked')){
+                            $('#like').removeClass('liked').addClass('disliked');
+                        }
                     }
-                }else{
-                    if($('#like').hasClass('liked')){
-                        $('#like').removeClass('liked').addClass('disliked');
-                    }
-                }
-                $('#new_likes').html(data.likes);
-            });
+                    $('#new_likes').html(data.likes);
+                });
+            @endif
         }
 
         $('#select_translate').change( function () {
@@ -702,12 +713,12 @@
                     window.location.replace('{{url('/login')}}');
                 }@else
                     $.post("{{ url('/newsread/'.$new->id) }}", {
-                    comment : $comment
-                }).done( function (data) {
-                    $('#comment-textarea').val('');
-                    $('#comment-result').removeClass().addClass('text-success').html(data);
-                    console.log(data);
-                });
+                        comment : $comment
+                        }).done( function (data) {
+                            $('#comment-textarea').val('');
+                            $('#comment-result').removeClass().addClass('text-success').html(data);
+                            console.log(data);
+                    });
                 @endif
             }else{
                 $('#comment-result').removeClass().addClass('text-danger').html("Пікір енгізіңіз!");

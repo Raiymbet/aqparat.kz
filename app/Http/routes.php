@@ -53,6 +53,7 @@ Route::group(['middleware' => ['web']], function () {
 
     Route::get('/admin', 'AdminController@adminHome');
     Route::get('/admin/profile', 'AdminController@getProfile');
+    Route::post('/admin/profile', 'AdminController@postProfile');
 
     Route::get('/admin/posts', 'AdminPostsController@getPosts');
     Route::get('/admin/posts/accept/{postId}', 'AdminPostsController@getAccept');

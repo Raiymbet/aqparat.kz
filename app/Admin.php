@@ -19,4 +19,19 @@ class Admin extends Authenticatable
      * @var array
      */
     protected $hidden = ['password', 'remember_token'];
+
+    public function adminDetails()
+    {
+        return $this->hasOne(AdminDetail::class);
+    }
+
+    public function news()
+    {
+        return $this->hasMany(News::class, 'author_id');
+    }
+
+    public function newsCount()
+    {
+        return $this->news()->count();
+    }
 }

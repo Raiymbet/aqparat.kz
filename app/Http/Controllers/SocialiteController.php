@@ -60,7 +60,7 @@ class SocialiteController extends Controller{
             'name' => $user->name,
             'email' => $user->email,
             'avatar' => $user->avatar,
-            'provider' => $provider
+            'provider' => $provider,
         ]);
     }
 }

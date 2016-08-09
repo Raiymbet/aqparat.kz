@@ -3407,3 +3407,13 @@ ul.h-list li:hover a {
     -webkit-transform: scaleY(1);
   }
 }
+.form-horizontal .control-label {
+  text-align: left;
+}
+.nav-pills>li.active>a, .nav-pills>li.active>a:focus, .nav-pills>li.active>a:hover {
+  color: rgb(52, 73, 94);
+  background-color: #829cba;
+}
+.nav-pills>li>a {
+  border-radius: 0;
+}

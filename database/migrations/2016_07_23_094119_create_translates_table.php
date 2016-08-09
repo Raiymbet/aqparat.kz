@@ -14,12 +14,12 @@ class CreateTranslatesTable extends Migration
     {
         Schema::create('translates', function (Blueprint $table) {
             $table->increments('id');
-            $table->integer('news_id');
-            $table->integer('translate_id');
+            $table->integer('news_id')->unsigned();
+            $table->integer('translate_id')->unsigned();
             $table->timestamps();
 
             /* Foregin Keys */
-            $table->foreign('new_id')->references('id')->on('news');
+            $table->foreign('news_id')->references('id')->on('news');
             $table->foreign('translate_id')->references('id')->on('news');
         });
     }

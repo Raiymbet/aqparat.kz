@@ -7,6 +7,7 @@
     <meta name="_token" content="{!! csrf_token() !!}"/>
 
     <title>Aqparat.kz</title>
+    <link rel="shortcut icon" type="image/x-icon" href="{{ URL::asset('img/title_logo.png') }}" />
 
     <!-- CSS and Javascript -->
     <!-- Fonts -->
@@ -37,24 +38,61 @@
     <nav class="navbar no-margin">
         <!-- Brand and toggle get grouped for better mobile display -->
 
-        <div class="navbar-header fixed-brand">
-            <a class="navbar-toggle collapsed" data-toggle="collapse" id="menu-toggle">
-                <i class="fa fa-bars" aria-hidden="true"></i>
-            </a>
+        <div class="navbar-header fixed-brand" id="logo">
             <a href="{{ url('/') }}">
                 <img class="img-responsive logo" src="{{ URL::asset('img/new_logo_sm.png') }}">
             </a>
         </div>
         <!-- navbar-header -->
 
-        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+        <div class="" id="bs-example-navbar-collapse-1">
             <a class="header-link collapse in" data-toggle="collapse" id="menu-toggle-2">
                 <i class="fa fa-bars fa-lg" aria-hidden="true"></i>
             <!--<img class="menu-btn" src="{{ URL::asset('img/menu_btn.png') }}">-->
             </a>
+            <div class="small-logo">
+                <img class="img-responsive logo" src="{{ URL::asset('img/new_logo_sm.png') }}">
+            </div>
 
-            <div class="col-sm-5 col-md-5 p-xxss">
-                <form class="" action="{{ url('/search') }}" method="GET">
+            <!-- Mobile menu -->
+            <div class="mobile-menu pull-right">
+                <a role="button" class="header-link mobile-menu-toggle" data-toggle="collapse" data-target="#mobile-collapse">
+                    <i class="fa">
+                        <img class="img-responsive img-chevron" src="{{ URL::asset('img/chevron_down_white.png') }}">
+                    </i>
+                </a>
+                <div class="collapse mobile-navbar" id="mobile-collapse">
+                    <ul class="nav navbar-nav">
+                        @if (Auth::guest())
+                            <li>
+                                <a class="" href="{{ url('/login') }}">Login</a>
+                            </li>
+                        @else
+                            <li>
+                                <a href="#">
+                                    <img class="img-responsive" style="width: 24px; height: 24px; float: left;" src="{{ Auth::user()->avatar}}">
+                                    <span class="m-l-sm">{{ Auth::user()->name }}</span>
+                                </a>
+                            </li>
+                            <li class="dropdown">
+                                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+                                    Notifications <label class="label-info">New 3</label> <i class="fa "><img class="img-responsive img-chevron"
+                                                                 src="{{ URL::asset('img/chevron_down_white.png') }}"></i>
+                                </a>
+                                <ul class="dropdown-menu" role="menubar">
+                                    <li><a href="#">Notifications</a></li>
+                                </ul>
+                            </li>
+                            <li>
+                                <a href="{{ url('/logout') }}">Logout</a>
+                            </li>
+                        @endif
+                    </ul>
+                </div>
+            </div>
+
+            <div class="col-xs-0 col-sm-5 col-md-5 p-xxss">
+                <form id="form-search" class="" action="{{ url('/search') }}" method="GET">
                     {{ csrf_field() }}
                     <div class="form-group no-margin">
                         <input type="text" placeholder="Жаңалық іздеу..." class="form-control" name="search">
@@ -71,11 +109,15 @@
                     <a href="#" class="header-link" role="button">
                         <i class="fa fa-bell-o"></i>
                     </a>
-                    <a href="#" class="dropdown-toggle header-link pull-right" data-toggle="dropdown" role="button"
-                       aria-expanded="false">
-                        {{ Auth::user()->name }}<span class="caret"></span>
+                    <a href="#" class="dropdown-toggle header-link pull-right" data-toggle="dropdown"
+                       role="button" aria-expanded="false">
+                        <img class="img-responsive" style="width: 20px; height: 20px; float: left;" src="{{ Auth::user()->avatar}}">
+                        <span class="m-l-sm">{{ Auth::user()->name }}</span>
+                        <i class="fa ">
+                            <img class="img-responsive img-chevron" src="{{ URL::asset('img/chevron_down_white.png') }}">
+                        </i>
                     </a>
-                    <ul class="dropdown-menu" role="menu">
+                    <ul class="dropdown-menu" role="menubar">
                         <li><a href="{{ url('/logout') }}"><i class="fa fa-sign-out"></i>Logout</a></li>
                     </ul>
                 @endif
@@ -85,10 +127,58 @@
     </nav>
 
     <div id="header-second">
-        <div class="col-sidebar p-xxs">
+        <div class="col-sidebar col-xs-10 p-xxs">
             <span id="datebox" style="padding-left: 10px">Сенбі, Шілде 09, 2016</span>
         </div>
-        <div class="col-sm-7 col-md-6 col-lg-7" style="padding: 0">
+
+        <div id="mobile-second-header-menu" class="">
+            <a role="button" class="header-link pull-right" data-toggle="collapse" data-target="#mobile-collapse-second">
+                <i class="fa">
+                    <img class="img-responsive img-chevron" src="{{ URL::asset('img/chevron_down_red.png') }}">
+                </i>
+            </a>
+            <div class="mobile-navbar collapse" id="mobile-collapse-second">
+                <ul class="nav navbar-nav">
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+                            Columnists
+                            <i class="fa"><img class="img-responsive img-chevron"
+                                               src="{{ URL::asset('img/chevron_down_white.png') }}"></i>
+                        </a>
+                        <ul class="dropdown-menu">
+                            @foreach($columnists as $columnist)
+                                <li>
+                                    <a href="{{ url('/columnist/'.$columnist->id) }}" role="button">{{ $columnist->name }}</a>
+                                </li>
+                            @endforeach
+                        </ul>
+                    </li>
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+                            On Point <i class="fa "><img class="img-responsive img-chevron"
+                                                         src="{{ URL::asset('img/chevron_down_white.png') }}"></i>
+                        </a>
+                        <ul class="dropdown-menu" role="menubar">
+                            <li><a href="#">Points</a></li>
+                        </ul>
+                    </li>
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+                            Focus <i class="fa"><img class="img-responsive img-chevron"
+                                                     src="{{ URL::asset('img/chevron_down_white.png') }}"></i>
+                        </a>
+                        <ul class="dropdown-menu" role="menu">
+                            <li><a href="#">Focuses</a></li>
+                        </ul>
+                    </li>
+                    <li>
+                        <a class="" href="{{ url('/about') }}">About</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <div id="second-header-menu" class="col-sm-7 col-md-6 col-lg-7" style="padding: 0">
             <nav role="navigation" class="">
                 <ul class="list-unstyled list-inline" id="second-header-list">
                     <li>
@@ -96,10 +186,10 @@
                             Columnists <i class="fa"><img class="img-responsive img-chevron"
                                                           src="{{ URL::asset('img/chevron_down_white.png') }}"></i>
                         </a>
-                        <ul class="dropdown-menu" role="menu">
+                        <ul class="dropdown-menu list-unstyled list-inline" role="menu" id="columnists-list">
                             @foreach($columnists as $columnist)
                                 <li>
-                                    <a href="{{ url('/columnist/'.$columnist->id) }}">{{ $columnist->name }}</a>
+                                    <a href="{{ url('/columnist/'.$columnist->id) }}" role="button">{{ $columnist->name }}</a>
                                 </li>
                             @endforeach
                         </ul>
@@ -128,14 +218,14 @@
                 </ul>
             </nav>
         </div>
-        <div class="col-lg-3 p-xxs text-right">
+        <div class="col-sm-3 col-lg-3 p-xxs text-right" id="currency_and_weather">
             <span class="">USD: 456</span>
             <span class="m-l-sm">EUR: 659</span>
             <span class="m-l-sm">RUB: 5.4</span>
-        <span class="m-l-sm">
-            <a href="#" role="button">Алматы +25 C <i class="fa"><img class="img-responsive img-chevron"
-                                                                      src="{{ URL::asset('img/chevron_down_red.png') }}"></i></a>
-        </span>
+            <span class="m-l-sm">
+                <a href="#" role="button">Алматы +25 C <i class="fa"><img class="img-responsive img-chevron"
+                                                                          src="{{ URL::asset('img/chevron_down_red.png') }}"></i></a>
+            </span>
         </div>
     </div>
 </div>
@@ -236,10 +326,6 @@
         headers: {'X-CSRF-Token': $('meta[name=_token]').attr('content')}
     });
 
-    $("#menu-toggle").click(function (e) {
-        e.preventDefault();
-        $("#wrapper").toggleClass("toggled");
-    });
     $("#menu-toggle-2").click(function (e) {
         e.preventDefault();
         $("#wrapper").toggleClass("toggled-2");
@@ -289,6 +375,5 @@
     });
 </script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
-@y
 </body>
 </html>

@@ -12,7 +12,7 @@ class Translate extends Model
      *
      * @var array
      */
-    protected $hidden = ['new_id', 'translate_id'];
+    protected $hidden = ['news_id', 'translate_id'];
 
     public function news(){
         return $this->belongsTo(News::class,'translate_id');

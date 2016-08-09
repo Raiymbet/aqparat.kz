@@ -26,9 +26,9 @@
 
 <body id="app-layout" class="blank">
 
-<div id="wrapper" class="toggled-2">
+<div id="" class="">
     <!-- Page Content -->
-    <div id="page-content-wrapper">
+    <div id="">
         <div class="container-fluid xyz">
             <div class="login-container">
                 <div class="row">
@@ -36,7 +36,7 @@
                         <div class="header-panel animated fadeIn">
                             <div class="hpanel hblue" style="margin-bottom: 20px;">
                                 <div class="panel-heading hbuilt text-center">
-                                    <h6>Жүйеге қоғамдық желі арқылы кіру</h6>
+                                    <h6>Жүйеге әлеуметтік желі арқылы кіру</h6>
                                 </div>
                                 <div class="panel-body">
                                     <a class="btn btn-info btn-block margin-bottom-10" href="{{ url('socialite/facebook') }}" style="background-color: #3a579a">
@@ -48,9 +48,9 @@
                                     <a class="btn btn-info btn-block margin-bottom-10" href="{{ url('socialite/google') }}" style="background-color: #df4a32">
                                         <i class="fa fa-google-plus fa-lg pull-left"></i> Login with Google
                                     </a>
-                                    <a class="btn btn-info btn-block margin-bottom-10" href="{{ url('socialite/vk') }}" style="background-color: #54769a">
+                                    <!--<a class="btn btn-info btn-block margin-bottom-10" href="{{ url('socialite/vk') }}" style="background-color: #54769a">
                                         <i class="fa fa-vk fa-lg pull-left"></i> Login with Vk
-                                    </a>
+                                    </a>-->
                                     <div class="checkbox">
                                         <!-- Squared FOUR -->
                                         <div class="margin-left-20">

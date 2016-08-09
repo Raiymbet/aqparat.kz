@@ -18,82 +18,86 @@
                     <div class="panel-body">
                         <div class="media">
                             <div class="media-image pull-left">
-                                <img src="{{ URL::asset('img/default_user.png') }}" alt="Қолданушы суреті">
+                                <img src="{{ URL::asset($columnist->avatar) }}" alt="Қолданушы суреті">
                             </div>
                             <div class="media-body">
-                                <div class="media-heading">{{ $columnist->name }}</div>
-                                <p>bla vla...</p>
+                                <div class="media-heading">
+                                    <h4>
+                                        {{ $columnist->name }}
+                                        <br>
+                                        <small><a href="#">{{ $columnist->email }}</a></small>
+                                    </h4>
+                                </div>
+                                <p>
+                                    @if(!is_null($columnist->adminDetails))
+                                        {{ $columnist->adminDetails->about }}
+                                    @endif
+                                </p>
+                                <p>
+                                    <address>
+                                        @if(!is_null($columnist->adminDetails))
+                                            {{ $columnist->adminDetails->location }}
+                                        @endif
+                                    </address>
+                                </p>
+                                <p>
+                                    <div class="btn-group">
+                                        @if(!is_null($columnist->adminDetails))
+                                            @if(!is_null( $columnist->adminDetails->facebook ))
+                                                <a href="{{ $columnist->adminDetails->facebook }}">
+                                                    <i class="fa fa-facebook btn btn-default btn-xs"></i>
+                                                </a>
+                                            @endif
+                                            @if(!is_null( $columnist->adminDetails->twitter ))
+                                                <a href="{{ $columnist->adminDetails->twitter }}">
+                                                    <i class="fa fa-twitter btn btn-default btn-xs"></i>
+                                                </a>
+                                            @endif
+                                            @if(!is_null( $columnist->adminDetails->linkedIn ))
+                                                <a href="{{ $columnist->adminDetails->linkedIn }}">
+                                                    <i class="fa fa-linkedin btn btn-default btn-xs"></i>
+                                                </a>
+                                            @endif
+                                            @if(!is_null( $columnist->adminDetails->googlePlus ))
+                                                <a href="{{ $columnist->adminDetails->googlePlus }}">
+                                                    <i class="fa fa-google-plus btn btn-default btn-xs"></i>
+                                                </a>
+                                            @endif
+                                        @endif
+                                    </div>
+                                </p>
                             </div>
                         </div>
                     </div>
 
-                    <div class="panel-body">
+                    <div class="panel-body" style="min-height: 1200px">
+                        <h4>Жазылымдары: <span class="text-info">{{ $columnist->newsCount() }}</span></h4>
+
                         <div class="row row-with-margin">
-                            <div class="col-xs-12 col-sm-12 col-md-4 news-thumbnail text-justify pull-left">
-                                <img class="img-responsive image-main-news" src="{{ URL::asset('img/GetArticleImage.jpg') }}">
-                                <h5>Қытайда Ақжарқын Тұрлыбайдың ісіне қатысты тағы да сот отырысы өтеді</h5>
-                                <p class="news-datetime">September 10, 12:34</p>
-                                <div class="small statistics-style">
-                                    <span><i class="fa fa-eye"></i>1287</span>
-                                    <span><i class="fa fa-comment"></i>5</span>
+                            <?php $colors = array('text-green', 'text-red', 'text-blue', 'text-orange');?>
+                            @foreach($news as $index => $new)
+                                <div class="col-xs-12 col-sm-12 col-md-4 news-thumbnail text-justify pull-left @if($index%3==0) clear-left @endif">
+                                    <a href="{{ url('/newsread/'.$new->id) }}">
+                                        <img class="img-responsive image-main-news" src="{{ asset($new->avatar_picture) }}">
+                                        <h5 class="{{ $colors[$index%4] }}">{{ $new->category->name }}</h5>
+                                        <h5>{{ $new->title }}</h5>
+                                        <p class="news-datetime">{{ $new->created_at }}</p>
+                                        <div class="small statistics-style">
+                                            <span><i class="fa fa-eye"></i>{{ $new->views }}</span>
+                                            <span><i class="fa fa-comment"></i>{{ $new->comments_count() }}</span>
+                                        </div>
+                                    </a>
                                 </div>
-                            </div>
-
-                            <div class="col-xs-12 col-sm-12 col-md-4 news-thumbnail text-justify pull-left">
-                                <img class="img-responsive image-main-news" src="{{ URL::asset('img/news_events.jpg') }}">
-                                <h5>Қытайда Ақжарқын Тұрлыбайдың ісіне қатысты тағы да сот отырысы өтеді</h5>
-                                <p class="news-datetime">September 10, 12:34</p>
-                                <div class="small statistics-style">
-                                    <span><i class="fa fa-eye"></i>1287</span>
-                                    <span><i class="fa fa-comment"></i>5</span>
-                                </div>
-                            </div>
-
-                            <div class="col-xs-12 col-sm-12 col-md-4 news-thumbnail text-justify pull-left">
-                                <img class="img-responsive image-main-news" src="{{ URL::asset('img/newspaper.jpg') }}">
-                                <h5>Назарбаев "Астана" көлік-логистика орталығына барды</h5>
-                                <p class="news-datetime">September 10, 12:34</p>
-                                <div class="small statistics-style">
-                                    <span><i class="fa fa-eye"></i>1287</span>
-                                    <span><i class="fa fa-comment"></i>5</span>
-                                </div>
-                            </div>
-
-                            <div class="col-xs-12 col-sm-12 col-md-4 news-thumbnail text-justify pull-left clear-left">
-                                <img class="img-responsive image-main-news" src="{{ URL::asset('img/GetArticleImage.jpg') }}">
-                                <h5>Қытайда Ақжарқын Тұрлыбайдың ісіне қатысты тағы да сот отырысы өтеді</h5>
-                                <p class="news-datetime">September 10, 12:34</p>
-                                <div class="small statistics-style">
-                                    <span><i class="fa fa-eye"></i>1287</span>
-                                    <span><i class="fa fa-comment"></i>5</span>
-                                </div>
-                            </div>
-
-                            <div class="col-xs-12 col-sm-12 col-md-4 news-thumbnail text-justify pull-left">
-                                <img class="img-responsive image-main-news" src="{{ URL::asset('img/news_events.jpg') }}">
-                                <h5>Қытайда Ақжарқын Тұрлыбайдың ісіне қатысты тағы да сот отырысы өтеді</h5>
-                                <p class="news-datetime">September 10, 12:34</p>
-                                <div class="small statistics-style">
-                                    <span><i class="fa fa-eye"></i>1287</span>
-                                    <span><i class="fa fa-comment"></i>5</span>
-                                </div>
-                            </div>
-
-                            <div class="col-xs-12 col-sm-12 col-md-4 news-thumbnail text-justify pull-left">
-                                <img class="img-responsive image-main-news" src="{{ URL::asset('img/newspaper.jpg') }}">
-                                <h5>Назарбаев "Астана" көлік-логистика орталығына барды</h5>
-                                <p class="news-datetime">September 10, 12:34</p>
-                                <div class="small statistics-style">
-                                    <span><i class="fa fa-eye"></i>1287</span>
-                                    <span><i class="fa fa-comment"></i>5</span>
-                                </div>
+                            @endforeach
+                            <div id="pagination" class="pagination">
+                                {!! $news->render() !!}
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <div id="jarnama" class="col-xs-12 col-sm-12 col-md-6 col-lg-3">
+            <div id="jarnama" class="col-xs-12 col-sm-12 col-md-6 col-lg-3 pull-right">
                 <div class="hpanel hred">
                     <div class="panel-heading hbuilt">
                         <h6 class="text-center">Жарнама</h6>
@@ -104,7 +108,7 @@
                 </div>
             </div>
 
-            <div class="col-xs-12 col-sm-12 col-md-6 col-lg-3">
+            <div class="col-xs-12 col-sm-12 col-md-6 col-lg-3 pull-right">
                 <div class="hpanel hblue">
                     <div class="panel-heading hbuilt">
                         <h6 class="text-center">Соңғы жаңалықтар</h6>
@@ -126,7 +130,7 @@
                 </div>
             </div>
 
-            <div class="col-xs-12 col-sm-12 col-md-6 col-lg-3">
+            <div class="col-xs-12 col-sm-12 col-md-6 col-lg-3 pull-right">
                 <div class="hpanel hgreen">
                     <div class="panel-heading hbuilt">
                         <h6 class="text-center">Көп оқылғандар</h6>
@@ -148,7 +152,7 @@
                 </div>
             </div>
 
-            <div id="" class="col-xs-12 col-sm-12 col-md-6 col-lg-3">
+            <div id="" class="col-xs-12 col-sm-12 col-md-6 col-lg-3 pull-right">
                 <div class="hpanel horange">
                     <div class="panel-heading hbuilt">
                         <h6 class="text-center">Жолдамалар</h6>

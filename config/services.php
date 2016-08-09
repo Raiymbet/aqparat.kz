@@ -51,8 +51,8 @@ return [
         'redirect' => 'http://localhost:8080/aqparat.kz/public/socialite/callback/facebook',
     ],
     'twitter' => [
-        'client_id' => '',
-        'client_secret' => '',
+        'client_id' => 'UCf9uMLZuxvslY5giPzFhS8vf',
+        'client_secret' => 'DZ3gxVWtVsOA2tLBY2ZZb9HqM9xz8My4jkgI6ByJNgxzKKx9b1',
         'redirect' => 'http://localhost:8080/aqparat.kz/public/socialite/callback/twitter',
     ],
 ];

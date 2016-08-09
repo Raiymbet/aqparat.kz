@@ -66,13 +66,15 @@ class HomeController extends Controller
         $more_readed_news = $this->new_repository->getMoreReadedNews();
         $columnist = \App\Admin::find($id);
         $columnists = $this->admin_repository->getColumnists();
+        $news = $columnist->news()->paginate(18);
         return view('columnist', [
             'categories' => \App\Category::all(),
             'last_news' => $last_news,
             'last_posts' => $last_posts,
             'more_readed_news' => $more_readed_news,
             'columnist' => $columnist,
-            'columnists' => $columnists
+            'columnists' => $columnists,
+            'news' => $news
         ]);
     }
 

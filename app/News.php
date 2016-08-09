@@ -20,6 +20,10 @@ class News extends Model
      */
     protected $hidden = ['author_id', 'category_id', 'views', 'shares', 'likes', 'ismainnew'];
 
+    public function author(){
+        return $this->belongsTo(Admin::class, 'id');
+    }
+
     public function posts(){
         return $this->hasOne(Post::class);
     }
