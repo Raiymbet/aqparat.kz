@@ -37,6 +37,7 @@ class AdminCategoriesController extends Controller
         if($request->ajax()){
             $category = new Category();
             $category->name = $request->input('name');
+            $category->type = $request->input('type');
             $category->save();
 
             return "".$category->name." санаты сәтті құрылды!";
@@ -48,6 +49,7 @@ class AdminCategoriesController extends Controller
         if($request->ajax()){
             $category = Category::find($id);
             $category->name = $request->input('name');
+            $category->type = $request->input('type');
             $category->save();
 
             return "Санат сәтті өзгертілді!";

@@ -37,8 +37,8 @@ class PostRepository
         return Post::orderBy('created_at','desc')->get();
     }
 
-    public function getLastPosts()
+    public function getLastPosts($count)
     {
-        return Post::where('status', 'accepted')->whereNotNull('news_id')->orderBy('created_at', 'desc')->take(15)->get();
+        return Post::where('status', 'accepted')->whereNotNull('news_id')->orderBy('created_at', 'desc')->simplePaginate($count);
     }
 }

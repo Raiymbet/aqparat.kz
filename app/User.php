@@ -24,6 +24,11 @@ class User extends Authenticatable
         'remember_token',
     ];
 
+    public function userDetails()
+    {
+        return $this->hasOne(UserDetail::class);
+    }
+
     /**
      * Получить все posts пользователя.
      */
@@ -38,4 +43,9 @@ class User extends Authenticatable
     public function likes(){
         return $this->belongsToMany('App\News', 'likes', 'user_id', 'news_id');
     }
+
+    public function comment_likes(){
+        return $this->belongsToMany('App\Comment', 'comment_likes', 'user_id', 'comment_id');
+    }
+
 }

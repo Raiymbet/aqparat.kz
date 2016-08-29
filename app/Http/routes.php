@@ -22,7 +22,16 @@ Route::group(['middleware' => ['web']], function () {
     Route::get('/','HomeController@getHome');
     Route::get('/currency', 'HomeController@currency_nbk_get_rates');
     Route::get('/about', 'HomeController@getAbout');
+    Route::get('/contactus', 'HomeController@getContact');
+
     Route::get('/columnist/{columnistId}', 'HomeController@getColumnist');
+    Route::get('/roundtable/{categoryId}', 'HomeController@getRoundTable');
+    Route::get('/onfocus/{categoryId}', 'HomeController@getFocus');
+
+    Route::get('/comments', 'HomeController@getMyComments');
+    Route::get('/profile', 'HomeController@getMyProfile');
+    Route::get('/profile/{userId}', 'HomeController@getUserProfile');
+    Route::post('/profile', 'HomeController@postProfile');
 
     Route::get('/login', 'SocialiteController@getLoginUserForm');
     Route::get('socialite/{provider?}', 'SocialiteController@getSocialiteAuth');
@@ -35,13 +44,19 @@ Route::group(['middleware' => ['web']], function () {
     Route::post('/myposts/search', 'PostController@search');
 
     Route::get('/newsread/{newId}', 'NewController@getReadNew');
-    Route::post('/newsread/{newId}', 'NewController@postComment');
+    Route::get('/print/{newId}', 'NewController@getPrint');
     Route::get('/newsread/translate/{newId}', 'NewController@getTranslate');
     Route::get('/newsread/{newId}/islikedbyme', 'NewController@isLikedByMe');
     Route::post('/like/{new}', 'NewController@like');
     Route::get('/categorynews/{categoryId}', 'NewController@getCategoryNews');
+    
     Route::get('/search', 'NewController@getSearch');
     Route::post('/search', 'NewController@postSearch');
+
+    Route::get('/news/ajax/{type}', 'NewController@getNewsPaginate' );
+
+    Route::post('/newsread/{newId}', 'CommentController@postComment');
+    Route::post('/comment/like/{comment}', 'CommentController@like');
 
 
     /**

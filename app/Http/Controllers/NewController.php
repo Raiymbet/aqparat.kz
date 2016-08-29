@@ -13,6 +13,7 @@ use App\Repositories\PostRepository;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
+use View;
 
 class NewController extends Controller
 {
@@ -27,44 +28,115 @@ class NewController extends Controller
         $this->post_repository = $postRepository;
     }
 
-    public function getReadNew($id)
+    public function getReadNew(Request $request, $id)
     {
+
         $new = News::find($id);
         $new->views = $new->views+1;
         $new->save();
 
         $translates = $new->translates;
         $columnists = $this->admin_repository->getColumnists();
-        $last_news = $this->new_repository->getLastNews();
-        $last_posts = $this->post_repository->getLastPosts();
-        $more_readed_news = $this->new_repository->getMoreReadedNews();
+        //$last_news = $this->new_repository->getLastNews();
+        //$last_posts = $this->post_repository->getLastPosts();
+        //$more_readed_news = $this->new_repository->getMoreReadedNews();
+        $recommend_news = $this->new_repository->getRecommendNews($new);
+        $comments = $new->comments_without_replies()->simplePaginate(3);
+        
+        //dd($comments->userIsLikedComment(Auth::user()->id));
+
+        $simple_categories = Category::ofType('simple')->get();
+        $round_table_categories = Category::ofType('point')->get();
+        $focus_categories = Category::ofType('focus')->get();
+
         return view('newsread', [
-            'categories' => Category::all(),
+            'categories' => $simple_categories,
+            'round_tables' => $round_table_categories,
+            'onfocus' => $focus_categories,
             'new' => $new,
             'translates' => $translates,
-            'comments' => $new->comments,
+            'comments' => $comments,
             'columnists' => $columnists,
-            'last_news' => $last_news,
-            'last_posts' => $last_posts,
-            'more_readed_news' => $more_readed_news,
+            //'last_news' => $last_news,
+            //'last_posts' => $last_posts,
+            //'more_readed_news' => $more_readed_news,
+            'recommend_news' => $recommend_news,
+        ]);
+    }
+
+    public function getNewsPaginate(Request $request, $type){
+        //$news_per_page = Input::get('per_pg', 9);
+        //dd($request);
+        $screen = $request->input('screen');
+        $columnist_id = $request->input('columnist');
+        $category_id = $request->input('category');
+        $view = null;
+        if($type == 'main_news'){
+            $news = $this->new_repository->getMainNews();
+            $view = View::make('get_mainnews')->with(['main_news' => $news, 'screen' => $screen]);
+        }else if($type == 'last_news'){
+            $news = $this->new_repository->getLastNews(12);
+            $view = View::make('get_sorted_news')->with(['news' => $news, 'screen' => $screen]);
+        }else if($type == 'popular_news'){
+            $news = $this->new_repository->getMoreReadedNews(12);
+            $view = View::make('get_sorted_news')->with(['news' => $news, 'screen' => $screen]);
+        }else if($type == 'posted_news'){
+            $news = $this->post_repository->getLastPosts(12);
+            $view = View::make('get_posted_news')->with(['news' => $news, 'screen' => $screen]);
+        }else if($type == 'columnist_news'){
+            $news = $this->new_repository->getColumnistNews($columnist_id, 12);
+            $view = View::make('get_mainnews')->with(['main_news' => $news, 'screen' => $screen]);
+        }else if($type == 'category_news'){
+            $news = $this->new_repository->getCategoryNews($category_id, 12);
+            $view = View::make('get_category_news')->with(['news' => $news]);
+        }else if($type == 'round_table'){
+            $news = $this->new_repository->getCategoryNews($category_id, 12);
+            $view = View::make('get_roundtable_news')->with(['news' => $news]);
+        }
+
+        return $view;
+    }
+
+    public function getPrint($id){
+        $new = News::find($id);
+        return view('print', [
+            'new' => $new
         ]);
     }
 
     public function getCategoryNews($id)
     {
         $columnists = $this->admin_repository->getColumnists();
-        $last_news = $this->new_repository->getLastNews();
-        $last_posts = $this->post_repository->getLastPosts();
-        $more_readed_news = $this->new_repository->getMoreReadedNews();
-        $news = $this->new_repository->getCategoryNews($id);
+        //$last_news = $this->new_repository->getLastNews();
+        //$last_posts = $this->post_repository->getLastPosts();
+        //$more_readed_news = $this->new_repository->getMoreReadedNews();
+        //$news = $this->new_repository->getCategoryNews($id);
+        $slider_news = $this->new_repository->getCategoryNewsForSlider($id);
+
+        $simple_categories = Category::ofType('simple')->get();
+        $round_table_categories = Category::ofType('point')->get();
+        $focus_categories = Category::ofType('focus')->get();
+
+        $array_news = array();
+        foreach(Category::ofExceptCategory('simple', $id)->get() as $category){
+            array_push($array_news,$category->latestNewsPerCategory()->get());
+        }
+        //dd($array_news);
+
+        //dd(Category::ofExceptCategory('simple', $id)->first()->latestNewsPerCategory()->get());
+
         return view('categorynews', [
-            'category' => Category::find($id)->name,
-            'categories' => \App\Category::all(),
+            'categories' => $simple_categories,
+            'round_tables' => $round_table_categories,
+            'onfocus' => $focus_categories,
+            'slider_news' => $slider_news,
+            'category' => Category::find($id),
             'columnists' => $columnists,
-            'news' => $news,
-            'last_news' => $last_news,
-            'last_posts' => $last_posts,
-            'more_readed_news' => $more_readed_news,
+            //'news' => $news,
+            'latestNewsPerCategory' => Category::ofExceptCategory('simple', $id)->first()->latestNewsPerCategory()->get()//$array_news
+            //'last_news' => $last_news,
+            //'last_posts' => $last_posts,
+            //'more_readed_news' => $more_readed_news,
         ]);
     }
 
@@ -81,16 +153,25 @@ class NewController extends Controller
         }
 
         $columnists = $this->admin_repository->getColumnists();
-        $last_news = $this->new_repository->getLastNews();
-        $last_posts = $this->post_repository->getLastPosts();
-        $more_readed_news = $this->new_repository->getMoreReadedNews();
+        //$last_news = $this->new_repository->getLastNews();
+        //$last_posts = $this->post_repository->getLastPosts();
+        //$more_readed_news = $this->new_repository->getMoreReadedNews();
+        $recommend_news = $this->new_repository->getRecommendedNews();
+
+        $simple_categories = Category::ofType('simple')->get();
+        $round_table_categories = Category::ofType('point')->get();
+        $focus_categories = Category::ofType('focus')->get();
+
         return view('search', [
+            'categories' => $simple_categories,
+            'round_tables' => $round_table_categories,
+            'onfocus' => $focus_categories,
             'searchNews' => $searchedNews,
-            'categories' => \App\Category::all(),
             'columnists' => $columnists,
-            'last_news' => $last_news,
-            'last_posts' => $last_posts,
-            'more_readed_news' => $more_readed_news,
+            //'last_news' => $last_news,
+            //'last_posts' => $last_posts,
+            //'more_readed_news' => $more_readed_news,
+            'recommend_news' => $recommend_news,
         ]);
     }
 
@@ -126,20 +207,6 @@ class NewController extends Controller
     {
         $new = News::find($id);
         return $new;
-    }
-
-    public function postComment(Request $request, $id)
-    {
-        $this->validate($request, [
-            'comment' => 'required|max:2000',
-        ]);
-
-        $comment = new Comment();
-        $comment->text = $request->input('comment');
-        $comment->user_id = $request->user()->id;
-        $comment->news_id = $id;
-        $comment->save();
-        return "Сіздің пікіріңіз қабылданды!";
     }
 
     public function isLikedByMe($id)

@@ -17,6 +17,7 @@ class CreateNewsTable extends Migration
             $table->string('title');
             $table->integer('author_id')->unsigned();
             $table->integer('category_id')->unsigned();
+            $table->string('short_description', 400);
             $table->text('text');
             $table->string('avatar_picture')->nullable();
             $table->boolean('ismainnew')->default(false);

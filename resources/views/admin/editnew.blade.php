@@ -33,6 +33,9 @@
                             </select>
                         </div>
                         <div class="form-group">
+                            <input id="short_description" value="{{$new->short_description}}" name="short_description" type="text" max="400" class="form-control" placeholder="Қысқаша сипаттама">
+                        </div>
+                        <div class="form-group">
                             <select id="language" class="form-control" name="language">
                                 <option selected value="kz">KZ</option>
                                 <option value="ru">RU</option>
@@ -75,15 +78,17 @@
             event.preventDefault();
 
             var title = $('#title').val(),
+                    short_description = $('#short_description').val(),
                     category = $('#category').val(),
                     language = $('#language').val(),
                     text = $('#summernote').summernote('code');
-            if(title && category && language && text){
+            if(title && category && language && text && short_description){
                 //ajax post the form
                 $.post("{{url('/admin/new/edit/'.$new->id)}}", {
                     title: title,
                     category: category,
                     language: language,
+                    short_description: short_description,
                     text: text
                 }).done(function(data) {
                     swal({

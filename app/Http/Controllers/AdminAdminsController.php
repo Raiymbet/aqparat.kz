@@ -33,13 +33,26 @@ class AdminAdminsController extends Controller
     public function postAdd(Request $request)
     {
         if($request->ajax()){
+            $password = str_random(8);
             $admin = new Admin();
             $admin->name = $request->input('name');
             $admin->email = $request->input('email');
             $admin->type = $request->input('type');
-            $admin->password = str_random(8);
-            $admin->save();
+            $admin->password = bcrypt($password);
 
+            $data = [
+                'name' => $admin->name,
+                'email' => $admin->email,
+                'password' => $password,
+            ];
+
+            Mail::raw($data, function($message) use ($data)
+            {
+                $message->from('tukpetov@bk.ru', 'Raiymbet Tukpetov');
+                $message->to($data['email'])->subject('Aqparat.kz сайтының жаңа қолданушысы ');
+            });
+
+            $admin->save();
             return "".$admin->name." қолданушысы сәтті құрылды!";
         }
     }

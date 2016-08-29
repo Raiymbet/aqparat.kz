@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
     <title>Aqparat.kz</title>
+    <link rel="shortcut icon" type="image/x-icon" href="{{ URL::asset('img/title_logo.png') }}" />
 
     <!-- CSS and Javascript -->
     <!-- Fonts -->
@@ -34,7 +35,7 @@
                 <div class="row">
                     <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
                         <div class="header-panel animated fadeIn">
-                            <div class="hpanel hblue" style="margin-bottom: 20px;">
+                            <div class="hpanel hblue m-b-md">
                                 <div class="panel-heading hbuilt text-center">
                                     <h6>Жүйеге әлеуметтік желі арқылы кіру</h6>
                                 </div>
@@ -53,7 +54,7 @@
                                     </a>-->
                                     <div class="checkbox">
                                         <!-- Squared FOUR -->
-                                        <div class="margin-left-20">
+                                        <div class="m-l-md">
                                             <input type="checkbox" value="None" id="remember" name="check" />
                                             <label for="remember">Remember login</label>
                                         </div>

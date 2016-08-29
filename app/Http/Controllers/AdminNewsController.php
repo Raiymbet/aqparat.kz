@@ -59,6 +59,7 @@ class AdminNewsController extends Controller
                     $new->title = $request->input('title');
                     $new->author_id = Auth::guard('admin')->user()->id;
                     $new->category_id = $request->input('category');
+                    $new->short_description = $request->input('short_description');
                     $new->text = $request->input('text');
                     $new->language = $request->input('language');
                     $new->views = 0;
@@ -89,6 +90,7 @@ class AdminNewsController extends Controller
                 $new->title = $request->input('title');
                 $new->author_id = Auth::guard('admin')->user()->id;
                 $new->category_id = $request->input('category');
+                $new->short_description = $request->input('short_description');
                 $new->text = $request->input('text');
                 $new->language = $request->input('language');
                 $new->views = 0;
@@ -120,6 +122,7 @@ class AdminNewsController extends Controller
                 $new->title = $request->input('title');
                 //$new->author_id = Auth::guard('admin')->user()->id;
                 $new->category_id = $request->input('category');
+                $new->short_description = $request->input('short_description');
                 $new->text = $request->input('text');
                 $new->language = $request->input('language');
                 //$new->views = 0;
@@ -155,7 +158,7 @@ class AdminNewsController extends Controller
         if(SliderNew::where('new_id', $new->id)->exists()){
             $message = "Жаңалық слайд ретінде таңдалып қойылған!";
             $message_type = "error";
-        }else if(count($sliders)>=6){
+        }else if(count($sliders)>=5){
             $slider = SliderNew::orderBy('updated_at', 'asc')->first();
             //Delete image and thumbnail from slider
             File::delete(public_path($destinationOfImage.$slider->news->id.'.jpg'));

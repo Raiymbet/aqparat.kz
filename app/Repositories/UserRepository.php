@@ -8,9 +8,16 @@
 
 namespace App\Repositories;
 
+use App\Comment;
 use App\User;
 
 class UserRepository
 {
-    
+
+    public function getComments(User $user)
+    {
+        return Comment::where('user_id', $user->id)
+            ->orderBy('created_at', 'desc')
+            ->get();
+    }
 }

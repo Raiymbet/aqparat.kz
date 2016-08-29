@@ -37,16 +37,25 @@ class PostController extends Controller
     {
         $columnists = $this->admin_repository->getColumnists();
         $posts = $this->post_repository->getPosts($request->user());
-        $last_news = $this->new_repository->getLastNews();
-        $last_posts = $this->post_repository->getLastPosts();
-        $more_readed_news = $this->new_repository->getMoreReadedNews();
+        //$last_news = $this->new_repository->getLastNews();
+        //$last_posts = $this->post_repository->getLastPosts();
+        //$more_readed_news = $this->new_repository->getMoreReadedNews();
+        $recommend_news = $this->new_repository->getRecommendedNews();
+
+        $simple_categories = Category::ofType('simple')->get();
+        $round_table_categories = Category::ofType('point')->get();
+        $focus_categories = Category::ofType('focus')->get();
+        
         return view('myposts', [
-            'categories' => Category::all(),
+            'categories' => $simple_categories,
+            'round_tables' => $round_table_categories,
+            'onfocus' => $focus_categories,
             'posts' => $posts,
             'columnists' => $columnists,
-            'last_news' => $last_news,
-            'last_posts' => $last_posts,
-            'more_readed_news' => $more_readed_news,
+            //'last_news' => $last_news,
+            //'last_posts' => $last_posts,
+            //'more_readed_news' => $more_readed_news,
+            'recommend_news' => $recommend_news,
         ]);
     }
     

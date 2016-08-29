@@ -32,6 +32,9 @@
                             </select>
                         </div>
                         <div class="form-group">
+                            <input id="short_description" name="short_description" type="text" max="400" class="form-control" placeholder="Қысқаша сипаттамасы">
+                        </div>
+                        <div class="form-group">
                             <select id="language" class="form-control" name="language">
                                 <option selected value="kz">KZ</option>
                                 <option disabled value="ru">RU</option>
@@ -74,10 +77,11 @@
 
             var title = $('#title').val(),
                     category = $('#category').val(),
+                    short_description = $('#short_description').val(),
                     language = $('#language').val(),
                     text = $('#summernote').summernote('code');
 
-            if(title && category && language && text){
+            if(title && category && language && text && short_description){
                 //ajax post the form
                 var formData = new FormData($(this)[0]);
                 formData.append('text', text);

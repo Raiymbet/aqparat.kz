@@ -66,7 +66,9 @@
                             </div>
                         </div>
                         <div class="panel-body">
-                            <p>{!! str_limit($new->text, 200)!!}</p>
+                            <p>
+                                {!! str_limit(strip_tags($new->text), 200) !!}
+                            </p>
                             <div class="row">
                                 <div class="col-sm-4">
                                     <div class="">Авторы:</div>

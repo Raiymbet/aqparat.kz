@@ -8,6 +8,7 @@
 
 namespace App\Repositories;
 
+use App\Admin;
 use App\News;
 use App\SliderNew;
 use App\Translate;
@@ -15,16 +16,42 @@ use App\Translate;
 class NewRepository
 {
 
-    public function getLastNews(){
-        return News::where('language', 'kz')->orderBy('created_at', 'desc')->take(15)->get();
+    public function getLastNews($count){
+        return News::where('language', 'kz')->orderBy('created_at', 'desc')->simplePaginate($count);
     }
 
-    public function getMoreReadedNews(){
-        return News::where('language', 'kz')->orderBy('views', 'desc')->orderBy('created_at', 'desc')->take(15)->get();
+    public function getMoreReadedNews($count){
+        return News::where('language', 'kz')->orderBy('views', 'desc')->orderBy('created_at', 'desc')->simplePaginate($count);
     }
 
-    public function getCategoryNews($id){
-        return News::where('language', 'kz')->where('category_id', $id)->orderBy('created_at', 'desc')->simplePaginate(12);
+    public function getFocuses($count, $array_ids){
+        return News::where('language', 'kz')->whereIn('category_id', $array_ids)->orderBy('created_at', 'desc')->take($count)->get();
+    }
+
+    public function getRoundTables($count, $array_ids){
+        return News::where('language', 'kz')->whereIn('category_id', $array_ids)->orderBy('created_at', 'desc')->take($count)->get();
+    }
+
+    public function getCategoryNewsForSlider($id){
+        return News::where('language', 'kz')->where('category_id', $id)->orderBy('created_at', 'desc')->take(5)->get();
+    }
+
+    public function getCategoryNews($id, $count){
+        return News::where('language', 'kz')->where('category_id', $id)->orderBy('created_at', 'desc')->skip(5)->simplePaginate($count);
+    }
+
+    public function getColumnistNews($id, $count){
+        return Admin::find($id)->news()->where('language', 'kz')->orderBy('created_at', 'desc')->simplePaginate($count);
+    }
+
+    public function getCategoryAdvancedNews($array_ids){
+        return News::where('language', 'kz')
+            ->whereIn('category_id', $array_ids)
+            ->orderBy('views', 'desc')
+            ->orderBy('likes', 'desc')
+            ->groupBy('category_id')
+            ->take(8)
+            ->get();
     }
 
     public function getSliderNews(){
@@ -32,7 +59,7 @@ class NewRepository
     }
 
     public function getMainNews(){
-        return News::where('language', 'kz')->where('ismainnew', true)->orderBy('created_at', 'desc')->simplePaginate(6);
+        return News::where('language', 'kz')->where('ismainnew', true)->orderBy('created_at', 'desc')->simplePaginate(18);
     }
 
     public function getSearchNews($text, $category, $date){
@@ -41,5 +68,21 @@ class NewRepository
             ->orWhere('title', 'LIKE', '%'.$text.'%')
             ->orderBy('created_at', 'desc')
             ->paginate(6);
+    }
+
+    public function getRecommendNews(News $new){
+        return News::where('language', '=', 'kz')
+            ->where('category_id', $new->category->id)
+            ->where('id', '!=', $new->id)
+            ->orderBy('views', 'desc')
+            ->orderBy('created_at', 'desc')
+            ->take(6)->get();
+    }
+
+    public function getRecommendedNews(){
+        return News::where('language', '=', 'kz')
+            ->orderBy('views', 'desc')
+            ->orderBy('created_at', 'desc')
+            ->take(6)->get();
     }
 }

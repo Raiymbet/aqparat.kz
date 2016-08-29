@@ -18,6 +18,7 @@ class CreateCommentsTable extends Migration
             $table->integer('user_id')->unsigned();
             $table->integer('news_id')->unsigned();
             $table->boolean('baned');
+            $table->boolean('reply');
             $table->timestamps();
 
             /* Foreign Keys */

@@ -1,19 +1,18 @@
 @extends('layouts.home')
 
 @section('content')
-    <div class="content">
-        <div class="row">
+    <?php $colors = array('text-green', 'text-red', 'text-blue', 'text-orange');?>
+
+    <div class="col-lg-12 header-two text-uppercase" style="background: #3a97bf; color: #FFFFFF; margin-top: 1px; padding: 9px 50px;">
+        <div class="header-row">
+            <span class="m-l-xs"><strong>Іздеу</strong></span>
+        </div>
+    </div>
+    <div class="col-lg-12 header-three">
+        <div class="row header-row">
 
             <div class="col-xs-12 col-sm-12 col-md-12 col-lg-9">
                 <div class="hpanel forum-box">
-                    <div class="panel-heading hbuilt">
-                        <ol class="hbreadcrumb breadcrumb">
-                            <li><a href="#">Негізгі бет</a></li>
-                            <li class="active">
-                                <span>Жаңалық іздеу</span>
-                            </li>
-                        </ol>
-                    </div>
                     <div class="panel-body">
                         <form id="advanced_search_form" class="form-horizontal">
 
@@ -97,147 +96,25 @@
                     </div>
                     <div class="panel-body hblue">
                         <div class="row row-with-margin">
-                            <div class="col-xs-12 col-sm-12 col-md-4 news-thumbnail text-justify pull-left">
-                                <img class="img-responsive image-main-news" src="{{ URL::asset('img/GetArticleImage.jpg') }}">
-                                <h5>Қытайда Ақжарқын Тұрлыбайдың ісіне қатысты тағы да сот отырысы өтеді</h5>
-                                <p class="news-datetime">September 10, 12:34</p>
-                                <div class="small statistics-style">
-                                    <span><i class="fa fa-heart"></i>128</span>
-                                    <span><i class="fa fa-share-alt"></i>12</span><br>
-                                    <span><i class="fa fa-eye"></i>1287</span>
-                                    <span><i class="fa fa-comment"></i>5</span>
-                                </div>
-                            </div>
-
-                            <div class="col-xs-12 col-sm-12 col-md-4 news-thumbnail text-justify pull-left">
-                                <img class="img-responsive image-main-news" src="{{ URL::asset('img/news_events.jpg') }}">
-                                <h5>Қытайда Ақжарқын Тұрлыбайдың ісіне қатысты тағы да сот отырысы өтеді</h5>
-                                <p class="news-datetime">September 10, 12:34</p>
-                                <div class="small statistics-style">
-                                    <span><i class="fa fa-heart"></i>128</span>
-                                    <span><i class="fa fa-share-alt"></i>12</span><br>
-                                    <span><i class="fa fa-eye"></i>1287</span>
-                                    <span><i class="fa fa-comment"></i>5</span>
-                                </div>
-                            </div>
-
-                            <div class="col-xs-12 col-sm-12 col-md-4 news-thumbnail text-justify pull-left">
-                                <img class="img-responsive image-main-news" src="{{ URL::asset('img/newspaper.jpg') }}">
-                                <h5>Назарбаев "Астана" көлік-логистика орталығына барды</h5>
-                                <p class="news-datetime">September 10, 12:34</p>
-                                <div class="small statistics-style">
-                                    <span><i class="fa fa-heart"></i>128</span>
-                                    <span><i class="fa fa-share-alt"></i>12</span><br>
-                                    <span><i class="fa fa-eye"></i>1287</span>
-                                    <span><i class="fa fa-comment"></i>5</span>
-                                </div>
-                            </div>
-
-                            <div class="col-xs-12 col-sm-12 col-md-4 news-thumbnail text-justify pull-left clear-left">
-                                <img class="img-responsive image-main-news" src="{{ URL::asset('img/GetArticleImage.jpg') }}">
-                                <h5>Қытайда Ақжарқын Тұрлыбайдың ісіне қатысты тағы да сот отырысы өтеді</h5>
-                                <p class="news-datetime">September 10, 12:34</p>
-                                <div class="small statistics-style">
-                                    <span><i class="fa fa-heart"></i>128</span>
-                                    <span><i class="fa fa-share-alt"></i>12</span><br>
-                                    <span><i class="fa fa-eye"></i>1287</span>
-                                    <span><i class="fa fa-comment"></i>5</span>
-                                </div>
-                            </div>
-
-                            <div class="col-xs-12 col-sm-12 col-md-4 news-thumbnail text-justify pull-left">
-                                <img class="img-responsive image-main-news" src="{{ URL::asset('img/news_events.jpg') }}">
-                                <h5>Қытайда Ақжарқын Тұрлыбайдың ісіне қатысты тағы да сот отырысы өтеді</h5>
-                                <p class="news-datetime">September 10, 12:34</p>
-                                <div class="small statistics-style">
-                                    <span><i class="fa fa-heart"></i>128</span>
-                                    <span><i class="fa fa-share-alt"></i>12</span><br>
-                                    <span><i class="fa fa-eye"></i>1287</span>
-                                    <span><i class="fa fa-comment"></i>5</span>
-                                </div>
-                            </div>
-
-                            <div class="col-xs-12 col-sm-12 col-md-4 news-thumbnail text-justify pull-left">
-                                <img class="img-responsive image-main-news" src="{{ URL::asset('img/newspaper.jpg') }}">
-                                <h5>Назарбаев "Астана" көлік-логистика орталығына барды</h5>
-                                <p class="news-datetime">September 10, 12:34</p>
-                                <div class="small statistics-style">
-                                    <span><i class="fa fa-heart"></i>128</span>
-                                    <span><i class="fa fa-share-alt"></i>12</span><br>
-                                    <span><i class="fa fa-eye"></i>1287</span>
-                                    <span><i class="fa fa-comment"></i>5</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="col-xs-12 col-sm-12 col-md-6 col-lg-3 pull-right">
-                <div class="hpanel hblue">
-                    <div class="panel-heading hbuilt">
-                        <h6 class="text-center">Соңғы жаңалықтар</h6>
-                    </div>
-                    <div class="panel-body" style="overflow-x: scroll">
-                        <div id="last-news">
-                            <ul class="list-unstyled" id="last-news-list">
-                                @foreach($last_news as $last_new)
-                                    <li>
-                                        <a href="{{ url('/newsread/'.$last_new->id) }}">
-                                            <span class="news-datetime">{{ $last_new->created_at }}</span>
-                                            <p>{{ $last_new->title }}</p>
-                                        </a>
-                                    </li>
-                                @endforeach
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="col-xs-12 col-sm-12 col-md-6 col-lg-3 pull-right">
-                <div class="hpanel hgreen">
-                    <div class="panel-heading hbuilt">
-                        <h6 class="text-center">Көп оқылғандар</h6>
-                    </div>
-                    <div class="panel-body panel-scrollbar">
-                        <div id="more-reads-news">
-                            <ul class="list-unstyled" id="more-reads-news-list">
-                                @foreach($more_readed_news as $more_readed_new)
-                                    <li>
-                                        <a href="{{url('/newsread/'.$more_readed_new->id)}}">
-                                            <span class="news-datetime">{{ $more_readed_new->created_at }}</span>
-                                            <p>{{ $more_readed_new->title }}</p>
-                                        </a>
-                                    </li>
-                                @endforeach
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div id="" class="col-xs-12 col-sm-12 col-md-6 col-lg-3 pull-right">
-                <div class="hpanel horange">
-                    <div class="panel-heading hbuilt">
-                        <h6 class="text-center">Жолдамалар</h6>
-                    </div>
-                    <div class="panel-body" style="overflow-x: scroll">
-                        <ul class="list-unstyled" id="posts-list">
-                            @foreach($last_posts as $last_post)
-                                <li>
-                                    <a href="#">
-                                        <span><i class="fa fa-check-square-o fa-lg"></i></span>
-                                        <span class="news-datetime">{{ $last_post->created_at }}</span>
-                                        <p>{{ $last_post->text }}</p>
+                            <?php $colors = array('text-green', 'text-red', 'text-blue', 'text-orange');?>
+                            @foreach($recommend_news as $index => $recommend_new)
+                                <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4 news-thumbnail text-justify pull-left @if($index%3==0) clear-left @endif">
+                                    <a href="{{ url('/newsread/'.$recommend_new->id) }}">
+                                        <img class="img-responsive image-main-news" src="{{ asset($recommend_new->avatar_picture) }}">
+                                        <h5 class="{{ $colors[$index%4] }}">{{ $recommend_new->category->name }}</h5>
+                                        <h5>{{ $recommend_new->title }}</h5>
+                                        <p class="news-datetime">{{ $recommend_new->created_at->format('F j, H:i') }}</p>
+                                        <div class="small statistics-style">
+                                            <span><i class="fa fa-eye"></i>{{ $recommend_new->views }}</span>
+                                            <span><i class="fa fa-comment"></i>{{ $recommend_new->comments_count() }}</span>
+                                        </div>
                                     </a>
-                                </li>
+                                </div>
                             @endforeach
-                        </ul>
+                        </div>
                     </div>
                 </div>
             </div>
-
         </div>
     </div>
 @endsection
@@ -245,6 +122,25 @@
 @section('script')
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
     <script type="text/javascript">
+
+        $(window).on('hashchange', function() {
+            if (window.location.hash) {
+                var page = window.location.hash.replace('#', '');
+                if (page == Number.NaN || page <= 0) {
+                    return false;
+                } else {
+                    getPosts(page);
+                }
+            }
+        });
+
+        $(document).ready(function() {
+            $(document).on('click', '.pagination a', function (e) {
+                e.preventDefault();
+                getPosts($(this).attr('href').split('page=')[1]);
+            });
+        });
+
         $('#advanced_search_form').submit( function (event) {
             event.preventDefault();
 
@@ -266,5 +162,18 @@
                 $('#news_items').html(data);
             });
         });
+
+        function getPosts(page) {
+            $.ajax({
+                url : '?page=' + page,
+                dataType: 'json'
+            }).done(function (data) {
+                console.log(data);
+                $('#news_items').html(data);
+                location.hash = page;
+            }).fail(function () {
+                alert('News could not be loaded.');
+            });
+        }
     </script>
 @endsection

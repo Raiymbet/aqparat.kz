@@ -46,8 +46,8 @@ return [
         'redirect' => 'http://localhost:8080/aqparat.kz/public/socialite/callback/google',
     ],
     'facebook' => [
-        'client_id' => '852011078263695',
-        'client_secret' => '4295ac1b9e3621829aa4e57a54f5bc13',
+        'client_id' => '866679340130202',
+        'client_secret' => '4491a9231e157822f18c8438c3e220b5',
         'redirect' => 'http://localhost:8080/aqparat.kz/public/socialite/callback/facebook',
     ],
     'twitter' => [
