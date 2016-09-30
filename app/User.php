@@ -48,4 +48,18 @@ class User extends Authenticatable
         return $this->belongsToMany('App\Comment', 'comment_likes', 'user_id', 'comment_id');
     }
 
+    //1 User has Many Notifications
+    public function notifications(){
+        return $this->hasMany(Notification::class);
+    }
+
+    //to retrieve new Notification
+    public function newNotification(){
+
+        $notification = new Notification;
+        $notification->user()->associate($this);
+
+        return $notification;
+    }
+
 }

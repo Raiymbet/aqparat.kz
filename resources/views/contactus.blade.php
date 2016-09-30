@@ -4,13 +4,13 @@
 @section('content')
     <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 header-two text-uppercase" style="background: #3a97bf; color: #FFFFFF; margin-top: 1px;">
         <div class="header-row">
-            <span class="m-l-xs">Contact Us</span>
+            <span class="m-l-xs">Байланыс</span>
         </div>
     </div>
     <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 header-three">
         <div class="row header-row">
             <div class="row-content">
-                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                <div class="col-xs-12 col-sm-12 col-md-9 col-lg-9">
                     <div class="hpanel">
                         <div class="panel-body">
 

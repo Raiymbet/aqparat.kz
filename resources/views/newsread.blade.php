@@ -2,6 +2,30 @@
 
 @section('head')
     <link rel="stylesheet" type="text/css" href="{{ URL::asset('css/flag-icon.css') }}">
+    <link href="http://vjs.zencdn.net/5.11.6/video-js.css" rel="stylesheet">
+
+    <!-- If you'd like to support IE8 -->
+    <script src="http://vjs.zencdn.net/ie8/1.1.2/videojs-ie8.min.js"></script>
+
+    <title>{{ $new->title }}</title>
+    <!-- Meta tags OG -->
+    <meta property="og:type" content="article">
+    <meta property="og:url" content="{{ Request::fullUrl()}}">
+    <meta property="og:site_name" content="Aqparat.kz">
+    <meta property="og:title" content="{{ $new->title }}">
+    <meta property="og:description" content="{{ $new->short_description }}">
+    <meta property="og:image" content="{{ URL::asset($new->avatar_picture) }}">
+    <meta property="og:locale" content="kk_KZ">
+    <meta property="article:author" content="{{ $new->author->name }}">
+    <meta property="article:section" content="{{ $new->category->name }}">
+    <meta property="article:tag" content="{{ $new->tags }}">
+
+    <!-- Meta tags Twitter Cards -->
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:url" content="{{ Request::fullUrl()}}">
+    <meta name="twitter:title" content="{{ $new->title }}">
+    <meta name="twitter:description" content="{{ $new->short_description }}">
+    <meta name="twitter:image" content="{{ URL::asset($new->avatar_picture) }}">
 @endsection
 
 @section('content')
@@ -17,9 +41,9 @@
 
                 <div class="col-xs-12 col-sm-12 col-md-12 col-lg-9">
                     <div class="hpanel blog-article-box">
-                        <div class="panel-body" style="padding-top: 10px;">
+                        <div class="panel-body p-t-xs">
                             <div class="row no-margin">
-                                <div class="media" style="padding-bottom: 20px; border-bottom: 1px solid #e4e5e7">
+                                <div class="media p-b" style="border-bottom: 1px solid #e4e5e7">
                                     <div class="media-image pull-left news-author-avatar">
                                         <a href="{{ url('/profile/'.$new->author->id) }}">
                                             <img class="img-responsive" width="100" height="100" src="{{ URL::asset($new->author->avatar) }}" alt="User Profile">
@@ -39,10 +63,16 @@
                                                 {!! str_limit(strip_tags($new->author->adminDetails->about), 300) !!}
                                             @endif
                                         </small>
+                                        @if(!is_null($new->posts))
+                                            <br>
+                                            <small>
+                                                posted by <a href="#">{{$new->posts->user->name}}</a>
+                                            </small>
+                                        @endif
                                     </div>
                                 </div>
                                 <div class="pull-left">
-                                    {{ $new->created_at->format('d.m.y H:i') }}
+                                    {{ $new->created_at->format('F j, Y, H:i') }}
                                 </div>
                                 <a href="{{ url('/print/'.$new->id) }}" id="print" class="btn btn-default pull-right">
                                     <i class="fa fa-print fa-lg"></i>
@@ -50,10 +80,22 @@
 
                                 <div class="btn-group pull-right">
                                     <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                    <span id="selected-language">
-                                        <i class="flag-icon flag-icon-kz"></i>
-                                        <span>Kazakh</span>
-                                    </span>
+                                        @if($new->language == 'kz')
+                                            <span id="selected-language">
+                                                <i class="flag-icon flag-icon-kz"></i>
+                                                <span>Kazakh</span>
+                                            </span>
+                                        @elseif($new->language == 'ru')
+                                            <span id="language-ru">
+                                                <i class="flag-icon flag-icon-ru"></i>
+                                                <span>Russian</span>
+                                            </span>
+                                        @elseif($new->language == 'en')
+                                            <span id="language-en">
+                                                <i class="flag-icon flag-icon-gb"></i>
+                                                <span>English</span>
+                                            </span>
+                                        @endif
                                         <span class="caret"></span>
                                     </button>
                                     <ul class="dropdown-menu" id="language-dropdown">
@@ -89,149 +131,64 @@
                             </div>
                             <h3 id="new_title"><strong>{{ $new->title }}</strong></h3>
 
-                            <br>
-                            <br>
-                            {!! SocShare::renderJs() !!}
-                            <span class="st_facebook_hcount" displaytext="Facebook" st_processed="yes">
-                            <span style="text-decoration:none;color:#000000;display:inline-block;cursor:pointer;" class="stButton">
-                                <span>
-                                    <a onclick="{{ SocShare::facebook([
-                                        'type' => 'share',
-                                        'redirect_uri' => 'http://aqparat.kz',
-                                        'display'      => 'popup',
-                                        //'from'         => '',
-                                        //'to'           => '',
-                                        'picture'      => 'http://aqparat.kz/news/25.07.2016/Tank.jpg',
-                                        //'source'       => '',
-                                        'name'         => 'Aqparat.kz',
-                                        'caption'      => '',
-                                        'description'  => str_limit(strip_tags($new->text), 200),
-                                        //'properties'   => array(), // ['some' => ['text' => 'text', 'href' => 'href']]
-                                        //'actions'      => array(), // ['name' => 'name', 'link' => 'link']
-                                        //'ref'          => array(),
-                                    ])->getJs() }}" href="javascript:void(0);">
-                                        <span class="stMainServices st-facebook-counter" style="background-image: url(&quot;http://w.sharethis.com/images/facebook_counter.png&quot;);">&nbsp;</span>
-                                        <span class="stArrow">
-                                            <span class="stButton_gradient stHBubble" style="display: inline-block;">
-                                                <span class="stBubble_hcount">{{ SocShare::facebook()->getCount() }}</span>
-                                            </span>
-                                        </span>
-                                    </a>
-                                </span>
-                            </span>
-                        </span>
+                            <div class='shareaholic-canvas' data-app='share_buttons' data-app-id='25689180'></div>
 
-                        <span class="st_twitter_hcount" displaytext="Tweet" st_processed="yes">
-                            <span style="text-decoration:none;color:#000000;display:inline-block;cursor:pointer;" class="stButton">
-                                <span>
-                                    <a onclick="{{ SocShare::twitter([
-                                        'hashtags' => array('aqparat.kz', $new->category->name),
-                                        'text' => $new->title
-                                    ])->getJs() }}" href="javascript:void(0);">
-                                        <span class="stMainServices st-twitter-counter" style="background-image: url(&quot;http://w.sharethis.com/images/twitter_counter.png&quot;);">&nbsp;</span>
-                                        <span class="stArrow">
-                                            <span class="stButton_gradient stHBubble" style="display: inline-block;">
-                                                <span class="stBubble_hcount">{{ SocShare::twitter([
-                                                        'hashtags' => array('aqparat.kz', $new->category->name),
-                                                        'text' => $new->title
-                                                    ])->getCount() }}
+                            <!--
+                            <div id="" class="social-sm-share-buttons m-t-lg m-b-lg">
+                                <span class="st_facebook" displaytext="" st_processed="yes">
+                                    <span style="text-decoration:none;color:#000000;display:inline-block;cursor:pointer;" class="stButton">
+                                        <span class="chicklets facebook"></span>
+                                    </span>
+                                </span>
+                                <span class="st_twitter" displaytext="" st_processed="yes">
+                                    <span style="text-decoration:none;color:#000000;display:inline-block;cursor:pointer;" class="stButton">
+                                        <span class="chicklets twitter"></span>
+                                    </span>
+                                </span>
+                                <span class="st_googleplus" displaytext="" st_processed="yes">
+                                    <span style="text-decoration:none;color:#000000;display:inline-block;cursor:pointer;" class="stButton">
+                                        <span class="chicklets googleplus"></span>
+                                    </span>
+                                </span>
+                                <span class="st_vkontakte" displaytext="" st_processed="yes">
+                                    <span style="text-decoration:none;color:#000000;display:inline-block;cursor:pointer;" class="stButton">
+                                        <span class="chicklets vkontakte"></span>
+                                    </span>
+                                </span>
+                            </div>
+
+                            <div id="" class="social-lg-share-buttons m-t-lg m-b-lg">
+                                {!! SocShare::renderJs() !!}
+                                <span class="st_facebook_hcount" displaytext="Facebook" st_processed="yes">
+                                <span style="text-decoration:none;color:#000000;display:inline-block;cursor:pointer;" class="stButton">
+                                    <span>
+                                        <a onclick="{{ SocShare::facebook([
+                                            'type' => 'share',
+                                            'redirect_uri' => 'http://aqparat.kz',
+                                            'display'      => 'popup',
+                                            //'from'         => '',
+                                            //'to'           => '',
+                                            'picture'      => 'http://aqparat.kz/news/25.07.2016/Tank.jpg',
+                                            //'source'       => '',
+                                            'name'         => 'Aqparat.kz',
+                                            'caption'      => '',
+                                            'description'  => str_limit(strip_tags($new->text), 200),
+                                            //'properties'   => array(), // ['some' => ['text' => 'text', 'href' => 'href']]
+                                            //'actions'      => array(), // ['name' => 'name', 'link' => 'link']
+                                            //'ref'          => array(),
+                                        ])->getJs() }}" href="javascript:void(0);">
+                                            <span class="stMainServices st-facebook-counter" style="background-image: url(&quot;http://w.sharethis.com/images/facebook_counter.png&quot;);">&nbsp;</span>
+                                            <span class="stArrow">
+                                                <span class="stButton_gradient stHBubble" style="display: inline-block;">
+                                                    <span class="stBubble_hcount">{{ SocShare::facebook()->getCount() }}</span>
                                                 </span>
                                             </span>
-                                        </span>
-                                    </a>
+                                        </a>
+                                    </span>
                                 </span>
                             </span>
-                        </span>
 
-                        <span class="st_googleplus_hcount" displaytext="Google +" st_processed="yes">
-                            <span style="text-decoration:none;color:#000000;display:inline-block;cursor:pointer;" class="stButton">
-                                <span>
-                                    <a onclick="{{ SocShare::gplus([
-                                        'hl' => 'ru'
-                                    ])->getJs() }}" href="javascript:void(0);">
-                                        <span class="stButton_gradient">
-                                            <span class="chicklets googleplus">Google +</span>
-                                        </span>
-                                        <span class="stArrow">
-                                            <span class="stButton_gradient stHBubble" style="display: inline-block;">
-                                                <span class="stBubble_hcount">{{ SocShare::gplus([
-                                                        'hl' => 'ru'
-                                                    ])->getCount() }}
-                                                </span>
-                                            </span>
-                                        </span>
-                                    </a>
-                                </span>
-                            </span>
-                        </span>
-
-                        <span class="st_vkontakte_hcount" displaytext="Vkontakte" st_processed="yes">
-                            <span style="text-decoration:none;color:#000000;display:inline-block;cursor:pointer;" class="stButton">
-                                <span>
-                                    <a onclick="{{ SocShare::vk([
-                                        'title' => $new->title,
-                                        'description' => str_limit(strip_tags($new->text), 200),
-                                        'image' => ''.URL::asset($new->avatar_picture),
-                                        'noparse' => false,
-                                    ])->getJs() }}" href="javascript:void(0);">
-                                        <span class="stButton_gradient">
-                                            <span class="chicklets vkontakte">Vkontakte</span>
-                                        </span>
-                                        <span class="stArrow">
-                                            <span class="stButton_gradient stHBubble" style="display: inline-block;">
-                                                <span class="stBubble_hcount">{{ SocShare::vk([
-                                                        'title' => $new->title,
-                                                        'description' => str_limit(strip_tags($new->text), 200),
-                                                        'image' => ''.URL::asset($new->avatar_picture),
-                                                        'noparse' => false,
-                                                    ])->getCount() }}
-                                                </span>
-                                            </span>
-                                        </span>
-                                    </a>
-                                </span>
-                            </span>
-                        </span>
-                            <br>
-                            <br>
-
-                            <div id="new_text_content">
-                                <br>
-                                @if(!is_null($new->avatar_picture))
-                                    <img class="img-responsive image-new-avatar-picture" src="{{ URL::asset($new->avatar_picture) }}" alt="News">
-                                @endif
-                                <div id="new_text">{!! $new->text !!}</div>
-                                <br>
-                            <span class="st_facebook_hcount" displaytext="Facebook" st_processed="yes">
-                            <span style="text-decoration:none;color:#000000;display:inline-block;cursor:pointer;" class="stButton">
-                                <span>
-                                    <a onclick="{{ SocShare::facebook([
-                                        'type' => 'share',
-                                        'redirect_uri' => 'http://aqparat.kz',
-                                        'display'      => 'popup',
-                                        //'from'         => '',
-                                        //'to'           => '',
-                                        'picture'      => 'http://aqparat.kz/news/25.07.2016/Tank.jpg',
-                                        //'source'       => '',
-                                        'name'         => 'Aqparat.kz',
-                                        'caption'      => '',
-                                        'description'  => str_limit(strip_tags($new->text), 200),
-                                        //'properties'   => array(), // ['some' => ['text' => 'text', 'href' => 'href']]
-                                        //'actions'      => array(), // ['name' => 'name', 'link' => 'link']
-                                        //'ref'          => array(),
-                                    ])->getJs() }}" href="javascript:void(0);">
-                                        <span class="stMainServices st-facebook-counter" style="background-image: url(&quot;http://w.sharethis.com/images/facebook_counter.png&quot;);">&nbsp;</span>
-                                        <span class="stArrow">
-                                            <span class="stButton_gradient stHBubble" style="display: inline-block;">
-                                                <span class="stBubble_hcount">{{ SocShare::facebook()->getCount() }}</span>
-                                            </span>
-                                        </span>
-                                    </a>
-                                </span>
-                            </span>
-                        </span>
-
-                            <span class="st_twitter_hcount" displaytext="Tweet" st_processed="yes">
+                                <span class="st_twitter_hcount" displaytext="Tweet" st_processed="yes">
                                 <span style="text-decoration:none;color:#000000;display:inline-block;cursor:pointer;" class="stButton">
                                     <span>
                                         <a onclick="{{ SocShare::twitter([
@@ -253,7 +210,7 @@
                                 </span>
                             </span>
 
-                            <span class="st_googleplus_hcount" displaytext="Google +" st_processed="yes">
+                                <span class="st_googleplus_hcount" displaytext="Google +" st_processed="yes">
                                 <span style="text-decoration:none;color:#000000;display:inline-block;cursor:pointer;" class="stButton">
                                     <span>
                                         <a onclick="{{ SocShare::gplus([
@@ -275,7 +232,7 @@
                                 </span>
                             </span>
 
-                            <span class="st_vkontakte_hcount" displaytext="Vkontakte" st_processed="yes">
+                                <span class="st_vkontakte_hcount" displaytext="Vkontakte" st_processed="yes">
                                 <span style="text-decoration:none;color:#000000;display:inline-block;cursor:pointer;" class="stButton">
                                     <span>
                                         <a onclick="{{ SocShare::vk([
@@ -303,18 +260,188 @@
                                 </span>
                             </span>
                             </div>
+                            -->
+                            <div id="new_text_content" class="m-t-sm">
+                                <div class="img-avatar-container">
+                                    @if(!is_null($new->video_url))
+                                        <video id="my-video" class="video-js vjs-16-9 vjs-default-skin" controls preload="auto"
+                                               poster="{{ URL::asset($new->avatar_picture) }}" data-setup="{}">
+                                            <source src="{{ URL::asset($new->video_url) }}" type='video/mp4'>
+                                            <source src="{{ URL::asset($new->video_url) }}" type='video/webm'>
+                                            <p class="vjs-no-js">
+                                                To view this video please enable JavaScript, and consider upgrading to a web browser that
+                                                <a href="http://videojs.com/html5-video-support/" target="_blank">supports HTML5 video</a>
+                                            </p>
+                                        </video>
+                                        @if(!is_null($new->media_author))
+                                            <span class="image-author">{{$new->media_author}}</span>
+                                        @endif
+                                    @elseif(!is_null($new->avatar_picture))
+                                        <img class="img-responsive image-new-avatar-picture" src="{{ URL::asset($new->avatar_picture) }}" alt="News">
+                                        @if(!is_null($new->media_author))
+                                            <span class="image-author">{{$new->media_author}}</span>
+                                        @endif
+                                    @endif
+                                </div>
+                                <div id="new_text">{!! $new->text !!}</div>
+
+                                <!--
+                                <div id="" class="social-sm-share-buttons m-t-lg m-b-lg">
+                                    <span class="st_facebook" displaytext="" st_processed="yes">
+                                        <span style="text-decoration:none;color:#000000;display:inline-block;cursor:pointer;" class="stButton">
+                                            <a onclick="{{ SocShare::facebook([
+                                                    'type' => 'share',
+                                                    'redirect_uri' => 'http://aqparat.kz',
+                                                    'display'      => 'popup',
+                                                    //'from'         => '',
+                                                    //'to'           => '',
+                                                    'picture'      => 'http://aqparat.kz/news/25.07.2016/Tank.jpg',
+                                                    //'source'       => '',
+                                                    'name'         => 'Aqparat.kz',
+                                                    'caption'      => '',
+                                                    'description'  => str_limit(strip_tags($new->text), 200),
+                                                    //'properties'   => array(), // ['some' => ['text' => 'text', 'href' => 'href']]
+                                                    //'actions'      => array(), // ['name' => 'name', 'link' => 'link']
+                                                    //'ref'          => array(),
+                                                ])->getJs() }}" href="javascript:void(0);">
+                                                <span class="chicklets facebook"></span>
+                                            </a>
+                                        </span>
+                                    </span>
+                                    <span class="st_twitter" displaytext="" st_processed="yes">
+                                        <span style="text-decoration:none;color:#000000;display:inline-block;cursor:pointer;" class="stButton">
+                                            <span class="chicklets twitter"></span>
+                                        </span>
+                                    </span>
+                                    <span class="st_googleplus" displaytext="" st_processed="yes">
+                                        <span style="text-decoration:none;color:#000000;display:inline-block;cursor:pointer;" class="stButton">
+                                            <span class="chicklets googleplus"></span>
+                                        </span>
+                                    </span>
+                                    <span class="st_vkontakte" displaytext="" st_processed="yes">
+                                        <span style="text-decoration:none;color:#000000;display:inline-block;cursor:pointer;" class="stButton">
+                                            <span class="chicklets vkontakte"></span>
+                                        </span>
+                                    </span>
+                                </div>
+
+                                <div id="" class="social-lg-share-buttons m-t-lg m-b-lg">
+                                    {!! SocShare::renderJs() !!}
+                                    <span class="st_facebook_hcount" displaytext="Facebook" st_processed="yes">
+                                        <span style="text-decoration:none;color:#000000;display:inline-block;cursor:pointer;" class="stButton">
+                                            <span>
+                                                <a onclick="{{ SocShare::facebook([
+                                                    'type' => 'share',
+                                                    'redirect_uri' => 'http://aqparat.kz',
+                                                    'display'      => 'popup',
+                                                    //'from'         => '',
+                                                    //'to'           => '',
+                                                    'picture'      => 'http://aqparat.kz/news/25.07.2016/Tank.jpg',
+                                                    //'source'       => '',
+                                                    'name'         => 'Aqparat.kz',
+                                                    'caption'      => '',
+                                                    'description'  => str_limit(strip_tags($new->text), 200),
+                                                    //'properties'   => array(), // ['some' => ['text' => 'text', 'href' => 'href']]
+                                                    //'actions'      => array(), // ['name' => 'name', 'link' => 'link']
+                                                    //'ref'          => array(),
+                                                ])->getJs() }}" href="javascript:void(0);">
+                                                    <span class="stMainServices st-facebook-counter" style="background-image: url(&quot;http://w.sharethis.com/images/facebook_counter.png&quot;);">&nbsp;</span>
+                                                    <span class="stArrow">
+                                                        <span class="stButton_gradient stHBubble" style="display: inline-block;">
+                                                            <span class="stBubble_hcount">{{ SocShare::facebook()->getCount() }}</span>
+                                                        </span>
+                                                    </span>
+                                                </a>
+                                            </span>
+                                        </span>
+                                    </span>
+
+                                    <span class="st_twitter_hcount" displaytext="Tweet" st_processed="yes">
+                                <span style="text-decoration:none;color:#000000;display:inline-block;cursor:pointer;" class="stButton">
+                                    <span>
+                                        <a onclick="{{ SocShare::twitter([
+                                            'hashtags' => array('aqparat.kz', $new->category->name),
+                                            'text' => $new->title
+                                        ])->getJs() }}" href="javascript:void(0);">
+                                            <span class="stMainServices st-twitter-counter" style="background-image: url(&quot;http://w.sharethis.com/images/twitter_counter.png&quot;);">&nbsp;</span>
+                                            <span class="stArrow">
+                                                <span class="stButton_gradient stHBubble" style="display: inline-block;">
+                                                    <span class="stBubble_hcount">{{ SocShare::twitter([
+                                                            'hashtags' => array('aqparat.kz', $new->category->name),
+                                                            'text' => $new->title
+                                                        ])->getCount() }}
+                                                    </span>
+                                                </span>
+                                            </span>
+                                        </a>
+                                    </span>
+                                </span>
+                            </span>
+
+                                    <span class="st_googleplus_hcount" displaytext="Google +" st_processed="yes">
+                                <span style="text-decoration:none;color:#000000;display:inline-block;cursor:pointer;" class="stButton">
+                                    <span>
+                                        <a onclick="{{ SocShare::gplus([
+                                            'hl' => 'ru'
+                                        ])->getJs() }}" href="javascript:void(0);">
+                                            <span class="stButton_gradient">
+                                                <span class="chicklets googleplus">Google +</span>
+                                            </span>
+                                            <span class="stArrow">
+                                                <span class="stButton_gradient stHBubble" style="display: inline-block;">
+                                                    <span class="stBubble_hcount">{{ SocShare::gplus([
+                                                            'hl' => 'ru'
+                                                        ])->getCount() }}
+                                                    </span>
+                                                </span>
+                                            </span>
+                                        </a>
+                                    </span>
+                                </span>
+                            </span>
+
+                                    <span class="st_vkontakte_hcount" displaytext="Vkontakte" st_processed="yes">
+                                <span style="text-decoration:none;color:#000000;display:inline-block;cursor:pointer;" class="stButton">
+                                    <span>
+                                        <a onclick="{{ SocShare::vk([
+                                            'title' => $new->title,
+                                            'description' => str_limit(strip_tags($new->text), 200),
+                                            'image' => ''.URL::asset($new->avatar_picture),
+                                            'noparse' => false,
+                                        ])->getJs() }}" href="javascript:void(0);">
+                                            <span class="stButton_gradient">
+                                                <span class="chicklets vkontakte">Vkontakte</span>
+                                            </span>
+                                            <span class="stArrow">
+                                                <span class="stButton_gradient stHBubble" style="display: inline-block;">
+                                                    <span class="stBubble_hcount">{{ SocShare::vk([
+                                                            'title' => $new->title,
+                                                            'description' => str_limit(strip_tags($new->text), 200),
+                                                            'image' => ''.URL::asset($new->avatar_picture),
+                                                            'noparse' => false,
+                                                        ])->getCount() }}
+                                                    </span>
+                                                </span>
+                                            </span>
+                                        </a>
+                                    </span>
+                                </span>
+                            </span>
+                                </div>
+                                -->
+                            </div>
                         </div>
                         <div class="panel-body panel-statistics text-muted">
                             <div class="row no-margin">
                                 <div class="pull-right">
                                     <span><i class="fa fa-eye fa-lg"></i> {{ $new->views }}</span>
                                     <a href="#comments" class="text-muted">
-                                    <span class="margin-left-20">
+                                    <span class="m-l-md">
                                         <i class="fa fa-comment fa-lg"></i> {{ $new->comments_count() }}
                                     </span>
                                     </a>
                                     <a id="like" class="disliked" role="button" onclick="like()">
-                                    <span class="margin-left-20">
+                                    <span class="m-l-md">
                                         <i role="button" class="fa fa-thumbs-o-up fa-lg"></i>
                                         <span id="new_likes">{{ $new->likes }}</span>
                                     </span>
@@ -329,99 +456,7 @@
                             <h6>Пікірлер (<span id="comments-count">{{ $new->comments_count() }}</span>) </h6>
                         </div>
                         <div id="comments">
-                            @foreach($comments as $comment)
-                                <div class="panel-body">
-                                    <div class="media" style="position: relative;">
-                                        <div class="media-image pull-left comment-author-md">
-                                            <a href="{{ url('/profile/'.$comment->user->id) }}">
-                                                <img src="{{ isset($comment->user->avatar)?$comment->user->avatar:url('img/default_user.png')  }}" alt="Қолданушы суреті">
-                                                <div class="author-info">
-                                                    <strong>{{ $comment->user->name }}</strong>
-                                                    <br>
-                                                    {{ $comment->created_at->format('F j, Y') }}
-                                                </div>
-                                            </a>
-                                        </div>
-                                        <div class="comment-author-xs">
-                                            <div class="author-info">
-                                                <strong>{{ $comment->user->name }}</strong>
-                                                <span class="m-l-xs">{{ $comment->created_at->format('M j, Y') }}</span>
-                                            </div>
-                                        </div>
-                                        <div class="media-body">
-                                            <p>{{ $comment->text }}</p>
-                                            <div class="pull-right comment-actions" >
-                                                <a class="text-muted" role="button" onclick="view_replies('{{$comment->id}}')">
-                                                <span class="m-l-md">
-                                                    <span>Last 10 replies</span>
-                                                </span>
-                                                </a>
-                                                <a class="text-muted" role="button" onclick="reply_comment('{{$comment->id}}', '{{$comment->user->id}}', '{{$comment->user->name}}')">
-                                                <span id="reply" class="m-l-md">
-                                                    <i role="button" class="fa fa-reply fa-lg"></i>
-                                                    <span id="reply_count">{{ $comment->replies_count() }}</span>
-                                                </span>
-                                                </a>
-                                                <a id="like_comment_{{$comment->id}}" class="@if(Auth::user() && $comment->userIsLikedComment(Auth::user()->id))liked @else disliked @endif" role="button" onclick="like_comment('{{$comment->id}}')">
-                                                <span class="m-l-md">
-                                                    <i role="button" class="fa fa-thumbs-o-up fa-lg"></i>
-                                                    <span id="comment_likes_{{$comment->id}}">{{ $comment->likes_count() }}</span>
-                                                </span>
-                                                </a>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    @if($comment->replies_count()>0)
-                                        @foreach($comment->replies as $reply)
-                                            <div class="forum-comments" id="">
-                                                <div class="media" style="position: relative;">
-                                                    <div class="media-image pull-left comment-author-md">
-                                                        <a href="{{ url('/profile/'.$reply->comment->user->id) }}">
-                                                            <img src="{{ isset($reply->comment->user->avatar)?$reply->comment->user->avatar:url('img/default_user.png')  }}" alt="profile-picture">
-                                                            <div class="author-info">
-                                                                <strong>{{ $comment->user->name }}</strong>
-                                                                <br>
-                                                                {{ $comment->created_at->format('F j, Y') }}
-                                                            </div>
-                                                        </a>
-                                                    </div>
-                                                    <div class="comment-author-xs">
-                                                        <div class="author-info">
-                                                            <span><strong>{{$reply->comment->user->name}}</strong></span>
-                                                            <span class="text-muted">{{$reply->comment->created_at->format('F j, Y')}}</span>
-                                                        </div>
-                                                    </div>
-                                                    <div class="media-body">
-                                                        <p>{{$reply->comment->text}}</p>
-                                                        <div class="pull-right comment-actions" >
-                                                            <a class="text-muted" role="button" onclick="view_replies('{{$reply->comment->id}}')">
-                                                            <span class="m-l-md">
-                                                                <span>Last 10 replies</span>
-                                                            </span>
-                                                            </a>
-                                                            <a class="text-muted" role="button" onclick="reply_comment('{{$reply->comment->id}}', '{{$reply->comment->user->id}}', '{{$reply->comment->user->name}}')">
-                                                            <span id="reply" class="m-l-md">
-                                                                <i role="button" class="fa fa-reply fa-lg"></i>
-                                                                <span id="reply_count">{{ $reply->comment->replies_count() }}</span>
-                                                            </span>
-                                                            </a>
-                                                            <a id="like_comment_{{$reply->comment->id}}" class="@if(!Auth::guest() && $reply->comment->userIsLikedComment(Auth::user()->id))liked @else disliked @endif" role="button" onclick="like_comment('{{$reply->comment->id}}')">
-                                                            <span class="m-l-md">
-                                                                <i role="button" class="fa fa-thumbs-o-up fa-lg"></i>
-                                                                <span id="comment_likes_{{$reply->comment->id}}">{{ $reply->comment->likes_count() }}</span>
-                                                            </span>
-                                                            </a>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        @endforeach
-                                    @endif
-                                </div>
-                            @endforeach
-                        </div>
-                        <div class="panel-body">
-                            <button class="btn btn-default center-block" onclick="load_more_comments()">Load more...</button>
+
                         </div>
                     </div>
 
@@ -433,16 +468,20 @@
                             <div class="row-with-padding" style="">
                                 <form id="comment_form" class="form-horizontal">
                                     <div class="form-group">
-                                        <textarea class="form-control textarea-infocus" id="comment-textarea" placeholder="Пікіріңізді осында жазыңыз..." rows="6"></textarea>
+                                        <textarea class="form-control textarea-infocus" id="comment-textarea" placeholder="Пікіріңізді осында жазыңыз..." rows="4"></textarea>
                                     </div>
                                     <div class="form-group">
                                         <div class="">
                                             <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
+                                                @if (Auth::guest())
+                                                    <p class="text-danger">Please, login for send comment</p>
+                                                @endif
                                                 <p id="comment-result" class="text-info">Жіберу түймесін басу арқылы, сіз пікір айту ережелеріне келісім бересіз</p>
                                             </div>
-                                            <button type="submit" class="btn btn-info pull-right">
+                                            <button type="submit" class="btn btn-info pull-right m-l-xs">
                                                 Жіберу
                                             </button>
+                                            <button type="button" onclick="resetComment()" class="btn btn-info pull-right">Cancel</button>
                                         </div>
                                     </div>
                                 </form>
@@ -457,7 +496,7 @@
                         <div class="panel-body hblue">
                             <div class="row row-with-margin">
                                 @foreach($recommend_news as $index => $recommend_new)
-                                    <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4 news-thumbnail text-justify pull-left">
+                                    <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4 news-thumbnail pull-left">
                                         <a href="{{ url('/newsread/'.$recommend_new->id) }}">
                                             <img class="img-responsive image-main-news" src="{{ asset($recommend_new->avatar_picture) }}">
                                             <h5 class="{{ $colors[$index%4] }}">{{ $recommend_new->category->name }}</h5>
@@ -493,8 +532,9 @@
 
 @section('script')
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+    <script src="http://vjs.zencdn.net/5.11.6/video.js"></script>
     <script type="text/javascript">
-        var reply = 0, replied_id = null;
+        var reply = 0, replied_id = null, addedComment = false;
         $(document).ready(function () {
 
         });
@@ -533,14 +573,14 @@
                 window.location.replace('{{url('/login')}}');
             @else
                 $.post("{{ url('/comment/like/') }}"+'/'+id_comment).done( function (data) {
-                console.log(data);
-                if(data.like=='liked'){
-                    $('#like_comment_'+id_comment).removeClass().addClass('liked');
-                }else{
-                    $('#like_comment_'+id_comment).removeClass().addClass('disliked');
-                }
-                $('#comment_likes_'+id_comment).html(data.likes);
-            });
+                    console.log(data);
+                    if(data.like=='liked'){
+                        $('#like_comment_'+id_comment).removeClass().addClass('liked');
+                    }else{
+                        $('#like_comment_'+id_comment).removeClass().addClass('disliked');
+                    }
+                    $('#comment_likes_'+id_comment).html(data.likes);
+                });
             @endif
         }
 
@@ -549,26 +589,87 @@
             //console.log('Comment: '+comment_id+"; User: "+user_id+'; Name: '+user_name);
             reply = 1;
             replied_id = comment_id;
-            console.log('Reply: '+reply+"; Replied_id: "+replied_id);
+            //console.log('Reply: '+reply+"; Replied_id: "+replied_id);
             $('#comment-textarea').val(user_name+', ').focus();
         }
-
-        function view_replies(comment_id){
-            //get comment replies and show function
-            console.log('View replies: '+comment_id);
+        
+        function resetComment() {
+            reply = 0;
+            replied_id = null;
+            $('#comment_form')[0].reset();
+            console.log('Reply: '+reply+' Replied: '+replied_id);
         }
 
-        function load_more_comments() {
-            $.ajax({
-                url : '?page=' + page,
-                dataType: 'json',
-            }).done(function (data) {
-                $('.posts').html(data);
-                location.hash = page;
-            }).fail(function () {
-                alert('Posts could not be loaded.');
+        function view_replies(comment_id, element){
+            //get comment replies and show function
+            //console.log('View replies: '+comment_id);
+            element.remove();
+            $.get("{{ url('/newsread/replies/') }}"+'/'+comment_id).done( function (data) {
+                $('#comment-replies-panel-'+comment_id).html(data);
             });
         }
+
+        function getPaginationSelectedPage(url) {
+            var chunks = url.split('?');
+            var baseUrl = chunks[0];
+            var querystr = chunks[1].split('&');
+            var pg = 1;
+            for (i in querystr) {
+                var qs = querystr[i].split('=');
+                if (qs[0] == 'page') {
+                    pg = qs[1];
+                    break;
+                }
+            }
+            return pg;
+        }
+
+        var pg = getPaginationSelectedPage('{{url('/newsread/comments/'.$new->id.'?page=1')}}');
+        $.ajax({
+            url: '{{url('/newsread/comments/'.$new->id)}}',
+            data: {
+                page: pg
+            },
+            success: function(data) {
+                $('#comments').append(data);
+            }
+        });
+
+        $('#comments').on('click', '.pagination.next-comments a', function(e) {
+            e.preventDefault();
+            pg = getPaginationSelectedPage($(this).attr('href'));
+            $.ajax({
+                url: '{{url('/newsread/comments/'.$new->id)}}',
+                data: {
+                    page: pg
+                },
+                success: function(response) {
+                    $('#comments .pagination.next-comments').remove();
+                    if(addedComment){
+                        $('#comments').children().last().remove();
+                        addedComment = false;
+                    }
+                    $('#comments').append(response);
+                }
+            });
+        });
+
+        $('#comments').on('click', '.pagination.next-reply a', function(e) {
+            e.preventDefault();
+            pg = getPaginationSelectedPage($(this).attr('href'));
+            var comment_id = $(this).attr('href').substring($(this).attr('href').lastIndexOf('/')+1, $(this).attr('href').indexOf('?'));
+            console.log(comment_id);
+            $.ajax({
+                url: '{{url('/newsread/replies')}}'+'/'+comment_id,
+                data: {
+                    page: pg
+                },
+                success: function(response) {
+                    $('#comments .pagination.next-reply').remove();
+                    $('#comment-replies-panel-'+comment_id).append(response);
+                }
+            });
+        });
 
         function getTranslate(id, language){
             $.get('{{ url('/newsread/translate') }}'+'/'+id, function(data) {
@@ -601,36 +702,23 @@
                         $('#comment-textarea').val('');
                         $('#comment-result').removeClass().addClass('text-success').html(response.message);
                         //console.log(data);
-                        if(response.count == 1){
-                            $('#comments').append(
-                                    '<div class="panel-heading hbuilt">' +
-                                    '<h6>Пікірлер (<span id="comments-count">'+response.count+'</span>)</h6>'+
-                                    '</div>');
-                        }
+
                         if(reply === 1){
-                            $('#comments').append(
-                                    '<div class="panel-body">' +
-                                    '<div class="media">' +
-                                    '<div class="media-image pull-left">' +
-                                    '<a href="#">' +
-                                    '<img src="{{ isset(Auth::user()->avatar)?Auth::user()->avatar:url('img/default_user.png')  }}" alt="Қолданушы суреті">'+
-                                    '<div class="author-info">' +
-                                    '<strong>{{ Auth::user()->name }}</strong>'+
-                                    '<br>' +
-                                    ''+response.created_at+
-                                    '</div>' +
-                                    '</a>' +
-                                    '</div>' +
-                                    '<div class="media-body">' +
-                                    '<p>'+response.comment.text+'</p>' +
-                                    '</div>' +
-                                    '</div>' +
-                                    '</div>'
-                            );
+                            $.get("{{ url('/comment/reply/') }}"+'/'+response.id).done( function (data) {
+                                $('#comment-replies-panel-'+replied_id).prepend(data);
+                                $('#reply_count_'+replied_id).text(parseInt($('#reply_count_'+replied_id).text()) + 1);
+                                window.location.hash = '#comment-panel-'+response.id;
+                                reply = 0;
+                                replied_id = null;
+                            });
+                        }else if(reply === 0){
+                            $.get("{{ url('/comment/comment/') }}"+'/'+response.id).done( function (data) {
+                                $('#comments').prepend(data);
+                                addedComment = true;
+                                window.location.hash = '#comment-panel-'+response.id;
+                            });
                         }
                         $('#comments-count').html(response.count);
-                        reply = 0;
-                        replied_id = null;
                     });
                 @endif
             }else{

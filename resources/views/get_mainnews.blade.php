@@ -21,9 +21,17 @@
                         @endif
                     </h5>
                 </a>
-                <a href="{{ url('/newsread/'.$main_new->id) }}">
+                <a href="{{ url('/newsread/'.$main_new->id) }}" class="main-news-image-content">
                     <img class="img-responsive image-main-news"
                          src="{{ asset($main_new->avatar_picture) }}">
+                    @if(!is_null($main_new->media_author))
+                        <span class="image-author">{{$main_new->media_author}}</span>
+                    @endif
+                    @if(!is_null($main_new->video_url))
+                        <span class="image-has-video">
+                            <i class="fa fa-video-camera"></i>
+                        </span>
+                    @endif
                 </a>
                 <p class="text-muted m-t-sm">
                     {{ $main_new->created_at->format('M j, H:i') }}

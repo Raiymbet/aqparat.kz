@@ -1,0 +1,106 @@
+/* PRINT VIEW STYLES */
+#print{
+    width: 210mm;
+    height: 296mm;
+    margin: auto;
+    background-color: #fff;
+    color: #000;
+}
+#print header img {
+    display: block;
+    margin: 20mm auto;
+}
+#print header h4 {
+    background-color: #8e8a8a;
+    color: #fff;
+    font-size: 20px;
+    line-height: 25px;
+    font-weight: 600;
+    text-transform: uppercase;
+    padding: 3px 5px;
+    margin-bottom: 20px;
+}
+#print header div img {
+    float: left;
+    margin: 0 20px 20px 0;
+}
+#print header div {
+    border-bottom: 1px solid #000;
+    margin-bottom: 10px;
+    padding-bottom: 10px;
+}
+#print header div h5 {
+    font-weight: 700;
+    text-transform: uppercase;
+    margin-bottom: 5px;
+    font-size: 15px;
+    line-height: inherit;
+}
+#print p {
+    margin-bottom: 14px;
+    font-weight: 400;
+    line-height: 16px;
+}
+#print #text-content{
+    border: none;
+}
+#print #text-content img {
+    display: none;
+}
+#print .url {
+    margin: 30px 0;
+    font-style: italic;
+}
+#print footer {
+    border-top: 1px dotted #000;
+    padding-top: 5px;
+    font-size: 12px;
+    line-height: inherit;
+    font-weight: 400;
+}
+@media only print{
+    .printme{
+        display: none;
+    }
+}
+@page { margin: 0 }
+body { margin: 0 }
+.sheet {
+    margin: 0;
+    overflow: hidden;
+    position: relative;
+    box-sizing: border-box;
+    page-break-after: always;
+}
+
+/** Paper sizes **/
+body.A3           .sheet { width: 297mm; height: 419mm }
+body.A3.landscape .sheet { width: 420mm; height: 296mm }
+body.A4           .sheet { width: 210mm; height: 296mm }
+body.A4.landscape .sheet { width: 297mm; height: 209mm }
+body.A5           .sheet { width: 148mm; height: 209mm }
+body.A5.landscape .sheet { width: 210mm; height: 147mm }
+
+/** Padding area **/
+.sheet.padding-10mm { padding: 10mm }
+.sheet.padding-15mm { padding: 15mm }
+.sheet.padding-20mm { padding: 20mm }
+.sheet.padding-25mm { padding: 25mm }
+
+/** For screen preview **/
+@media screen {
+    body { background: #e0e0e0 }
+    .sheet {
+        background: white;
+        box-shadow: 0 .5mm 2mm rgba(0,0,0,.3);
+        margin: 5mm;
+    }
+}
+
+/** Fix for Chrome issue #273306 **/
+@media print {
+    body.A3.landscape { width: 420mm }
+    body.A3, body.A4.landscape { width: 297mm }
+    body.A4, body.A5.landscape { width: 210mm }
+    body.A5                    { width: 148mm }
+}

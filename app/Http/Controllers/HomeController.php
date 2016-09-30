@@ -11,8 +11,11 @@ use App\Repositories\PostRepository;
 use App\Repositories\UserRepository;
 use App\User;
 use App\UserDetail;
+use App\Notification;
 use Illuminate\Http\Request;
 use Auth;
+use Illuminate\Support\Facades\File;
+use View;
 
 use App\Http\Requests;
 
@@ -45,17 +48,24 @@ class HomeController extends Controller
         $round_table_categories = Category::ofType('point')->get();
         $focus_categories = Category::ofType('focus')->get();
 
+        //$unreadNotifications = null;
+
         return view('home', [
             'categories' => $simple_categories,
             'round_tables' => $round_table_categories,
             'onfocus' => $focus_categories,
             //'main_news' => $main_news,
             'slider_news' => $slider_news,
+            //'unreadNotifications' => $unreadNotifications,
             //'last_news' => $last_news,
             //'last_posts' => $last_posts,
             //'more_readed_news' => $more_readed_news,
             'columnists' => $columnists
         ]);
+    }
+
+    public function getGoogleSiteConfirm(){
+        return File::get(public_path() . '/google18945143611ffadd.html');
     }
 
     public function getMyProfile(Request $request){
@@ -173,16 +183,16 @@ class HomeController extends Controller
     public function getFocus($id){
         $columnists = $this->admin_repository->getColumnists();
 
-        $news = $this->new_repository->getCategoryNews($id);
+        //$news = $this->new_repository->getCategoryNews($id);
 
-        $slider_news = $this->new_repository->getCategoryNewsForSlider($id);
+        // $slider_news = $this->new_repository->getCategoryNewsForSlider($id);
         $last_news = $this->new_repository->getLastNews(4);
         $more_readed_news = $this->new_repository->getMoreReadedNews(4);
 
-        $point_categories = Category::where('type', 'point')->get();
-        $json_toArray = json_decode($point_categories, true);
-        $array_ids = array_column($json_toArray, 'id');
-        $points = $this->new_repository->getRoundTables(4, $array_ids);
+        //$point_categories = Category::where('type', 'point')->get();
+        //$json_toArray = json_decode($point_categories, true);
+        //$array_ids = array_column($json_toArray, 'id');
+        //$points = $this->new_repository->getRoundTables(4, $array_ids);
 
         $simple_categories = Category::ofType('simple')->get();
         $round_table_categories = Category::ofType('point')->get();
@@ -193,11 +203,12 @@ class HomeController extends Controller
             'round_tables' => $round_table_categories,
             'onfocus' => $focus_categories,
             'columnists' => $columnists,
-            'news' => $news,
-            'last_news' => $last_news,
-            'more_readed_news' => $more_readed_news,
-            'point_news' => $points,
-            'slider_news' => $slider_news
+            'category' => $id,
+            //'news' => $news,
+            //'last_news' => $last_news,
+            //'more_readed_news' => $more_readed_news,
+            //'point_news' => $points,
+            //'slider_news' => $slider_news
         ]);
     }
     public function getContact(){

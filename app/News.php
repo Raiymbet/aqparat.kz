@@ -11,7 +11,7 @@ class News extends Model
      *
      * @var array
      */
-    protected $fillable = ['title', 'short_description', 'text', 'language'];
+    protected $fillable = ['title', 'short_description', 'text', 'language', 'tags', 'media_author'];
 
     /**
      * The attributes excluded from the model's JSON form.
@@ -33,7 +33,7 @@ class News extends Model
     }
 
     public function comments_without_replies(){
-        return $this->comments()->commentsWithoutReplies();
+        return $this->comments()->orderBy('created_at', 'desc')->commentsWithoutReplies();
     }
     
     public function comments_count(){

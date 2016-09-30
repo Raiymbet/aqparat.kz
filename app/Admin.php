@@ -25,6 +25,10 @@ class Admin extends Authenticatable
         return $this->hasOne(AdminDetail::class);
     }
 
+    public function adSenses(){
+        return $this->hasMany(AdSense::class);
+    }
+
     public function news()
     {
         return $this->hasMany(News::class, 'author_id');
@@ -34,4 +38,21 @@ class Admin extends Authenticatable
     {
         return $this->news()->count();
     }
+
+    public function scopeColumnists($query){
+        return $query->where('type', 'columnist');
+    }
+
+    public function scopeJournalists($query){
+        return $query->where('type', 'journalist');
+    }
+
+    public function scopeAdmin($query){
+        return $query->where('type', 'admin');
+    }
+
+    public function scopeColumnistsAndJournalists($query){
+        return $query->where('type', 'columnist')->orWhere('type', 'journalist');
+    }
+
 }

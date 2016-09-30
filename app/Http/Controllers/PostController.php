@@ -93,8 +93,21 @@ class PostController extends Controller
         return redirect('/myposts');
     }
 
-    public function search(Request $request)
-    {
+    public function edit(Request $request){
+        $id = $request->input('post_id');
+        $text = $request->input('text');
 
+        $post = Post::find($id);
+        if(strcmp($post->text, $text) == 0){
+            return ['message' => "Post text is not changed!", 'text' => $post->text];
+        }
+        $post->text = $text;
+        $post->save();
+
+        return ['message' => "Post is changed!", 'text' => $post->text];
     }
+    //public function search(Request $request)
+    //{
+
+    //}
 }

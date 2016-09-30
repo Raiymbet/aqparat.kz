@@ -49,8 +49,19 @@
                                                     </p>
                                                     <div class="media">
                                                         <a href="#" class="carousel-image-container" style="background-image: url('{{asset($slider_new->avatar_picture)}}');">
+                                                            @if(!is_null($slider_new->media_author))
+                                                                <span class="image-author">{{$slider_new->media_author}}</span>
+                                                            @endif
+                                                            @if(!is_null($slider_new->video_url))
+                                                                <span class="image-has-video">
+                                                                    <i class="fa fa-video-camera"></i>
+                                                                </span>
+                                                            @endif
                                                         </a>
-                                                        <h4 class="slider-content-text" style="font-size: 16px; line-height: 24px; margin-top: -7px;">{!! str_limit(strip_tags($slider_new->text), 300) !!}</h4>
+                                                        <h4 class="slider-content-text">
+                                                            {!! str_limit(strip_tags($slider_new->text), 300) !!}
+                                                            <a class="text-red" href="{{ url('/newsread/'.$slider_new->id) }}">Read more...</a>
+                                                        </h4>
                                                     </div>
                                                 </div>
                                             @endforeach
@@ -77,8 +88,8 @@
                                 </div>
                             </div>
 
-                            <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4 m-t-xl pull-right" id="category-news-recommend">
-                                <div class="row" style="background: #f1f0de;">
+                            <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4 pull-right category-news-recommend" id="category-news-recommend">
+                                <div class="row m-t-md m-l-md m-r-n-sm" style="background: #f1f0de;">
                                     <div class="chapter">
                                         <span>Соңғы ақпарат</span>
                                     </div>
@@ -98,11 +109,11 @@
                                                     <span class="text-muted m-l-sm"><i
                                                                 class="fa fa-comment"></i>{{ $last_new->comments_count() }}</span>
                                                     </p>
-                                                    <a href="{{ url('/newsread/'.$last_new->id) }}">
-                                                        <h4 class="news-with-author-avatar-title">
+                                                    <h4 class="news-with-author-avatar-title">
+                                                        <a href="{{ url('/newsread/'.$last_new->id) }}">
                                                             <strong>{{ $last_new->title }}</strong>
-                                                        </h4>
-                                                    </a>
+                                                        </a>
+                                                    </h4>
                                                     <p>
                                                         <a href="{{ url('/columnist/'.$last_new->author->id) }}">
                                                             <strong class="text-uppercase"><u>{{ $last_new->author->name }}</u></strong>
@@ -117,8 +128,8 @@
                                 </div>
                             </div>
 
-                            <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4 m-t-xl pull-right">
-                                <div class="row" style="background: #f1f0de;">
+                            <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4 m-t-md pull-right category-news-recommend">
+                                <div class="row m-t-md m-l-md m-r-n-sm" style="background: #f1f0de;">
                                     <div class="chapter">
                                         <span>Көп оқылған</span>
                                     </div>
@@ -158,8 +169,8 @@
                                 </div>
                             </div>
 
-                            <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4 m-t-xl pull-right">
-                                <div class="row" style="background: #f1f0de;">
+                            <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4 m-t-md pull-right category-news-recommend">
+                                <div class="row m-t-md m-l-md m-r-n-sm" style="background: #f1f0de;">
                                     <div class="chapter">
                                         <span>Focus</span>
                                     </div>

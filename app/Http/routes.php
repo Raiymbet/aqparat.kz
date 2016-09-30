@@ -11,7 +11,7 @@
 |
 */
 use App\Task;
-use Laravel\Socialite;
+use Laravel\Socialite\Facades\Socialite;
 use Illuminate\Http\Request;
 
 Route::group(['middleware' => ['web']], function () {
@@ -23,6 +23,7 @@ Route::group(['middleware' => ['web']], function () {
     Route::get('/currency', 'HomeController@currency_nbk_get_rates');
     Route::get('/about', 'HomeController@getAbout');
     Route::get('/contactus', 'HomeController@getContact');
+    Route::get('/google18945143611ffadd.html', 'HomeController@getGoogleSiteConfirm');
 
     Route::get('/columnist/{columnistId}', 'HomeController@getColumnist');
     Route::get('/roundtable/{categoryId}', 'HomeController@getRoundTable');
@@ -40,8 +41,9 @@ Route::group(['middleware' => ['web']], function () {
 
     Route::get('/myposts', 'PostController@getMyPosts');
     Route::post('/post', 'PostController@store');
+    Route::post('/post/edit', 'PostController@edit');
     Route::delete('/myposts/{post}', 'PostController@destroy');
-    Route::post('/myposts/search', 'PostController@search');
+    //Route::post('/myposts/search', 'PostController@search');
 
     Route::get('/newsread/{newId}', 'NewController@getReadNew');
     Route::get('/print/{newId}', 'NewController@getPrint');
@@ -51,10 +53,14 @@ Route::group(['middleware' => ['web']], function () {
     Route::get('/categorynews/{categoryId}', 'NewController@getCategoryNews');
     
     Route::get('/search', 'NewController@getSearch');
-    Route::post('/search', 'NewController@postSearch');
+    Route::get('/search/new', 'NewController@postSearch');
 
     Route::get('/news/ajax/{type}', 'NewController@getNewsPaginate' );
 
+    Route::get('/comment/{type}/{commentId}', 'NewController@getComment');
+    Route::get('/newsread/comments/{newId}', 'NewController@getComments');
+    Route::get('/newsread/replies/{commentId}', 'NewController@getReplies');
+    Route::get('/newsread/notifications/read', 'NotificationController@readNotifications');
     Route::post('/newsread/{newId}', 'CommentController@postComment');
     Route::post('/comment/like/{comment}', 'CommentController@like');
 
@@ -68,7 +74,9 @@ Route::group(['middleware' => ['web']], function () {
 
     Route::get('/admin', 'AdminController@adminHome');
     Route::get('/admin/profile', 'AdminController@getProfile');
+    Route::get('/admin/users', 'AdminController@getUsers');
     Route::post('/admin/profile', 'AdminController@postProfile');
+    Route::post('/admin/image/upload', 'AdminController@postImageUpload');
 
     Route::get('/admin/posts', 'AdminPostsController@getPosts');
     Route::get('/admin/posts/accept/{postId}', 'AdminPostsController@getAccept');
@@ -88,6 +96,8 @@ Route::group(['middleware' => ['web']], function () {
     Route::get('/admin/new/add', 'AdminNewsController@getAddNew');
     Route::post('/admin/new/add', 'AdminNewsController@postAddNew');
     Route::get('/admin/new/search', 'AdminNewsController@getSearch');
+    Route::post('/admin/new/trash/clean', 'AdminController@postTrashClean');
+    Route::get('/admin/news/preview', 'AdminController@getPreview');
 
     Route::get('/admin/comments', 'AdminCommentsController@getComments');
     Route::get('/admin/comments/delete/{commentId}', 'AdminCommentsController@getDestroy');
@@ -103,4 +113,11 @@ Route::group(['middleware' => ['web']], function () {
     Route::get('/admin/categories/delete/{categoryId}', 'AdminCategoriesController@getDestroy');
     Route::post('/admin/categories/edit/{categoryId}', 'AdminCategoriesController@postEdit');
 
+    Route::get('/admin/messaging', 'AdminMessagingController@getMessaging');
+    Route::post('/admin/messaging', 'AdminMessagingController@postMessaging');
+
+    Route::get('/admin/adSense', 'AdminAdSenseController@getAdSense');
+    Route::post('/admin/adSense', 'AdminAdSenseController@postAdSense');
+    Route::get('/admin/adSense/delete/{id}', 'AdminAdSenseController@getDeleteAdSense');
+    Route::get('/admin/adSense/publish/{id}', 'AdminAdSenseController@getPublishAdSense');
 });

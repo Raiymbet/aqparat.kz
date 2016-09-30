@@ -25,6 +25,7 @@ class SocialiteController extends Controller{
     {
         return view('login');
     }
+
     public function getSocialiteAuth($provider=null)
     {
         if(!config("services.$provider")) abort('404');
@@ -38,7 +39,7 @@ class SocialiteController extends Controller{
             //dd($social_user);
             $authUser = $this->findOrCreateUser($social_user, $provider);
             Auth::login($authUser, true);
-            return redirect()->to('/');
+            return redirect()->back();
         }else{
             return 'Socialite Authentication is failed!';
         }
@@ -47,7 +48,7 @@ class SocialiteController extends Controller{
     public function logout()
     {
         Auth::guard('web')->logout();
-        return redirect('/');
+        return redirect()->back();
     }
 
     private function findOrCreateUser($user, $provider)
@@ -56,11 +57,18 @@ class SocialiteController extends Controller{
             return $authUser;
         }
 
-        return User::create([
+        $newUser = User::create([
             'name' => $user->name,
             'email' => $user->email,
             'avatar' => $user->avatar,
             'provider' => $provider,
         ]);
+        $newUser->newNotification()
+            ->withType('NewUser')
+            ->withSubject('Welcome new user.')
+            ->withBody($user->name.' welcome to Apqrat.kz and please ')
+            ->deliver();
+
+        return $newUser;
     }
 }

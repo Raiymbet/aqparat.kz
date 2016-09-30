@@ -3,8 +3,11 @@
 @section('content')
     <div class="row">
         <div class="col-lg-12">
-            <div class="hpanel">
+            <div class="hpanel ">
                 <div class="panel-heading hbuilt">
+                    <div class="panel-tools">
+                        <a class="showhide"><i class="fa fa-chevron-up"></i></a>
+                    </div>
                     <ol class="hbreadcrumb breadcrumb">
                         <li><a href="#">Админ</a></li>
                         <li class="active">
@@ -13,9 +16,25 @@
                     </ol>
                 </div>
                 <div class="panel-body">
-                    <form class="form-horizontal" action="" method="POST">
+                    <form class="form-horizontal" id="searchFilterForm" action="" method="POST">
 
                         <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                            <div class="form-group">
+                                <div class="btn-group" data-toggle="buttons">
+                                    <label class="btn btn-default active">
+                                        <input type="checkbox" name="new_text_types" autocomplete="off" checked> Тақырыбы
+                                    </label>
+                                    <label class="btn btn-default">
+                                        <input type="checkbox" name="new_text_types" autocomplete="off"> Қысқа сипаттамасы
+                                    </label>
+                                    <label class="btn btn-default">
+                                        <input type="checkbox" name="new_text_types" autocomplete="off"> Кілт сөздер
+                                    </label>
+                                    <label class="btn btn-default">
+                                        <input type="checkbox" name="new_text_types" autocomplete="off"> Мәтіні
+                                    </label>
+                                </div>
+                            </div>
                             <div class="form-group">
                                 <label class="col-xs-4 col-sm-4 col-md-2 col-lg-1 control-label text-left">Мәтін:</label>
                                 <div class="col-xs-8 col-sm-8 col-md-10 col-lg-10">
@@ -42,12 +61,60 @@
 
                         <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
                             <div class="form-group">
+                                <label class="col-xs-4 col-sm-4 col-md-4 col-lg-2 control-label text-left">Типі:</label>
+                                <div class="col-xs-8 col-sm-8 col-md-8 col-lg-8">
+                                    <select class="form-control" name="category">
+                                        <option value="all" selected="selected">Барлығы</option>
+                                        <option>Аудармалар</option>
+                                        <option>Таңдалғандар</option>
+                                        <option>Жолданған ақпараттар</option>
+                                        <option>Видео ақпараттар</option>
+                                        <option>Слайд жаңалықтары</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+                            <div class="form-group">
+                                <label class="col-xs-4 col-sm-4 col-md-4 col-lg-2 control-label text-left">Сұрыптау:</label>
+                                <div class="col-xs-8 col-sm-8 col-md-8 col-lg-8">
+                                    <select class="form-control" name="category">
+                                        <option value="all" selected="selected">Соңғы жаңалықтар</option>
+                                        <option>Бастапқы жаңалықтар</option>
+                                        <option>Көп оқылғандар</option>
+                                        <option>Көп ұнатылғандар</option>
+                                        <option>Көп пікір жазылғандар</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+                            <div class="form-group">
                                 <label class="col-xs-4 col-sm-4 col-md-4 col-lg-2 control-label text-left">Уақыты:</label>
                                 <div class="col-xs-8 col-sm-8 col-md-8 col-lg-8">
                                     <input name="datetime" type="datetime-local" class="form-control" placeholder="Уақытын көрсетіңіз">
                                 </div>
                             </div>
                         </div>
+
+                        <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+                            <div class="form-group">
+                                <label class="col-xs-4 col-sm-4 col-md-4 col-lg-2 control-label text-left">Авторы:</label>
+                                <div class="col-xs-8 col-sm-8 col-md-8 col-lg-8">
+                                    <select class="form-control" name="category">
+                                        <option value="all" selected="selected">Барлығы</option>
+                                        @foreach($columnists as $columnist)
+                                            <option value="{{ $columnist->id }}">
+                                                {{ $columnist->name }}
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <button type="submit" class="btn btn-info pull-right">Қабылдау</button>
                     </form>
                 </div>
             </div>
@@ -64,10 +131,18 @@
                                     <h4 style="color: inherit">{{ $new->title }}</h4>
                                 </a>
                             </div>
+                            @if(!is_null($new->video_url))
+                                <span class="image-has-video">
+                                    <i class="fa fa-video-camera"></i>
+                                </span>
+                            @endif
+                            @if(!is_null($new->media_author))
+                                <span class="image-author">{{$new->media_author}}</span>
+                            @endif
                         </div>
                         <div class="panel-body">
                             <p>
-                                {!! str_limit(strip_tags($new->text), 200) !!}
+                                {{$new->short_description}}
                             </p>
                             <div class="row">
                                 <div class="col-sm-4">
@@ -184,365 +259,22 @@
                 {!! $news->render() !!}
             </div>
         </div>
-        <!--
-        <div class="col-md-4 pull-left">
-            <div class="hpanel blog-box">
-                <div class="panel-body">
-                    <div class="row">
-                        <div class="col-sm-12">
-                            <a href="">
-                                <h4>News Title And Some text</h4>
-                            </a>
-                            <p>Lorem Ipsum as their default model text, and a search for 'lorem ipsum' will uncover many web sites still in their infancy. Various versions have evolved over the years, sometimes by accident, sometimes on purpose (injected humour and the like).</p>
-                            <div class="row">
-                                <div class="col-sm-4">
-                                    <div class="">Авторы:</div>
-                                    <small>Raiymbet Tukpetov</small>
-                                </div>
-                                <div class="col-sm-4">
-                                    <div class="">Санаты:</div>
-                                    <small>Әлем</small>
-                                </div>
-                                <div class="col-sm-4">
-                                    <div class="">Уақыты:</div>
-                                    <small>21.03.2016, 18:45</small>
-                                </div>
-                            </div>
-                            <br>
-                            <div class="row">
-                                <div class="col-sm-3">
-                                    <i class="fa fa-eye"></i>
-                                    <small>1234</small>
-                                </div>
-                                <div class="col-sm-3">
-                                    <i class="fa fa-comment"></i>
-                                    <small>1234</small>
-                                </div>
-                                <div class="col-sm-3">
-                                    <i class="fa fa-heart"></i>
-                                    <small>1234</small>
-                                </div>
-                                <div class="col-sm-3">
-                                    <i class="fa fa-share-alt"></i>
-                                    <small>1234</small>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-sm-12 m-t-md">
-                                    <div class="btn-group pull-right">
-                                        <button class="btn btn-xs btn-default"> View</button>
-                                        <button class="btn btn-xs btn-default"> Edit</button>
-                                        <button class="btn btn-xs btn-default"> Delete</button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-4 pull-left">
-            <div class="hpanel blog-box">
-                <div class="panel-image">
-                    <img class="img-responsive" src="{{ URL::asset('img/p1.jpg') }}">
-                    <div class="title">
-                        <a href="#">
-                            <h4>Standard new title of Aqparat.kz</h4>
-                        </a>
-                    </div>
-                </div>
-                <div class="panel-body">
-                    <div class="row">
-                        <div class="col-sm-12">
-                            <p>
-                                Lorem Ipsum which looks reasonable. The generated Lorem Ipsum is therefore always free from repetition, injected humour, or non-characteristic words etc.
-                            </p>
-                            <div class="row">
-                                <div class="col-sm-4">
-                                    <div class="">Авторы:</div>
-                                    <small>Raiymbet Tukpetov</small>
-                                </div>
-                                <div class="col-sm-4">
-                                    <div class="">Санаты:</div>
-                                    <small>Әлем</small>
-                                </div>
-                                <div class="col-sm-4">
-                                    <div class="">Уақыты:</div>
-                                    <small>21.03.2016, 18:45</small>
-                                </div>
-                            </div>
-                            <br>
-                            <div class="row">
-                                <div class="col-sm-3">
-                                    <i class="fa fa-eye"></i>
-                                    <small>1234</small>
-                                </div>
-                                <div class="col-sm-3">
-                                    <i class="fa fa-comment"></i>
-                                    <small>1234</small>
-                                </div>
-                                <div class="col-sm-3">
-                                    <i class="fa fa-heart"></i>
-                                    <small>1234</small>
-                                </div>
-                                <div class="col-sm-3">
-                                    <i class="fa fa-share-alt"></i>
-                                    <small>1234</small>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-sm-12 m-t-md">
-                                    <div class="btn-group pull-right">
-                                        <button class="btn btn-xs btn-default"> View</button>
-                                        <button class="btn btn-xs btn-default"> Edit</button>
-                                        <button class="btn btn-xs btn-default"> Delete</button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-4 pull-left">
-            <div class="hpanel blog-box">
-                <div class="panel-image">
-                    <img class="img-responsive" src="{{ URL::asset('img/p1.jpg') }}">
-                    <div class="title">
-                        <a href="#">
-                            <h4>Standard new title of Aqparat.kz</h4>
-                        </a>
-                    </div>
-                </div>
-                <div class="panel-body">
-                    <p>
-                        Lorem Ipsum which looks reasonable. The generated Lorem Ipsum is therefore always free from repetition, injected humour, or non-characteristic words etc.
-                    </p>
-                    <div class="row">
-                        <div class="col-sm-4">
-                            <div class="">Авторы:</div>
-                            <small>Raiymbet Tukpetov</small>
-                        </div>
-                        <div class="col-sm-4">
-                            <div class="">Санаты:</div>
-                            <small>Әлем</small>
-                        </div>
-                        <div class="col-sm-4">
-                            <div class="">Уақыты:</div>
-                            <small>21.03.2016, 18:45</small>
-                        </div>
-                    </div>
-                    <br>
-                    <div class="row">
-                        <div class="col-sm-3">
-                            <i class="fa fa-eye"></i>
-                            <small>1234</small>
-                        </div>
-                        <div class="col-sm-3">
-                            <i class="fa fa-comment"></i>
-                            <small>1234</small>
-                        </div>
-                        <div class="col-sm-3">
-                            <i class="fa fa-heart"></i>
-                            <small>1234</small>
-                        </div>
-                        <div class="col-sm-3">
-                            <i class="fa fa-share-alt"></i>
-                            <small>1234</small>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-sm-12 m-t-md">
-                            <div class="btn-group pull-right">
-                                <button class="btn btn-xs btn-default"> View</button>
-                                <button class="btn btn-xs btn-default"> Edit</button>
-                                <button class="btn btn-xs btn-default"> Delete</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-4 pull-left clear-left">
-            <div class="hpanel blog-box">
-                <div class="panel-image">
-                    <img class="img-responsive" src="{{ URL::asset('img/p1.jpg') }}">
-                    <div class="title">
-                        <a href="#">
-                            <h4>Standard new title of Aqparat.kz</h4>
-                        </a>
-                    </div>
-                </div>
-                <div class="panel-body">
-                    <p>
-                        Lorem Ipsum which looks reasonable. The generated Lorem Ipsum is therefore always free from repetition, injected humour, or non-characteristic words etc.
-                    </p>
-                    <div class="row">
-                        <div class="col-sm-4">
-                            <div class="">Авторы:</div>
-                            <small>Raiymbet Tukpetov</small>
-                        </div>
-                        <div class="col-sm-4">
-                            <div class="">Санаты:</div>
-                            <small>Әлем</small>
-                        </div>
-                        <div class="col-sm-4">
-                            <div class="">Уақыты:</div>
-                            <small>21.03.2016, 18:45</small>
-                        </div>
-                    </div>
-                    <br>
-                    <div class="row">
-                        <div class="col-sm-3">
-                            <i class="fa fa-eye"></i>
-                            <small>1234</small>
-                        </div>
-                        <div class="col-sm-3">
-                            <i class="fa fa-comment"></i>
-                            <small>1234</small>
-                        </div>
-                        <div class="col-sm-3">
-                            <i class="fa fa-heart"></i>
-                            <small>1234</small>
-                        </div>
-                        <div class="col-sm-3">
-                            <i class="fa fa-share-alt"></i>
-                            <small>1234</small>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-sm-12 m-t-md">
-                            <div class="btn-group pull-right">
-                                <button class="btn btn-xs btn-default"> View</button>
-                                <button class="btn btn-xs btn-default"> Edit</button>
-                                <button class="btn btn-xs btn-default"> Delete</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-4 pull-left">
-            <div class="hpanel blog-box">
-                <div class="panel-body">
-                    <div class="row">
-                        <div class="col-sm-12">
-                            <a href="">
-                                <h4>News Title And Some text</h4>
-                            </a>
-                            <p>Lorem Ipsum as their default model text, and a search for 'lorem ipsum' will uncover many web sites still in their infancy. Various versions have evolved over the years, sometimes by accident, sometimes on purpose (injected humour and the like).</p>
-                            <div class="row">
-                                <div class="col-sm-4">
-                                    <div class="">Авторы:</div>
-                                    <small>Raiymbet Tukpetov</small>
-                                </div>
-                                <div class="col-sm-4">
-                                    <div class="">Санаты:</div>
-                                    <small>Әлем</small>
-                                </div>
-                                <div class="col-sm-4">
-                                    <div class="">Уақыты:</div>
-                                    <small>21.03.2016, 18:45</small>
-                                </div>
-                            </div>
-                            <br>
-                            <div class="row">
-                                <div class="col-sm-3">
-                                    <i class="fa fa-eye"></i>
-                                    <small>1234</small>
-                                </div>
-                                <div class="col-sm-3">
-                                    <i class="fa fa-comment"></i>
-                                    <small>1234</small>
-                                </div>
-                                <div class="col-sm-3">
-                                    <i class="fa fa-heart"></i>
-                                    <small>1234</small>
-                                </div>
-                                <div class="col-sm-3">
-                                    <i class="fa fa-share-alt"></i>
-                                    <small>1234</small>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-sm-12 m-t-md">
-                                    <div class="btn-group pull-right">
-                                        <button class="btn btn-xs btn-default"> View</button>
-                                        <button class="btn btn-xs btn-default"> Edit</button>
-                                        <button class="btn btn-xs btn-default"> Delete</button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-4 pull-left">
-            <div class="hpanel blog-box">
-                <div class="panel-image">
-                    <img class="img-responsive" src="{{ URL::asset('img/p1.jpg') }}">
-                    <div class="title">
-                        <a href="#">
-                            <h4>Standard new title of Aqparat.kz</h4>
-                        </a>
-                    </div>
-                </div>
-                <div class="panel-body">
-                    <p>
-                        Lorem Ipsum which looks reasonable. The generated Lorem Ipsum is therefore always free from repetition, injected humour, or non-characteristic words etc.
-                    </p>
-                    <div class="row">
-                        <div class="col-sm-4">
-                            <div class="">Авторы:</div>
-                            <small>Raiymbet Tukpetov</small>
-                        </div>
-                        <div class="col-sm-4">
-                            <div class="">Санаты:</div>
-                            <small>Әлем</small>
-                        </div>
-                        <div class="col-sm-4">
-                            <div class="">Уақыты:</div>
-                            <small>21.03.2016, 18:45</small>
-                        </div>
-                    </div>
-                    <br>
-                    <div class="row">
-                        <div class="col-sm-3">
-                            <i class="fa fa-eye"></i>
-                            <small>1234</small>
-                        </div>
-                        <div class="col-sm-3">
-                            <i class="fa fa-comment"></i>
-                            <small>1234</small>
-                        </div>
-                        <div class="col-sm-3">
-                            <i class="fa fa-heart"></i>
-                            <small>1234</small>
-                        </div>
-                        <div class="col-sm-3">
-                            <i class="fa fa-share-alt"></i>
-                            <small>1234</small>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-sm-12 m-t-md">
-                            <div class="btn-group pull-right">
-                                <button class="btn btn-xs btn-default"> View</button>
-                                <button class="btn btn-xs btn-default"> Edit</button>
-                                <button class="btn btn-xs btn-default"> Delete</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        -->
     </div>
 @endsection
 
 @section('script')
     <script type="text/javascript">
+        $( function () {
+            $('#searchFilterForm').submit( function (event) {
+                event.preventDefault();
+                searchFilter();
+            });
+        });
+        function searchFilter(){
+            var types = $('input[name="new_text_types"]:checked').val();
+            console.log(types);
+        }
+
         function delete_new(id){
             $.get('{{ url('/admin/news/delete') }}'+'/'+id, function(data) {
                 if(data=="OK"){

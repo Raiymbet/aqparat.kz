@@ -1,11 +1,14 @@
 @extends('layouts.home')
 
 @section('head')
-    <!-- Start WOWSlider.com HEAD section
-    <link rel="stylesheet" type="text/css" href="{{ URL::asset('engine0/style.css') }}">
-    <script type="text/javascript" src="{{ URL::asset('engine0/jquery.js') }}"></script>
-    <!-- End WOWSlider.com HEAD section -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+
+    <!-- Meta tags -->
+    <title>Aqparat.kz</title>
+    <meta name="keywords" content="aqparat, akparat, ақпарат, жаңалық, kz, Қазақстан, Новости, Казахстан">
+    <meta name="description" content="Aqparat.kz - Қазақстандағы ақпараттандыру порталы. Қазақстан, әлем, экономика, саясат және басқа да соңғы жаңалықтар.">
+    <meta name="author" content="Райымбет Түкпетов">
+    <meta name="copyright" content="All privacy and terms -> Aqparat.kz">
 @endsection
 
 @section('content')
@@ -14,33 +17,25 @@
         <div class="row header-row">
             <div class="row-content">
 
-                <!--<div class="col-xs-12 col-sm-6 col-md-4 col-lg-3">
-                    <div class="hpanel">
-                        <div class="panel-body" style="padding: 14px;">
-                            <span>
-                                <i class="fa fa-dollar fa-lg m-r-lg"></i>USD: 354<br>
-                                <i class="fa fa-euro fa-lg m-r-lg"></i>EUR: 455<br>
-                                <i class="fa fa-ruble fa-lg m-r-lg"></i>RU: 5
-                            </span>
-                        </div>
-                    </div>
-                </div>-->
-
                 <div id="jarnama" class="col-xs-12 col-sm-6 col-md-3 col-lg-3 pull-right m-t">
                     <!-- Jarnama ushin arnalgan oryn -->
+                    @foreach(\App\AdSense::sliderRight()->published()->get() as $ads)
+                        {!! $ads->code !!}
+                    @endforeach
                 </div>
 
                 <div class="col-xs-12 col-sm-12 col-md-9 col-lg-9 pull-left">
                     <div class="">
-                        <div class="panel-body m-b-lg m-t-none border-none">
+                        <div class="panel-body m-b-lg m-t-none border-none form-post-panel-sm">
                             <div class="row">
                                 <div class="col-xs-12 col-sm-8 col-md-8 col-lg-8 pull-left"
                                      style="padding-bottom: 10px; padding-left: 0; border-bottom: 1px solid #e4e5e7;">
                                     <form id="post_form">
                                         {{ csrf_field() }}
                                         <div class="form-group m-b-none">
+                                            <a class="closebox" onclick="postClose()"><i class="fa fa-times"></i></a>
                                             <textarea id="post_textarea" class="form-control textarea-infocus" rows="1"
-                                                      name="text" placeholder="Не хабар?"></textarea>
+                                                      name="text"  placeholder="Не хабар?"></textarea>
                                         </div>
 
                                         <div id="post-result" class=""></div>
@@ -62,6 +57,8 @@
                                         </div>
 
                                         <div id="post_submit" class="form-group hidden m-t">
+
+                                            @if (Auth::guest())<span class="m-l-sm text-danger">Хабар жіберу үшін жүйеге кіріңіз!</span>@endif
                                             <button type="submit" id="post_btn" class="btn btn-info pull-right">
                                                 Хабарла
                                             </button>
@@ -87,7 +84,6 @@
 
                                     </form>
                                 </div>
-
                                 <div class="col-sm-4 col-md-4 col-lg-4 pull-right" id="slider-tab-wrapper">
                                     <ul class="list-unstyled nav nav-tabs" id="slider_tabs" style="">
                                         @foreach($slider_news as $index => $slider_new)
@@ -107,11 +103,13 @@
                                         @foreach($slider_news as $index => $slider_new)
                                             <div role="tabpanel" id="menu-slider-{{$index}}"
                                                  class="tab-pane slider-tab fade @if($index==0) in active @endif">
-                                                <h4 class="text-uppercase {{ $colors[$index%4] }}">
-                                                    <strong>
-                                                        {{ $slider_new->news->category->name }}
-                                                    </strong>
-                                                </h4>
+                                                <a href="{{ url('/categorynews/'.$slider_new->news->category->id) }}">
+                                                    <h4 class="text-uppercase {{ $colors[$index%4] }}">
+                                                        <strong>
+                                                            {{ $slider_new->news->category->name }}
+                                                        </strong>
+                                                    </h4>
+                                                </a>
                                                 <a href="{{ url('/newsread/'.$slider_new->news->id) }}">
                                                     <h3 class="slider-tab-content-title">
                                                         <strong>{{ $slider_new->news->title }}</strong>
@@ -125,12 +123,23 @@
                                                     <span>{{ $slider_new->news->created_at->format('F j,Y, H:i') }}</span>
                                                 </p>
                                                 <div class="media m-t-lg">
-                                                    <a href="#" class="slider-image-content">
+                                                    <a href="{{ url('/newsread/'.$slider_new->news->id) }}" class="slider-image-content">
                                                         <img style="" class="media-object img-responsive"
                                                              src="{{ asset($slider_new->news->avatar_picture) }}"
                                                              alt="...">
+                                                        @if(!is_null($slider_new->news->media_author))
+                                                            <span class="image-author">{{$slider_new->news->media_author}}</span>
+                                                        @endif
+                                                        @if(!is_null($slider_new->news->video_url))
+                                                            <span class="image-has-video">
+                                                                <i class="fa fa-video-camera"></i>
+                                                            </span>
+                                                        @endif
                                                     </a>
-                                                    <h4 class="slider-content-text">{!! str_limit(strip_tags($slider_new->news->text), 400) !!}</h4>
+                                                    <h4 class="slider-content-text">
+                                                        {!! str_limit(strip_tags($slider_new->news->text), 400) !!}
+                                                        <a class="text-red" href="{{ url('/newsread/'.$slider_new->news->id) }}">Read more...</a>
+                                                    </h4>
                                                     <br>
                                                 </div>
                                             </div>
@@ -144,10 +153,13 @@
                 </div>
 
                 <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-                    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 row-recommend"
-                         style=""></div>
+                    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 row-recommend">
+                        @foreach(\App\AdSense::sliderBottom()->published()->get() as $ads)
+                            {!! $ads->code !!}
+                        @endforeach
+                    </div>
 
-                    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 m-t-md" style="padding: 0;">
+                    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 m-t-md m-b-sm news-content-sm" style="padding: 0;">
                         <ul class="list-unstyled nav nav-tabs text-uppercase" id="news_tabs">
                             <li class="active">
                                 <a href="#tab_news">Таңдалған</a>
@@ -232,9 +244,17 @@
             }
         }
 
+        function postClose() {
+            $('#post_textarea').val('').attr('rows', 1);
+            $('#post_submit').addClass('hidden');
+            $('#post-media-content').html('').hide();
+            $('.closebox').hide();
+        }
+
         $( function () {
             $('#post-media-content').hide();
             $('#post-video-content').hide();
+            $('.closebox').hide();
 
             var tabCarousel = setInterval(function () {
                 var tabs = $('#slider_tabs>li'),
@@ -275,6 +295,7 @@
                 }, 2000);
                 $('#post_textarea').val('').attr('rows', 1);
                 $('#post_submit').addClass('hidden');
+                $('.closebox').hide();
                 //$('#post_btn').addClass('hidden');
                 //$('#btn_image').addClass('hidden');
                 //$('#btn_videocamera').addClass('hidden');
@@ -284,6 +305,7 @@
             $('#post_textarea').focus(function () {
                 $(this).attr('rows', 4);
                 $('#post_submit').removeClass('hidden');
+                $('.closebox').show();
                 //$('#post_btn').removeClass('hidden');
                 //$('#btn_image').removeClass('hidden');
                 //$('#btn_videocamera').removeClass('hidden');

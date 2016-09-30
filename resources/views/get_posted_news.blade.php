@@ -9,12 +9,12 @@
     @endif
     @foreach($news as $index => $last_post)
         <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4 news-thumbnail pull-left @if($index%$divider==0) clear-left @endif">
-            <div class="media" style="border-top: 1px solid #ccc; padding-top: 15px;">
+            <div class="media p-t-sm" style="border-top: 1px dashed;">
                 <div class="media-left">
                     <a href="{{ url('/newsread/'.$last_post->news->id) }}">
                         <img alt="64x64" class="media-object"
                              src="{{ asset($last_post->news->author->avatar) }}"
-                             data-holder-rendered="true" style="width: 80px; height: 80px;">
+                             data-holder-rendered="true" width="80" height="80">
                     </a>
                 </div>
                 <div class="media-body">
@@ -36,7 +36,7 @@
                                                         <span class="text-muted m-l-sm"><i
                                                                     class="fa fa-comment"></i>{{ $last_post->news->comments_count() }}</span>
                     </p>
-                    <h4 class="" style="line-height: 20px; font-size: 20px;">
+                    <h4 class="news-with-author-avatar-title">
                         <a href="{{ url('/newsread/'.$last_post->news->id) }}">
                             <strong>{{ $last_post->news->title }}</strong>
                         </a>

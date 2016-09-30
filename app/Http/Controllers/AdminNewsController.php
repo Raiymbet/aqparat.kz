@@ -36,7 +36,9 @@ class AdminNewsController extends Controller
     public function getNews(Request $request)
     {
         $news = News::orderBy('created_at', 'desc')->paginate(6);
-        return view('admin.news', ['news' => $news, 'categories' => Category::all()]);
+        $columnists = Admin::columnistsAndJournalists()->get();
+        //dd($columnists);
+        return view('admin.news', ['news' => $news, 'categories' => Category::all(), 'columnists' => $columnists]);
     }
 
     public function getAddNew()
@@ -46,60 +48,143 @@ class AdminNewsController extends Controller
 
     public function postAddNew(Request $request)
     {
+        $messageType = 'success';
+        $message = "Жаңалық сәтті құрылды!";
+
+        $imageHas = false;
+        $videoHas = false;
+
         if($request->ajax()){
-
-            $image = $request->file('image');
-
             if($request->hasFile('image')){
                 if ($request->file('image')->isValid()) {
-
-                    $imageName = $request->file('image')->getClientOriginalName();
-
-                    $new = new News();
-                    $new->title = $request->input('title');
-                    $new->author_id = Auth::guard('admin')->user()->id;
-                    $new->category_id = $request->input('category');
-                    $new->short_description = $request->input('short_description');
-                    $new->text = $request->input('text');
-                    $new->language = $request->input('language');
-                    $new->views = 0;
-                    $new->shares = 0;
-                    $new->likes = 0;
-
-                    //$directory = ''.date('d.m.Y').'/'.$new->id;
-                    //if(!Storage::disk('public')->has($directory)){
-                    // Storage::disk('public')->makeDirectory($directory);
-                    //}
-                    //Storage::disk('public')->put($directory.'/'.$imageName, file_get_contents($image -> getRealPath()));
-                    //$new->avatar_picture = Storage::url($directory.'/'.$imageName);
-
-                    $directory = ''.date('d.m.Y');
-                    $destinationPath = base_path().'/public/news/'.$directory;
-                    $request->file('image')->move($destinationPath, $imageName);
-                    $new->avatar_picture = 'news/'.$directory.'/'.$imageName;
-                    $new->save();
-
-                    if($request->has('postId')){
-                        $post = Post::find($request->input('postId'));
-                        $post->news_id = $new->id;
-                        $post->save();
+                    $file = $request->file('image');
+                    $fileArray = array('image' => $file);
+                    $rules = array(
+                        'image' => 'mimes:jpeg,jpg,png,gif|required|max:10000'
+                    );
+                    $validator = Validator::make($fileArray, $rules);
+                    if($validator->fails()){
+                        $messageType = 'error';
+                        $message = '';
+                        $errors = $validator->errors();
+                        foreach ($errors->get('image') as $messageOf) {
+                            $message .= $messageOf."\n";
+                        }
+                        return response()->json(['messageType' => $messageType, 'message' => $message]);
+                    }
+                    else{
+                        $imageHas = true;
                     }
                 }
-            }else{
+            }
+            if($request->hasFile('video')){
+                if($request->file('video')->isValid()){
+                    $file = $request->file('video');
+                    $fileArray = array('video' => $file);
+                    $rules = array(
+                        'video' => 'mimes:mp4,x-flv,x-mpegURL,MP2T,3gpp,quicktime,x-msvideo,x-ms-wmv|max:100000'
+                    );
+                    $validator = Validator::make($fileArray, $rules);
+                    if($validator->fails()){
+                        $messageType = 'error';
+                        $message = '';
+                        $errors = $validator->errors();
+                        foreach ($errors->get('video') as $messageOf) {
+                            $message .= $messageOf."\n";
+                        }
+                        return response()->json(['messageType' => $messageType, 'message' => $message]);
+                    }
+                    else{
+                        $videoHas = true;
+                    }
+                }
+            }
+            if($imageHas){
+                $imageName = $request->file('image')->getClientOriginalName();
+                $text = $request->input('text');
+
                 $new = new News();
                 $new->title = $request->input('title');
                 $new->author_id = Auth::guard('admin')->user()->id;
                 $new->category_id = $request->input('category');
                 $new->short_description = $request->input('short_description');
-                $new->text = $request->input('text');
+                $new->media_author = $request->input('media_author');
+                $new->tags = $request->input('keywords');
                 $new->language = $request->input('language');
                 $new->views = 0;
                 $new->shares = 0;
                 $new->likes = 0;
+
+                //$directory = ''.date('d.m.Y').'/'.$new->id;
+                //if(!Storage::disk('public')->has($directory)){
+                // Storage::disk('public')->makeDirectory($directory);
+                //}
+                //Storage::disk('public')->put($directory.'/'.$imageName, file_get_contents($image -> getRealPath()));
+                //$new->avatar_picture = Storage::url($directory.'/'.$imageName);
+
+                $directory = ''.date('d.m.Y');
+                $destinationPath = base_path().'/public/news/'.$directory;
+
+                $request->file('image')->move($destinationPath, $imageName);
+                //$image = Image::make(public_path($new->avatar_picture));
+                //$image->resize(1600, 900)->save(public_path($destinationOfImage.$new->id.'.jpg'));
+                $new->avatar_picture = 'news/'.$directory.'/'.$imageName;
+
+                if($videoHas){
+                    $videoName = $request->file('video')->getClientOriginalName();
+                    $request->file('video')->move($destinationPath, $videoName);
+                    $new->video_url = 'news/'.$directory.'/'.$videoName;
+                }
+
+                if($request->has('trashFiles')){
+                    //dd('Has trash files. And we need move to news directory.');
+                    $trashFiles = $request->input('trashFiles');
+                    $files_src = explode(',', $trashFiles);
+                    foreach ($files_src as $file){
+                        $pieces = explode('/', $file);
+                        $trashDirectory = $pieces[count($pieces)-2];
+                        $file_name = array_pop($pieces);
+                        $old_path =  public_path().'\\trash\\'.$trashDirectory.'\\'.$file_name;
+                        $new_path = public_path().'\\news\\'.$directory.'\\'.$file_name;
+
+                        if(File::exists(public_path('trash\\'.$trashDirectory.'\\'.$file_name))){
+                            File::move($old_path, $new_path);
+                            File::delete($old_path);
+                        }
+                        if (strpos($text, $file) !== false) {
+                            $text = str_replace($file, url('/news/'.$directory.'/'.$file_name), $text);
+                            //return $text;
+                        }
+
+                    }
+                    //return  response()->json(['messageType' => 'success', 'message' => 'Trash files moved. And text replaced.']);
+                }
+
+                $new->text = $text;
                 $new->save();
+
+                if($request->has('postId')){
+                    $post = Post::find($request->input('postId'));
+                    $post->news_id = $new->id;
+                    $post->save();
+
+                    //Notify user about your post is published
+                    $receivedUser = $new->posts->user;
+
+                    $receivedUser->newNotification()
+                        ->withType('NewsPublished')
+                        ->withSubject('Your posted new is published.')
+                        ->withBody('Your posted new is published. Thanks for information')
+                        ->regarding($new)
+                        ->deliver();
+                }
+            }else{
+                $messageType = 'error';
+                $message = "News can't be created, because you don't choose image file!";
+                return  response()->json(['messageType' => $messageType, 'message' => $message]);
             }
 
-            return "Жаңалық сәтті құрылды!";
+            return response()->json(['messageType' => $messageType, 'message' => $message]);
         }
     }
 
@@ -161,12 +246,12 @@ class AdminNewsController extends Controller
         }else if(count($sliders)>=5){
             $slider = SliderNew::orderBy('updated_at', 'asc')->first();
             //Delete image and thumbnail from slider
-            File::delete(public_path($destinationOfImage.$slider->news->id.'.jpg'));
-            File::delete(public_path($destinationOfThumbnail.$slider->news->id.'.jpg'));
+            //File::delete(public_path($destinationOfImage.$slider->news->id.'.jpg'));
+            //File::delete(public_path($destinationOfThumbnail.$slider->news->id.'.jpg'));
             //Create new image and thumbnail for slider
-            $image = Image::make(public_path($new->avatar_picture));
-            $image->resize(1600, 900)->save(public_path($destinationOfImage.$new->id.'.jpg'));
-            $image->resize(85, 48)->save(public_path($destinationOfThumbnail.$new->id.'.jpg'));
+            //$image = Image::make(public_path($new->avatar_picture));
+            //$image->resize(1600, 900)->save(public_path($destinationOfImage.$new->id.'.jpg'));
+            //$image->resize(85, 48)->save(public_path($destinationOfThumbnail.$new->id.'.jpg'));
             //update slider data
             $slider->new_id = $new->id;
             $slider->save();
@@ -174,9 +259,9 @@ class AdminNewsController extends Controller
             $message = "Жаңалық слайды ретінде қабылданып жаңартылды.";
             $message_type = "success";
         }else{
-            $image = Image::make(public_path(''.$new->avatar_picture));
-            $image->resize(1600, 900)->save(public_path($destinationOfImage.$new->id.'.jpg'));
-            $image->resize(85, 48)->save(public_path($destinationOfThumbnail.$new->id.'.jpg'));
+            //$image = Image::make(public_path(''.$new->avatar_picture));
+            //$image->resize(1600, 900)->save(public_path($destinationOfImage.$new->id.'.jpg'));
+            //$image->resize(85, 48)->save(public_path($destinationOfThumbnail.$new->id.'.jpg'));
 
             $slider = new SliderNew();
             $slider->new_id = $new->id;

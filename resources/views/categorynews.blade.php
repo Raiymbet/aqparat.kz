@@ -49,8 +49,19 @@
                                                     </p>
                                                     <div class="media">
                                                         <a href="#" class="carousel-image-container" style="background-image: url('{{asset($slider_new->avatar_picture)}}');">
+                                                            @if(!is_null($slider_new->video_url))
+                                                                <span class="image-has-video">
+                                                                    <i class="fa fa-video-camera"></i>
+                                                                </span>
+                                                            @endif
+                                                            @if(!is_null($slider_new->media_author))
+                                                                <span class="image-author">{{$slider_new->media_author}}</span>
+                                                            @endif
                                                         </a>
-                                                        <h4 class="slider-content-text">{!! str_limit(strip_tags($slider_new->text), 300) !!}</h4>
+                                                        <h4 class="slider-content-text">
+                                                            {!! str_limit(strip_tags($slider_new->text), 300) !!}
+                                                            <a class="text-red" href="{{ url('/newsread/'.$slider_new->id) }}">Read more...</a>
+                                                        </h4>
                                                     </div>
                                                 </div>
                                             @endforeach
@@ -72,8 +83,8 @@
                                 </div>
                             </div>
 
-                            <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4 m-t-xl pull-right" id="category-news-recommend">
-                                <div class="row" style="background: #f1f0de;">
+                            <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4 pull-right category-news-recommend" id="category-news-recommend">
+                                <div class="row m-t-md m-l-md m-r-n-sm" style="background: #f1f0de;">
                                     <div class="chapter">
                                         <span>Бөлім жаңалықтары</span>
                                     </div>

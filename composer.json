@@ -9,6 +9,7 @@
         "laravel/framework": "5.2.*",
         "laravel/socialite": "^2.0",
         "intervention/image": "^2.3",
+        "guzzlehttp/guzzle": "^6.2",
         "yaro/soc-share": "1.*"
     },
     "require-dev": {

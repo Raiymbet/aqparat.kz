@@ -37,7 +37,7 @@
                         <div class="header-panel animated fadeIn">
                             <div class="hpanel hblue m-b-md">
                                 <div class="panel-heading hbuilt text-center">
-                                    <h6>Жүйеге әлеуметтік желі арқылы кіру</h6>
+                                    <h6>Әлеуметтік желі арқылы кіру</h6>
                                 </div>
                                 <div class="panel-body">
                                     <a class="btn btn-info btn-block margin-bottom-10" href="{{ url('socialite/facebook') }}" style="background-color: #3a579a">
@@ -67,7 +67,7 @@
                 </div>
                 <div class="row">
                     <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 text-center">
-                        2015 Copyright Company Name
+                        <i class="fa fa-copyright"></i> 2016 Aqparat.kz
                     </div>
                 </div>
             </div>

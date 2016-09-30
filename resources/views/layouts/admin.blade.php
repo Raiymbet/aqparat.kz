@@ -22,10 +22,10 @@
 {{-- <link href="{{ elixir('css/app.css') }}" rel="stylesheet"> --}}
 
 <!-----Including CSS for different screen sizes----->
-    @yield('head')
     <link rel="stylesheet" type="text/css" href="{{ URL::asset('css/style.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ URL::asset('css/animate.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ URL::asset('css/sweetalert.css') }}">
+    @yield('head')
 </head>
 
 <body class="fixed-navbar fixed-sidebar">
@@ -97,6 +97,12 @@
                                                 <h5>Email</h5>
                                             </a>
                                         </td>
+                                        <td>
+                                            <a href="{{ url('/admin/profile') }}">
+                                                <i class="fa fa-user"></i>
+                                                <h5>Profile</h5>
+                                            </a>
+                                        </td>
                                     </tr>
                                 </tbody>
                             </table>
@@ -136,11 +142,13 @@
                     <ul class="nav nav-second-level">
                         <li><a href="{{ url('/admin/news') }}">Жаңалықтар тізімі</a></li>
                         <li><a href="{{ url('/admin/new/add') }}">Жаңалық қосу</a></li>
-                        <li><a href="{{ url('/admin/new/search') }}">Іздеу</a></li>
                     </ul>
                 </li>
                 <li>
                     <a href="{{ url('/admin/admins') }}"> <span class="nav-label">Админдер</span></a>
+                </li>
+                <li>
+                    <a href="{{ url('/admin/users') }}"><span class="nav-label">Қолданушылар</span></a>
                 </li>
                 <li>
                     <a href="{{ url('/admin/categories') }}"> <span class="nav-label">Санаттар</span></a>
@@ -150,6 +158,12 @@
                 </li>
                 <li>
                     <a href="{{ url('/admin/comments') }}"> <span class="nav-label">Пікірлер</span></a>
+                </li>
+                <li>
+                    <a href="{{ url('/admin/messaging') }}"> <span class="nav-label">Хат жолдау</span></a>
+                </li>
+                <li>
+                    <a href="{{ url('/admin/adSense') }}">Жарнама</a>
                 </li>
             </ul>
         </div>

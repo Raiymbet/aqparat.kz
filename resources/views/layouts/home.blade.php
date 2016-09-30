@@ -1,12 +1,22 @@
+<!--
+    1. Search durystau
+    2. Comment and Reply
+    3. Reklama
+    4. Bolim janalyktary usynysy
+    5. Share and count
+    6. New videos and images position and width styles
+    7. Okuga usynamyz
+ -->
 <!DOCTYPE html>
-<html lang="en">
+<html lang="kz,en,ru">
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta http-equiv="content-language" content="kz">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="_token" content="{!! csrf_token() !!}"/>
 
-    <title>Aqparat.kz</title>
+    <!-- Meta tags for dynamic pages -->
     <link rel="shortcut icon" type="image/x-icon" href="{{ URL::asset('img/title_logo.png') }}" />
 
     <!-- CSS and Javascript -->
@@ -24,6 +34,9 @@
 <!-----Including CSS for different screen sizes----->
     @yield('head')
     <link rel="stylesheet" type="text/css" href="{{ URL::asset('css/responsivestyle.css') }}">
+
+    <!-- Including shareaholic app -->
+    <script type='text/javascript' data-cfasync='false' src='//dsms0mj1bbhn4.cloudfront.net/assets/pub/shareaholic.js' data-shr-siteid='0cb5aaee1a49d7720c1ac24ad13ca130' async='async'></script>
 </head>
 
 <body id="app-layout" class="fixed-navbar blank">
@@ -31,28 +44,67 @@
     <div class="row header-row">
         <div class="col-sm-12 col-md-12 col-lg-12">
             <span id="datebox" style=""></span>
-            <div class="pull-right">
+            <div class="navbar-right">
                 @if (Auth::guest())
                     <a class="pull-right" href="{{ url('/login') }}">
                         LOG IN
                     </a>
                 @else
-                    <a href="#" class="" role="button">
-                        <i class="fa fa-bell-o"></i>
-                    </a>
-                    <a href="#" class="dropdown-toggle pull-right m-l-md" data-toggle="dropdown"
-                       role="button" aria-expanded="false">
-                        <img class="img-responsive" style="width: 20px; height: 20px; float: left;" src="{{ Auth::user()->avatar}}">
-                        <span class="m-l-sm">{{ Auth::user()->name }}</span>
-                        <i class="fa ">
-                            <img class="img-responsive img-chevron" src="{{ URL::asset('img/chevron_down_white.png') }}">
-                        </i>
-                    </a>
-                    <ul class="dropdown-menu" role="menubar">
-                        <li><a href="{{ url('/profile') }}">Profile</a></li>
-                        <li><a href="{{ url('/comments') }}">My comments</a></li>
-                        <li><a href="{{ url('/myposts') }}">My posts</a></li>
-                        <li><a href="{{ url('/logout') }}"><i class="fa fa-sign-out"></i>Logout</a></li>
+                    <ul class="nav navbar-nav no-borders">
+                        <li class="dropdown">
+                            @if(Auth::user()->notifications()->unread()->count() > 0)
+                                <a class="dropdown-toggle label-menu-corner" id="see-notifications" href="#" data-toggle="dropdown">
+                                    <i class="fa fa-bell-o" ></i>
+                                    <span class="label label-success label-notifications-count">{{Auth::user()->notifications()->unread()->count()}}</span>
+                                </a>
+                            @else
+                                <a class="dropdown-toggle label-menu-corner" href="#" data-toggle="dropdown">
+                                    <i class="fa fa-bell-o" ></i>
+                                </a>
+                            @endif
+                            <ul class="dropdown-menu hdropdown notification animated flipInX">
+                                <li class="summary"><a href="#">Notifications:</a></li>
+                                @if(Auth::user()->notifications()->unread()->get()->count()>0)
+                                    @foreach(Auth::user()->notifications()->unread()->get() as $notification)
+                                        <li class="notifications-body">
+                                            <a href="#">
+                                                <div class="notification {{ $notification->type }}">
+                                                    <p class="subject">
+                                                        <span class="label label-success">NEW</span>
+                                                        {{ $notification->subject }}
+                                                    </p>
+                                                    <p class="body">{{ $notification->body }}</p>
+                                                    @if($notification->type == "" && $notification->hasValidObject())
+                                                        <a class="" href="{{ url('/newsread/'.$notification->getObject()->id) }}">View New</a>
+                                                    @endif
+                                                    <span class="hidden">{{$notification->id}}</span>
+                                                </div>
+                                            </a>
+                                        </li>
+                                    @endforeach
+                                @else
+                                    <li class="no-notification"><a href="#" class="text-muted">You don't have new notifications.</a></li>
+                                @endif
+                                <li class="summary"><a href="#">See all notifications.</a></li>
+                            </ul>
+                        </li>
+                        <li class="dropdown">
+                            <a href="#" class="dropdown-toggle pull-right m-l-md" data-toggle="dropdown">
+                                <img class="img-responsive" style="width: 20px; height: 20px; float: left;" src="{{ Auth::user()->avatar}}">
+                                <span class="m-l-sm">{{ Auth::user()->name }}</span>
+                                <i class="fa ">
+                                    <img class="img-responsive img-chevron" src="{{ URL::asset('img/chevron_down_white.png') }}">
+                                </i>
+                            </a>
+                            <ul class="dropdown-menu hdropdown bigmenu animated flipInX" role="menubar">
+                                <li><a href="{{ url('/profile') }}">Profile</a></li>
+                                <li><a href="{{ url('/comments') }}">My comments</a></li>
+                                <li><a href="{{ url('/myposts') }}">My posts</a></li>
+                                <li><a href="#">Settings</a></li>
+                                <li><a href="#">Help</a></li>
+                                <li><a href="{{ url('/logout') }}"><i class="fa fa-sign-out"></i>Logout</a></li>
+                            </ul>
+                        </li>
                     </ul>
                 @endif
             </div>
@@ -65,20 +117,20 @@
         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
             <div class="col-lg-4 col-md-4 col-sm-3">
                 <div class="m-t-lg" id="header-social-links">
-                    <a href="#" style="color: #FFFFFF">
+                    <a href="https://facebook.com/aqparatplus" style="color: #FFFFFF">
                         <i class="fa fa-facebook-square fa-lg fa-2x"></i>
                     </a>
-                    <a href="#" style="color: #FFFFFF">
+                    <a href="https://twitter.com/aqparatplus" style="color: #FFFFFF">
                         <i class="fa fa-twitter-square fa-lg fa-2x m-l-sm"></i>
                     </a>
-                    <a href="#" style="color: #FFFFFF">
-                        <i class="fa fa-linkedin-square fa-lg fa-2x m-l-sm"></i>
+                    <a href="https://vk.com/aqparatplus" style="color: #FFFFFF">
+                        <i class="fa fa-vk fa-lg fa-2x m-l-sm"></i>
                     </a>
-                    <a href="#" style="color: #FFFFFF">
+                    <a href="https://instagram.com/aqparatplus" style="color: #FFFFFF">
+                        <i class="fa fa-instagram fa-lg fa-2x m-l-sm"></i>
+                    </a>
+                    <a href="https://google.com" style="color: #FFFFFF">
                         <i class="fa fa-google-plus-square fa-lg fa-2x m-l-sm"></i>
-                    </a>
-                    <a href="#" style="color: #FFFFFF">
-                        <i class="fa fa-rss-square fa-lg fa-2x m-l-sm"></i>
                     </a>
                 </div>
             </div>
@@ -99,8 +151,8 @@
                 <form id="form-search" class="hidden" action="{{ url('/search') }}" method="GET">
                     {{ csrf_field() }}
                     <div class="form-group no-margin">
-                        <input id="input-search" type="text" placeholder="Жаңалық іздеу..." class="form-control" name="search"
-                         style="position: absolute; margin-top: 30px; width: 90%; float: right;">
+                        <input id="input-search" type="text" placeholder="Жаңалық іздеу..." class="form-control" name="Text"
+                         style="">
                     </div>
                 </form>
             </div>
@@ -178,6 +230,7 @@
 <!-- MOBILE HEADER -->
 <div class="col-xs-12 header-two" id="header-for-mobile-screens">
     <div class="row header-row">
+        <a class="mobile-logo" href="{{ url('/') }}">Back to home</a>
         <a role="button" class="header-link pull-right" data-toggle="collapse" data-target="#mobile-collapse-second">
             <i class="fa">
                 <img class="img-responsive img-chevron" src="{{ URL::asset('img/chevron_down_red.png') }}">
@@ -378,20 +431,20 @@
             <span><i class="fa fa-copyright"></i>2016 Aqparat.kz</span>
             <br>
             <p>Әлеуметтік желілеріміз:
-                <a href="#">
+                <a href="https://facebook.com/aqparatplus">
                     <i class="fa fa-facebook-square fa-lg m-l-xs"></i>
                 </a>
-                <a href="#">
+                <a href="https://twitter.com/aqparatplus">
                     <i class="fa fa-twitter-square fa-lg m-l-xs"></i>
                 </a>
-                <a href="#">
-                    <i class="fa fa-linkedin-square fa-lg m-l-xs"></i>
+                <a href="https://vk.com/aqparatplus">
+                    <i class="fa fa-vk fa-lg m-l-xs"></i>
                 </a>
-                <a href="#">
+                <a href="https://instagram.com/aqparatplus">
+                    <i class="fa fa-instagram fa-lg m-l-xs"></i>
+                </a>
+                <a href="https://google.com">
                     <i class="fa fa-google-plus-square fa-lg m-l-xs"></i>
-                </a>
-                <a href="#">
-                    <i class="fa fa-rss-square fa-lg m-l-xs"></i>
                 </a>
             </p>
         </div>
@@ -457,12 +510,25 @@
     $(document).ready(function () {
         //initMenu();
         getDate();
-        $.get('{{ url('/currency') }}', function(data) {
-            console.log(data);
-        });
+        //$.get('{{ url('/currency') }}', function(data) {
+          //  console.log(data);
+        //});
         $('#input-search').focusout(function() {
             $('#form-search').addClass('hidden');
             $('#btn-search').show();
+        });
+
+        $('#see-notifications').one('click', function () {
+            var array = [];
+            $('li .notifications-body .hidden').each( function () {
+                //console.log($(this).text());
+                array.push($(this).text());
+            });
+            console.log(array);
+            $.get("{{ url('/newsread/notifications/read') }}", { 'array' : array }).done( function (data) {
+                console.log(data);
+                $('.label.label-success.label-notifications-count').html('');
+            });
         });
     });
 </script>

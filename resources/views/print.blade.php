@@ -2,10 +2,10 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <title>Aqparat.kz</title>
+    <title>{{ $new->title }}</title>
     <link rel="shortcut icon" type="image/x-icon" href="{{ URL::asset('img/title_logo.png') }}" />
 
     <!-- CSS and Javascript -->
@@ -21,10 +21,11 @@
 {{-- <link href="{{ elixir('css/app.css') }}" rel="stylesheet"> --}}
 
 <!-----Including CSS for different screen sizes----->
-    <link rel="stylesheet" type="text/css" href="{{ URL::asset('css/responsivestyle.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ URL::asset('css/responsivestyle.css') }}" media="all">
+    <link rel="stylesheet" type="text/css" href="{{ URL::asset('css/print.css') }}">
 </head>
 
-<body id="print" class="fixed-navbar blank">
+<body id="print">
     <article>
         <header>
             <a href="#" class="btn btn-info pull-right printme">Print</a>
@@ -50,23 +51,21 @@
                 </a>
             </h2>
             <br>
-            <div id="text-content">
-                {!! $new->text !!}
-            </div>
-            <p class="url">http://aqparat.kz/newsread/{{$new->id}}</p>
-            <footer>
-                <p>© 2016 Aqparat.kz</p>
-            </footer>
         </header>
+        <div id="text-content">
+            {!! $new->text !!}
+        </div>
+        <p class="url">http://aqparat.kz/newsread/{{$new->id}}</p>
+        <footer>
+            <p>© 2016 Aqparat.kz</p>
+        </footer>
     </article>
 <!-- JavaScripts -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
 <script>
-    $(document).ready(function () {
-        $('.printme').click(function() {
-            window.print();
-        });
+    $('.printme').click(function() {
+        window.print();
     });
 </script>
 </body>

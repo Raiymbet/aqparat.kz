@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Admin;
+use Illuminate\Support\Facades\Config;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
 
 use App\Http\Requests;
 
@@ -33,6 +35,14 @@ class AdminAdminsController extends Controller
     public function postAdd(Request $request)
     {
         if($request->ajax()){
+
+            if (Admin::where('email', '=', $request->input('email'))->exists()) {
+                // user found
+                $messageType = 'error';
+                $message = 'User with this email exists. Please, enter other email!';
+                return response()->json(['messageType' => $messageType, 'message' => $message]);
+            }
+
             $password = str_random(8);
             $admin = new Admin();
             $admin->name = $request->input('name');
@@ -41,19 +51,23 @@ class AdminAdminsController extends Controller
             $admin->password = bcrypt($password);
 
             $data = [
-                'name' => $admin->name,
-                'email' => $admin->email,
+                'name' => $request->input('name'),
+                'email' => $request->input('email'),
                 'password' => $password,
             ];
 
-            Mail::raw($data, function($message) use ($data)
-            {
-                $message->from('tukpetov@bk.ru', 'Raiymbet Tukpetov');
-                $message->to($data['email'])->subject('Aqparat.kz сайтының жаңа қолданушысы ');
+            //dd(Config::get('mail'));
+
+            Mail::send('common.email', $data, function($message) use ($data){
+                $message->from('info@aqparat.kz', 'Aqparat.kz');
+                $message->to($data['email'], $data['name'])->subject('Aqparat.kz сайтының жаңа қолданушысы');
             });
 
             $admin->save();
-            return "".$admin->name." қолданушысы сәтті құрылды!";
+
+            $messageType = 'success';
+            $message = "".$admin->name." қолданушысы сәтті құрылды!";
+            return response()->json(['messageType' => $messageType, 'message' => $message]);
         }
     }
 

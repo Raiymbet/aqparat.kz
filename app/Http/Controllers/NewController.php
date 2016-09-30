@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use Auth;
+use App\CommentReplies;
 use App\Category;
 use App\Comment;
 use App\Like;
@@ -10,9 +10,11 @@ use App\News;
 use App\Repositories\AdminRepository;
 use App\Repositories\NewRepository;
 use App\Repositories\PostRepository;
+use App\NewSearch\NewSearch;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
+use Auth;
 use View;
 
 class NewController extends Controller
@@ -41,7 +43,7 @@ class NewController extends Controller
         //$last_posts = $this->post_repository->getLastPosts();
         //$more_readed_news = $this->new_repository->getMoreReadedNews();
         $recommend_news = $this->new_repository->getRecommendNews($new);
-        $comments = $new->comments_without_replies()->simplePaginate(3);
+        //$comments = $new->comments_without_replies()->simplePaginate(12);
         
         //dd($comments->userIsLikedComment(Auth::user()->id));
 
@@ -55,13 +57,40 @@ class NewController extends Controller
             'onfocus' => $focus_categories,
             'new' => $new,
             'translates' => $translates,
-            'comments' => $comments,
+            //'comments' => $comments,
             'columnists' => $columnists,
             //'last_news' => $last_news,
             //'last_posts' => $last_posts,
             //'more_readed_news' => $more_readed_news,
             'recommend_news' => $recommend_news,
         ]);
+    }
+
+    public function getComment($type, $id){
+        //id, user_id, user_avatar, user_name, created_at, comment_text, comment_replies_count, user_idLikedComment, likes_count
+        if($type == 'reply') {
+            $comment = CommentReplies::where('replied_id', '=', $id)->first();
+            //dd($comment);
+            return View::make('get_replies')->with(['replies' => [$comment]]);
+        }
+        else{
+            $comment = Comment::find($id);
+            return View::make('get_comments')->with(['comments' => [$comment]]);
+        }
+    }
+
+    public function getComments(Request $request, $id){
+        $new = News::find($id);
+        $comments = $new->comments_without_replies()->simplePaginate(3);
+        //dd($comments);
+        return View::make('get_comments')->with(['comments' => $comments]);
+    }
+
+    public function getReplies(Request $request, $id){
+        $comment = Comment::find($id);
+        $replies = $comment->replies()->simplePaginate(3);
+        //dd($replies);
+        return View::make('get_replies')->with(['replies' => $replies]);
     }
 
     public function getNewsPaginate(Request $request, $type){
@@ -92,6 +121,9 @@ class NewController extends Controller
         }else if($type == 'round_table'){
             $news = $this->new_repository->getCategoryNews($category_id, 12);
             $view = View::make('get_roundtable_news')->with(['news' => $news]);
+        }else if($type == 'focus'){
+            $news = $this->new_repository->getCategoryNews($category_id, 12);
+            $view = View::make('get_focus')->with(['news' => $news]);
         }
 
         return $view;
@@ -142,21 +174,16 @@ class NewController extends Controller
 
     public function getSearch(Request $request)
     {
-        if($request->input('search')===''){
-            $searchedNews = News::where('language', 'kz')->orderBy('created_at', 'desc')->paginate(6);
-        }else{
-            $searchedNews = News::where('language', '=', 'kz')
-                ->where('text', 'LIKE', '%'.$request->input('search').'%')
-                ->orWhere('title', 'LIKE', '%'.$request->input('search').'%')
-                ->orderBy('created_at', 'desc')
-                ->paginate(6);
+        if($request->has('Text')){
+            //$searchNews = NewSearch::apply($request)->paginate(6);
+            //$view = View::make('get_search_news')->with(['searchNews' => $searchNews]);
         }
 
         $columnists = $this->admin_repository->getColumnists();
         //$last_news = $this->new_repository->getLastNews();
         //$last_posts = $this->post_repository->getLastPosts();
         //$more_readed_news = $this->new_repository->getMoreReadedNews();
-        $recommend_news = $this->new_repository->getRecommendedNews();
+        //$recommend_news = $this->new_repository->getRecommendedNews();
 
         $simple_categories = Category::ofType('simple')->get();
         $round_table_categories = Category::ofType('point')->get();
@@ -166,41 +193,19 @@ class NewController extends Controller
             'categories' => $simple_categories,
             'round_tables' => $round_table_categories,
             'onfocus' => $focus_categories,
-            'searchNews' => $searchedNews,
+            //'searchNewsView' => $view,
             'columnists' => $columnists,
             //'last_news' => $last_news,
             //'last_posts' => $last_posts,
             //'more_readed_news' => $more_readed_news,
-            'recommend_news' => $recommend_news,
+            //'recommend_news' => $recommend_news,
         ]);
     }
 
     public function postSearch(Request $request)
     {
-        $text = $request->input('text');
-        $category = $request->input('category');
-        $date = ($request->input('date')==='')?null:$request->input('date');
-
-        if($category !== 'all' && !is_null($date)){
-            $searchedNews = News::where('language', '=', 'kz')
-                ->where('category_id', '=', $category)
-                ->where('created_at', '=', $date)
-                ->paginate(6);
-        }else if($category === 'all' && !is_null($date)) {
-            $searchedNews = News::where('language', '=', 'kz')
-                ->where('created_at', '=', $date)
-                ->paginate(6);
-        }else if(is_null($date) && $category !== 'all') {
-            $searchedNews = News::where('language', '=', 'kz')
-                ->where('category_id', '=', $category)
-                ->paginate(6);
-        }else{
-            $searchedNews = News::where('language', '=', 'kz')
-                ->paginate(6);
-        }
-        return view('postsearch', [
-            'searchNews' => $searchedNews,
-        ]);
+        $searchNews = NewSearch::apply($request)->paginate(6);
+        return View::make('get_search_news')->with(['searchNews' => $searchNews]);
     }
 
     public function getTranslate($id)
@@ -227,6 +232,18 @@ class NewController extends Controller
             $like = new Like();
             $like->news_id = $new->id;
             $like->user_id = Auth::id();
+
+            //If news is posted by user, then notify user liked post
+            $receivedUser = $new->posts()->user;
+            $sendUser = $request->user();
+
+            $receivedUser->newNotification()
+                ->withType('NewsLiked')
+                ->withSubject('Your posted new is liked.')
+                ->withBody($sendUser->name.' is liked your posted new.')
+                ->regarding($new)
+                ->deliver();
+
             $like->save();
 
             $new->likes = $new->likes+1;

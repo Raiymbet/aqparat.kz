@@ -88,6 +88,7 @@
                                 @endforeach
                             </tbody>
                         </table>
+                        <div id="result-data"></div>
                     </div>
                 </div>
             </div>
@@ -137,14 +138,23 @@
                 $.post("{{url('/admin/admins')}}", {name: name, email:email, type:type}).done(function(data) {
                     //$('#add_category').hide("slow");
                     //swal("Сәтті жұмыс!", data, "success");
-                    swal({
-                                title: "Сәтті жұмыс!",
-                                text: data,
-                                type: "success"
-                            },
-                            function(){
-                                location.reload();
-                            });
+                    if(data.messageType == 'error'){
+                        swal({
+                            title: "Oops...",
+                            text: data.message,
+                            type: 'error'
+                        });
+                    }else if(data.messageType == 'success'){
+                        swal({
+                            title: "Сәтті жұмыс!",
+                            text: data.message,
+                            type: "success"
+                        }, function(){
+                            location.reload();
+                        });
+                    }else{
+                        $('#result-data').html(data);
+                    }
                 });
 
             }else{

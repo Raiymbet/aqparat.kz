@@ -9,7 +9,7 @@
     @endif
     @foreach($news as $index => $new)
         <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4 news-thumbnail pull-left @if($index%$divider==0) clear-left @endif">
-            <div class="media p-t-sm" style="border-top: 1px solid #ccc;">
+            <div class="media p-t-sm" style="border-top: 1px dashed;">
                 <div class="media-left news-author-avatar">
                     <a href="{{ url('/newsread/'.$new->id) }}">
                         <img alt="64x64" class="media-object"

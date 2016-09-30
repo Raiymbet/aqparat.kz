@@ -28,9 +28,9 @@
 
 <body id="app-layout" class="blank">
 
-<div id="wrapper" class="toggled-2">
+<div>
     <!-- Page Content -->
-    <div id="page-content-wrapper">
+    <div id="">
         <div class="container-fluid xyz">
             <div class="login-container">
                 <div class="row">
@@ -38,7 +38,7 @@
                         <div class="header-panel animated fadeIn">
                             <div class="hpanel hblue" style="margin-bottom: 20px;">
                                 <div class="panel-heading hbuilt text-center">
-                                    <h6>Жүйеге админ ретінде кіру</h6>
+                                    <h6>Админ ретінде кіру</h6>
                                 </div>
                                 <div class="panel-body">
                                     @include('common.errors')
@@ -66,7 +66,7 @@
                                         </div>
                                         <div class="checkbox">
                                             <!-- Squared FOUR -->
-                                            <div class="margin-left-20">
+                                            <div class="m-l-md">
                                                 <input type="checkbox" name="remember" />
                                                 <label for="remember">Remember login</label>
                                             </div>
@@ -81,7 +81,7 @@
                 </div>
                 <div class="row">
                     <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 text-center">
-                        2015 Copyright Company Name
+                        <i class="fa fa-copyright"></i> 2016 Aqparat.kz
                     </div>
                 </div>
             </div>

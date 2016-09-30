@@ -3,10 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\AdminDetail;
+use App\User;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
 use App\Admin;
+use Intervention\Image\Facades\Image;
 use Validator;
 use Illuminate\Support\Facades\File;
 use App\Http\Controllers\Controller;
@@ -88,6 +90,62 @@ class AdminController extends Controller
 
             return  response()->json(['message_type' => $message_type, 'message' => $message]);
         }
+    }
+
+    public function postImageUpload(Request $request){
+        if($request->ajax()){
+            if($request->hasFile('file')){
+                if ($request->file('file')->isValid()) {
+                    $file = $request->file('file');
+                    $fileArray = array('image' => $file);
+                    $rules = array(
+                        'image' => 'mimes:jpeg,jpg,png,gif|required|max:10000'
+                    );
+                    $validator = Validator::make($fileArray, $rules);
+                    if($validator->fails()){
+                        $messageType = 'error';
+                        $message = '';
+                        $errors = $validator->errors();
+                        foreach ($errors->get('image') as $messageOf) {
+                            $message .= $messageOf."\n";
+                        }
+                        return "Invalid mimes";
+                    }
+                    else{
+                        $imageName = $request->file('file')->getClientOriginalName();
+                        $directory = ''.Auth::guard('admin')->id();
+                        $destinationPath = base_path().'/public/trash/'.$directory;
+
+                        $request->file('file')->move($destinationPath, $imageName);
+                        //$image = Image::make(public_path('trash\\'.$directory.'\\'.$imageName));
+                        //$image->resize(700, 500)->save(public_path('\\trash\\'.$directory.'\\'.$imageName));
+                        $src = url('/trash/'.$directory.'/'.$imageName);
+                        return $src;
+                    }
+                }
+            }
+        }
+    }
+
+    public function getUsers(Request $request){
+        $users = User::paginate(30);
+        //dd($users);
+        return view('admin.users')->with('users', $users);
+    }
+
+    public function postTrashClean(Request $request){
+        $files = $request->input('files');
+        $message = 'File do not exists';
+        foreach ($files as $file){
+            $pieces = explode('/', $file);
+            $directory = $pieces[count($pieces)-2];
+            $file_name = array_pop($pieces);
+            if(File::exists(public_path('trash\\'.$directory.'\\'.$file_name))){
+                File::delete(public_path('trash\\'.$directory.'\\'.$file_name));
+                $message = 'File exists and deleted';
+            }
+        }
+        return $message;
     }
 
     public function getNews(Request $request)

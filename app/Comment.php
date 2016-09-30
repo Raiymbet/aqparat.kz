@@ -46,7 +46,7 @@ class Comment extends Model
     }
 
     public function replies(){
-        return $this->hasMany(CommentReplies::class, 'comment_id', 'id');
+        return $this->hasMany(CommentReplies::class, 'comment_id', 'id')->orderBy('created_at', 'desc');
     }
 
     public function replies_count(){

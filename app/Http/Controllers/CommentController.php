@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\CommentLikes;
 use App\CommentReplies;
+use App\User;
 use Auth;
 use App\Comment;
 use App\Like;
@@ -18,14 +19,6 @@ class CommentController extends Controller
     public function __construct()
     {
         $this->middleware('auth');
-    }
-
-    public function showComments(Request $request, $id){
-        $new = News::find($id);
-        $comments = $new->comments_without_replies()->simplePaginate(3);
-        if ($request->ajax()) {
-            return Response::json(View::make('get_comments', array('comments' => $comments))->render());
-        }
     }
 
     public function postComment(Request $request, $id)
@@ -45,14 +38,28 @@ class CommentController extends Controller
             $comment_reply = new CommentReplies();
             $comment_reply->replied_id = $comment->id;
             $comment_reply->comment_id = $request->input('replied_id');
+
+            //Comment Replyed Notification
+            $repliedComment = Comment::find($request->input('replied_id'));
+            $receivedUser = $repliedComment->user;
+            $sendUser = $request->user();
+
+            $receivedUser->newNotification()
+                ->withType('ReplyComment')
+                ->withSubject('Your comment is replied.')
+                ->withBody($sendUser->name.' replied your comment.')
+                ->regarding($comment)
+                ->deliver();
+
             $comment_reply->save();
         }
 
         return response()->json([
             'message' => "Сіздің пікіріңіз қабылданды!",
-            'comment' => $comment,
-            'reply' => $comment->reply,
-            'created_at' => $comment->created_at->format('F j, Y H:i'),
+            'id' => $comment->id,
+            //'comment' => $comment,
+            //'reply' => $comment->reply,
+            //'created_at' => $comment->created_at->format('F j, Y H:i'),
             'count' => News::find($id)->comments_count(),
         ]);
     }
@@ -64,6 +71,18 @@ class CommentController extends Controller
             $like = new CommentLikes();
             $like->comment_id = $comment->id;
             $like->user_id = Auth::id();
+
+            //Your comment liked notification
+            $receivedUser = $comment->user;
+            $sendUser = Auth::user();
+
+            $receivedUser->newNotification()
+                ->withType('LikeComment')
+                ->withSubject('Your comment is liked.')
+                ->withBody($sendUser->name.' liked your comment.')
+                ->regarding($comment)
+                ->deliver();
+
             $like->save();
 
             return response()->json(['like' => 'liked', 'likes' => $comment->likes_count()]);
