@@ -137,34 +137,71 @@
                 <li class="">
                     <a href="{{ url('/admin') }}"><span class="nav-label">Dashboard</span></a>
                 </li>
-                <li>
-                    <a role="button" aria-expanded="false"><span class="nav-label">Жаңалықтар</span><span class="fa arrow"></span> </a>
-                    <ul class="nav nav-second-level">
-                        <li><a href="{{ url('/admin/news') }}">Жаңалықтар тізімі</a></li>
-                        <li><a href="{{ url('/admin/new/add') }}">Жаңалық қосу</a></li>
-                    </ul>
-                </li>
-                <li>
-                    <a href="{{ url('/admin/admins') }}"> <span class="nav-label">Админдер</span></a>
-                </li>
-                <li>
-                    <a href="{{ url('/admin/users') }}"><span class="nav-label">Қолданушылар</span></a>
-                </li>
-                <li>
-                    <a href="{{ url('/admin/categories') }}"> <span class="nav-label">Санаттар</span></a>
-                </li>
-                <li>
-                    <a href="{{ url('/admin/posts') }}"> <span class="nav-label">Жолдамалар</span></a>
-                </li>
-                <li>
-                    <a href="{{ url('/admin/comments') }}"> <span class="nav-label">Пікірлер</span></a>
-                </li>
-                <li>
-                    <a href="{{ url('/admin/messaging') }}"> <span class="nav-label">Хат жолдау</span></a>
-                </li>
-                <li>
-                    <a href="{{ url('/admin/adSense') }}">Жарнама</a>
-                </li>
+                @if(Auth::guard('admin')->user()->type == 'admin')
+                    <li>
+                        <a role="button" aria-expanded="false"><span class="nav-label">Жаңалықтар</span><span class="fa arrow"></span> </a>
+                        <ul class="nav nav-second-level">
+                            <li><a href="{{ url('/admin/news') }}">Жаңалықтар тізімі</a></li>
+                            <li><a href="{{ url('/admin/new/add') }}">Жаңалық қосу</a></li>
+                        </ul>
+                    </li>
+                    <li>
+                        <a href="{{ url('/admin/admins') }}"> <span class="nav-label">Админдер</span></a>
+                    </li>
+                    <li>
+                        <a href="{{ url('/admin/users') }}"><span class="nav-label">Қолданушылар</span></a>
+                    </li>
+                    <li>
+                        <a href="{{ url('/admin/categories') }}"> <span class="nav-label">Санаттар</span></a>
+                    </li>
+                    <li>
+                        <a href="{{ url('/admin/posts') }}"> <span class="nav-label">Жолдамалар</span></a>
+                    </li>
+                    <li>
+                        <a href="{{ url('/admin/comments') }}"> <span class="nav-label">Пікірлер</span></a>
+                    </li>
+                    <li>
+                        <a href="{{ url('/admin/messaging') }}"> <span class="nav-label">Хат жолдау</span></a>
+                    </li>
+                    <li>
+                        <a href="{{ url('/admin/adSense') }}">Жарнама</a>
+                    </li>
+                @elseif(Auth::guard('admin')->user()->type == 'journalist')
+                    <li>
+                        <a role="button" aria-expanded="false"><span class="nav-label">Жаңалықтар</span><span class="fa arrow"></span> </a>
+                        <ul class="nav nav-second-level">
+                            <li><a href="{{ url('/admin/news') }}">Жаңалықтар тізімі</a></li>
+                            <li><a href="{{ url('/admin/new/add') }}">Жаңалық қосу</a></li>
+                        </ul>
+                    </li>
+                    <li>
+                        <a href="{{ url('/admin/posts') }}"> <span class="nav-label">Жолдамалар</span></a>
+                    </li>
+                @elseif(Auth::guard('admin')->user()->type == 'columnist')
+                    <li>
+                        <a role="button" aria-expanded="false"><span class="nav-label">Жаңалықтар</span><span class="fa arrow"></span> </a>
+                        <ul class="nav nav-second-level">
+                            <li><a href="{{ url('/admin/news') }}">Жаңалықтар тізімі</a></li>
+                            <li><a href="{{ url('/admin/new/add') }}">Жаңалық қосу</a></li>
+                        </ul>
+                    </li>
+                @elseif(Auth::guard('admin')->user()->type == 'moderator')
+                    <li>
+                        <a role="button" aria-expanded="false"><span class="nav-label">Жаңалықтар</span><span class="fa arrow"></span> </a>
+                        <ul class="nav nav-second-level">
+                            <li><a href="{{ url('/admin/news') }}">Жаңалықтар тізімі</a></li>
+                        </ul>
+                    </li>
+                    <li>
+                        <a href="{{ url('/admin/posts') }}"> <span class="nav-label">Жолдамалар</span></a>
+                    </li>
+                    <li>
+                        <a href="{{ url('/admin/comments') }}"> <span class="nav-label">Пікірлер</span></a>
+                    </li>
+                    <li>
+                        <a href="{{ url('/admin/messaging') }}"> <span class="nav-label">Хат жолдау</span></a>
+                    </li>
+                @endif
             </ul>
         </div>
     </aside>

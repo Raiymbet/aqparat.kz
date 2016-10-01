@@ -74,14 +74,7 @@
                             </div>
 
                             <div id="jarnama" class="col-xs-12 col-sm-12 col-md-3 col-lg-3 pull-right">
-                                <div class="hpanel hred">
-                                    <div class="panel-heading hbuilt">
-                                        <h6 class="text-center">Жарнама</h6>
-                                    </div>
-                                    <div class="panel-body">
-                                        <p>Ақпараттандыру сайты туралы жарнамалар салуға болады</p>
-                                    </div>
-                                </div>
+                                <!-- AdSense -->
                             </div>
 
                             <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 m-t-md" style="">

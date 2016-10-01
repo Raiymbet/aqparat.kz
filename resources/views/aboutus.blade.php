@@ -1,5 +1,9 @@
 @extends('layouts.home')
 
+@section('head')
+    <link rel="stylesheet" type="text/css" href="{{ URL::asset('css/flag-icon.css') }}">
+    <title>Aqparat.kz туралы мәлімет</title>
+@endsection
 
 @section('content')
 
@@ -15,50 +19,83 @@
                 <div class="col-xs-12 col-sm-12 col-md-9 col-lg-9">
                     <div class="hpanel blog-article-box">
                         <div class="panel-body">
-                            <h6>What we do</h6>
-                            <p>Our commentaries appear in
-                                476 media outlets
-                                in 154 countries
-                                Project Syndicate produces and delivers original, high-quality commentaries to a global audience. Featuring exclusive contributions by prominent political leaders, policymakers, scholars, business leaders, and civic activists from around the world, we provide news media and their readers cutting-edge analysis and insight, regardless of ability to pay. Our membership now includes nearly 500 media outlets – more than half of which receive our commentaries for free or at subsidized rates – in more than 150 countries.
-                            </p>
-                            <h6 class="m-t">Why we do it</h6>
-                            <p>
-                                Project Syndicate began in the early 1990s as an initiative to assist newly independent media in post-communist Central and Eastern Europe, before quickly expanding to Western Europe, Africa, Asia, and the Americas. Our rapid growth has been guided by a simple credo: All people – wherever they live, whatever their income, and whatever language they use – deserve equal access to a broad range of views by the world’s foremost leaders and thinkers on the issues, events, and forces shaping their lives.
-                                Our contributors include
-                                45 Nobel laureates
-                                and 111 heads of state
-                                Project Syndicate thus provides an invaluable global public good: ensuring that news media in all countries, regardless of their financial and journalistic resources – and often in challenging political environments – can offer readers original, engaging, and thought-provoking analysis by the world’s leading innovators in economics, politics, health, technology, and culture. Indeed, without Project Syndicate, most of the publications we serve would be unable to secure comparable commentaries.
-                            </p>
-                            <h6 class="m-t">How we do it</h6>
-                            <p>
-                                News organizations in developed countries provide financial contributions for the rights to Project Syndicate commentaries, which enables us to offer these rights for free, or at subsidized rates, to newspapers and other media in the developing world. Because no publication is turned down solely on the basis of its inability to pay, Project Syndicate has cultivated strong partnerships with the most respected news media in every country in which it operates. This, in turn, has made Project Syndicate an even more attractive outlet for the world’s most eminent authors, for whom a truly global audience simply is not available elsewhere.
-                                Indeed, because our highest priority is to disseminate authors’ commentaries as widely as possible, we provide translations free of charge, enabling editors worldwide to publish them simultaneously. We currently translate authors’ commentaries from English into 12 languages (Arabic, Bahasa Indonesia, Czech, Dutch, French, German, Hindi, Italian, Mandarin, Portuguese, Russian, and Spanish). Member publications translate into 50 additional languages.
-                            </p>
-                            <h6 class="m-t">How you can help</h6>
-                            <p>
-                                Ultimately, the backbone of Project Syndicate is readers like you: informed, engaged citizens around the world who appreciate the value of open, civil, high-level debate about issues of global concern. It is readers like you who strive to advance the common good by seeking cooperative solutions to collective problems. And, as the decline of print publication erodes news organizations’ traditional revenue models, it is readers like you who must help us ensure that all people, regardless of where they live or their ability to pay, continue to benefit from the insights and analysis that only Project Syndicate provides.
+                            <div class="col-lg-12">
+
+                                <div class="btn-group pull-right">
+                                    <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    <span id="selected-language">
+                                        <i class="flag-icon flag-icon-kz"></i>
+                                        <span>Kazakh</span>
+                                    </span>
+                                        <span class="caret"></span>
+                                    </button>
+                                    <ul class="dropdown-menu" id="language-dropdown">
+                                        <li>
+                                            <button type="button" class="btn btn-default btn-block" onclick="getTranslate('kz')">
+                                            <span id="language-kz">
+                                                <i class="flag-icon flag-icon-kz"></i>
+                                                <span>Kazakh</span>
+                                            </span>
+                                            </button>
+                                        </li>
+                                        <li>
+                                            <button type="button" class="btn btn-default btn-block" onclick="getTranslate('')">
+                                             <span id="language-ru">
+                                                 <i class="flag-icon flag-icon-ru"></i>
+                                                 <span>Russian</span>
+                                             </span>
+                                            </button>
+                                        </li>
+                                        <li>
+                                            <button type="button" class="btn btn-default btn-block" onclick="getTranslate()">
+                                            <span id="language-en">
+                                                <i class="flag-icon flag-icon-gb"></i>
+                                                <span>English</span>
+                                            </span>
+                                            </button>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+
+                            <h3 class="about-header" >Біздің мақсат</h3>
+                            <p>Еліміз бен әлемде болып жатқан түрлі оқиаларды дер кезінде, сапалы және өзіндік
+                                стилде Қазақстандық һәм шетелдік аудиторияға ұсыну.  Біз Қазақстандық және шетелдік
+                                саяси тұлғалардан, саясаткерлерден, бизнес лидерлерден сондай-ақ, азаматтық
+                                ұстанымы айқын белсенді азаматтардан алынған экслюзивті материалдарды оқуға
+                                мүмкіндік береміз. Біздің ұжым 15 тәжірибелі маманнан және мыңдаған AQPARAT-ты
+                                белсенді қолданушылардан тұрады.
                             </p>
 
-                            <h6 class="m-t-lg">
-                                Testimonials
-                            </h6>
-                            <p>
-                                <span class="quote">“'Generosity gives assistance, rather than advice,' wrote a French moralist in the middle of the eighteenth century. It seems his reflection still holds today. However, looking at the things Project Syndicate has done for so many years for so many media all over this imperfect world, one is tempted to say that both parts of Vauvenargues' maxim are true. Who else offers so many different views and opinions of the most eminent thinkers, experts, and policy-makers about the most...</span>
-                                <br>
-                            <p class="text-right">
-                                <strong>Radomir Ličina</strong>
-                                <br>
-                                Senior Editor, Danas, Serbia
+                            <h3 class="about-header" style="margin-top: 20px;">Не үшін жасаймыз</h3>
+                            <p>1991 КСРО ыдырағаннан кейін тәуелсіз мемлекеттердің өзіндік демократиялық даму бағыты
+                                мен ақпарттық саясаты қалыптасты. Әлемге әсер еткен бұл жаңа саяси өзгеріс жаһандық
+                                саяси аренада   жаңа мүдделер қақтығысын тудырды.  Бұл мүдделер тартысы тек Орталық
+                                Азия емес, Шығыс Еуропа, Орталық Еуропа, Африка, Америка, Шығыс  елдеріне де тікелей
+                                ықпал етті. Авторитарлық режимге бейімдеу Посткоммунистік сана жаңа әлемдік
+                                талаптарға жауап беру үшін мемлекеттің саяси иерархиялық құрылымын сондай-ақ,
+                                ішкі және сыртқы саясатты либералдық талапқа сай қайта құру мұқтаждығы сезілуде.
+                                Осы арада қоғам мен зиялы қауым арасында, билік пен халық арасындағы медиалық
+                                байланыс өте маңызды рөл ойнайтыны белгілі. Олай болса, AQPARAT осы байланысты
+                                орнатуға әзір.
                             </p>
+                            <h3 class="about-header" style="margin-top: 20px;">Біз ақпартты қалай жасаймыз</h3>
+                            <p>AQPARAT контентті қазақ, орыс және ағылшын тілдерінде ұсынады.<br>
+                            Кез келген заманауи медиа құралдары секілді AQPARAT қызметкерлері де, болған
+                                оқиғаны суреттеу, бейнелеу және жазу арқылы аудиторияға ұсынады. Сонымен қатар,
+                                AQPARAT жүйесіне тіркелген білікті мамандардың саяси құбылысқа берген бағалары мен
+                                комментарилерін оқи аласыздар. Fact checking мен сенімді ақпарат біздің негізгі
+                                құралымыз. Аудиториядан келген хабарламалар да AQPARAT-тың негізгі дерек көзі болып
+                                қалмақ. Сапалы контент ұсынуда Storytelling, инфографика сынды жаңа жанрлар да
+                                назарымыздан тыс қалмайды. Автордың идеясы мен көз қарасын қазақ, орыс және ағылшын
+                                тілді кең аудиторияға жеткізу AQPARAT-тың басты приоритеті .
                             </p>
-                            <p>
-                                <span class="quote">“Project Syndicate’s commentaries and analyses have proved extremely useful to Ta Nea, especially over the last few difficult years. Most important, they have allowed us to offer our readers a variety of international perspectives and insightful points of view on the unfolding crisis in Greece and the Eurozone. No other syndication service offers such a spectrum of high-quality views. We look forward to continuing our fruitful relationship with Project Syndicate, and thank...</span>
-                                <br>
-                            <p class="pull-right text-right">
-                                <strong>Dimitris Mitropoulos</strong>
-                                <br>
-                                Editor, Ta Nea, Greece
-                            </p>
+                            <h3 class="about-header" style="margin-top: 20px;">Сіз қалай көмектесе аласыз</h3>
+                            <p>Елімізде және шетеледе болып жатқан саяси, әлеуметтік оқиғаларға, экономикалық
+                                құбылыстарға бей-жай қарамай, пікірін ашық білдіріп, жоғары деңгейлі дискуссия
+                                жүргізуге дайын сіз сияқты көзі ашық, көкірегі ояу белсенді азаматтар - AQPARAT-тың
+                                бел омыртқасы. Сондай-ақ, бұл оқырмандар отандық және ғаламдық проблемаларды шешу
+                                үшін игі бастамаларға ұмтылған
                             </p>
                         </div>
                     </div>
@@ -66,14 +103,7 @@
                 </div>
 
                 <div id="jarnama" class="col-xs-12 col-sm-12 col-md-3 col-lg-3">
-                    <div class="hpanel hred">
-                        <div class="panel-heading hbuilt">
-                            <h6 class="text-center">Жарнама</h6>
-                        </div>
-                        <div class="panel-body">
-                            <p>Ақпараттандыру сайты туралы жарнамалар салуға болады</p>
-                        </div>
-                    </div>
+                    <!-- AdSense -->
                 </div>
             </div>
         </div>
@@ -82,4 +112,16 @@
 
 @section('script')
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+    <script>
+        function getTranslate(language){
+            $.get('{{ url('/newsread/translate') }}'+'/'+id, function(data) {
+                //console.log(data);
+                $('#new_title').html(data.title);
+                $('#new_text').html(data.text);
+                var selected_content = $('#language-'+language).html();
+                $('#selected-language').html(selected_content);
+                $('#print').attr('href', '{{url('/print')}}'+'/'+id);
+            });
+        }
+    </script>
 @endsection

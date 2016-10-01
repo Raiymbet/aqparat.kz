@@ -94,14 +94,22 @@
                             <div class="col-sm-12 m-t-md">
                                 <div class="btn-group pull-right">
 
-                                    <button class="btn btn-sm btn-default" onclick="accept_post('{{$post->id}}')"> Accept</button>
-                                    <button class="btn btn-sm btn-default" onclick="ban_post('{{$post->id}}')"> Ban</button>
-                                    @if($post->status != 'processing')
-                                        <button class="btn btn-sm btn-default" onclick="processing_post('{{$post->id}}')"> Processing</button>
-                                    @elseif($post->status == 'processing')
-                                        <a class="btn btn-sm btn-default" href="{{url('/admin/posts/writenew/'.$post->id)}}" >Write New</a>
+                                    @if(Auth::guard('admin')->user()->type == 'admin' || Auth::guard('admin')->user()->type == 'moderator')
+                                        <button class="btn btn-sm btn-default" onclick="accept_post('{{$post->id}}')"> Accept</button>
+                                        <button class="btn btn-sm btn-default" onclick="ban_post('{{$post->id}}')"> Ban</button>
+                                        @if($post->status != 'processing')
+                                            <button class="btn btn-sm btn-default" onclick="processing_post('{{$post->id}}')"> Processing</button>
+                                        @elseif($post->status == 'processing')
+                                            <a class="btn btn-sm btn-default" href="{{url('/admin/posts/writenew/'.$post->id)}}" >Write New</a>
+                                        @endif
+                                        <button class="btn btn-sm btn-default" onclick="delete_post('{{$post->id}}')"> Delete</button>
+                                    @else
+                                        @if($post->status != 'processing')
+                                            <button class="btn btn-sm btn-default" onclick="processing_post('{{$post->id}}')"> Processing</button>
+                                        @elseif($post->status == 'processing')
+                                            <a class="btn btn-sm btn-default" href="{{url('/admin/posts/writenew/'.$post->id)}}" >Write New</a>
+                                        @endif
                                     @endif
-                                    <button class="btn btn-sm btn-default" onclick="delete_post('{{$post->id}}')"> Delete</button>
 
                                 </div>
                             </div>

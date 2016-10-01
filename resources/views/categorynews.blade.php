@@ -48,7 +48,7 @@
                                                         <span>{{ $slider_new->created_at->format('F j, H:i') }}</span>
                                                     </p>
                                                     <div class="media">
-                                                        <a href="#" class="carousel-image-container" style="background-image: url('{{asset($slider_new->avatar_picture)}}');">
+                                                        <a href="{{url('/newsreasd/'.$slider_new->id)}}" class="carousel-image-container" style="background-image: url('{{asset($slider_new->avatar_picture)}}');">
                                                             @if(!is_null($slider_new->video_url))
                                                                 <span class="image-has-video">
                                                                     <i class="fa fa-video-camera"></i>

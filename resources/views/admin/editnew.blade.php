@@ -2,6 +2,7 @@
 
 @section('head')
     <link href="http://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.1/summernote.css" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="{{ URL::asset('css/bootstrap-tagsinput.css') }}">
 @endsection
 
 @section('content')
@@ -42,7 +43,16 @@
                                 <option value="en">EN</option>
                             </select>
                         </div>
-                        <div id="summernote" class="summernote"></div>
+                        <div class="form-group">
+                            <input id="media_author" value="{{$new->media_author}}" type="text" class="form-control" name="media_author" placeholder="Сурет немесе видео авторы">
+                        </div>
+                        <div class="form-group">
+                            <input id="keywords" value="{{$new->tags}}" data-role="tagsinput" class="form-control" type="text" name="keywords" placeholder="Жаңалыққа қатысты кілт сөздер">
+                            <span class="help-block m-b-none text-info">Please enter keywords through commas, for example: Kazakhstan, Boxing, GGG, Golovkyn</span>
+                        </div>
+                        <div class="" id="news-content">
+                            <div id="summernote" class="summernote"></div>
+                        </div>
                         <button type="submit" class="btn btn-info pull-right">Сақтау</button>
                     </form>
                 </div>
@@ -53,19 +63,22 @@
 
 @section('script')
     <script src="http://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.1/summernote.js"></script>
+    <script type="text/javascript" src="{{ URL::asset('js/bootstrap-tagsinput.js') }}"></script>
     <script type="text/javascript">
         $(function () {
             $('#category').val({{$new->category_id}});
             $('#language').val('{{$new->language}}');
             // Initialize summernote plugin
             $('.summernote').summernote({
-                height: 400,
+                maxHeight: 1700,
                 minHeight: 400,
                 toolbar: [
                     ['headline', ['style']],
                     ['style', ['bold', 'italic', 'underline', 'clear']],
+                    ['fontsize', ['fontsize']],
+                    ['color', ['color']],
                     ['alignment', ['ul', 'ol', 'paragraph']],
-                    ['insert', ['picture', 'link', 'video', 'table']],
+                    ['insert', ['link', 'table', 'hr']],
                     ['misc', ['fullscreen', 'codeview', 'help']]
                 ]
             });
@@ -81,14 +94,18 @@
                     short_description = $('#short_description').val(),
                     category = $('#category').val(),
                     language = $('#language').val(),
+                    media_author = $('#media_author').val(),
+                    tags = $('#keywords').val(),
                     text = $('#summernote').summernote('code');
             if(title && category && language && text && short_description){
                 //ajax post the form
                 $.post("{{url('/admin/new/edit/'.$new->id)}}", {
                     title: title,
                     category: category,
-                    language: language,
                     short_description: short_description,
+                    language: language,
+                    media_author: media_author,
+                    tags: tags,
                     text: text
                 }).done(function(data) {
                     swal({

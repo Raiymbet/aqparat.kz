@@ -99,21 +99,23 @@
                             </div>
                         </div>
 
-                        <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
-                            <div class="form-group">
-                                <label class="col-xs-4 col-sm-4 col-md-4 col-lg-2 control-label text-left">Авторы:</label>
-                                <div class="col-xs-8 col-sm-8 col-md-8 col-lg-8">
-                                    <select class="form-control" name="category">
-                                        <option value="all" selected="selected">Барлығы</option>
-                                        @foreach($columnists as $columnist)
-                                            <option value="{{ $columnist->id }}">
-                                                {{ $columnist->name }}
-                                            </option>
-                                        @endforeach
-                                    </select>
+                        @if(Auth::guard('admin')->user()->type == 'admin' || Auth::guard('admin')->user()->type == 'moderator')
+                            <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+                                <div class="form-group">
+                                    <label class="col-xs-4 col-sm-4 col-md-4 col-lg-2 control-label text-left">Авторы:</label>
+                                    <div class="col-xs-8 col-sm-8 col-md-8 col-lg-8">
+                                        <select class="form-control" name="category">
+                                            <option value="all" selected="selected">Барлығы</option>
+                                            @foreach($columnists as $columnist)
+                                                <option value="{{ $columnist->id }}">
+                                                    {{ $columnist->name }}
+                                                </option>
+                                            @endforeach
+                                        </select>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
+                        @endif
                         <button type="submit" class="btn btn-info pull-right">Қабылдау</button>
                     </form>
                 </div>
@@ -178,17 +180,58 @@
                                 </div>
                             </div>
                             <div class="row">
-                                <div class="col-sm-12 m-t-md">
-                                    <div class="btn-group pull-right">
-                                        <button class="btn btn-xs btn-default" onclick="set_as_sliderNew('{{$new->id}}')">Slider new</button>
-                                        <button class="btn btn-xs btn-default" onclick="set_as_mainNew('{{$new->id}}')">Main new</button>
-                                        <a href="{{ url('/admin/news/translate/'.$new->id) }}" class="btn btn-xs btn-default">Translate</a>
-                                    </div>
-                                    <div class="btn-group pull-right">
-                                        <a href="{{ url('/newsread/'.$new->id) }}" class="btn btn-xs btn-default">View</a>
-                                        <a href="{{ url('/admin/new/edit/'.$new->id) }}" class="btn btn-xs btn-default">Edit</a>
-                                        <button class="btn btn-xs btn-default" onclick="delete_new('{{$new->id}}')"> Delete</button>
-                                    </div>
+                                <div class="col-sm-12 m-t-md" id="action-content-{{$new->id}}">
+                                    @if(Auth::guard('admin')->user()->type == 'admin')
+                                        <div class="btn-group pull-right">
+                                            <button class="btn btn-xs btn-default" onclick="set_as_sliderNew('{{$new->id}}')">Slider new</button>
+                                            <button class="btn btn-xs btn-default" onclick="set_as_mainNew('{{$new->id}}')">Main new</button>
+                                            <a href="{{ url('/admin/news/translate/'.$new->id) }}" class="btn btn-xs btn-default">Translate</a>
+                                        </div>
+                                        <div class="btn-group pull-right">
+                                            @if($new->published)
+                                                <a type="button" onclick="publishOrUnPublishNew('{{$new->id}}')" class="btn btn-xs btn-default"><i class="fa fa-globe liked"></i> Publish</a>
+                                            @else
+                                                <a type="button" onclick="publishOrUnPublishNew('{{$new->id}}')" class="btn btn-xs btn-default"><i class="fa fa-globe"></i> Publish</a>
+                                            @endif
+                                            <a href="{{ url('/newsread/'.$new->id) }}" class="btn btn-xs btn-default">View</a>
+                                            <a href="{{ url('/admin/new/edit/'.$new->id) }}" class="btn btn-xs btn-default">Edit</a>
+                                            <button class="btn btn-xs btn-default" onclick="delete_new('{{$new->id}}')"> Delete</button>
+                                        </div>
+                                    @elseif(Auth::guard('admin')->user()->type == 'journalist')
+                                        @if($new->published)
+                                            <div class="btn-group pull-right">
+                                                <a href="#"><i class="fa fa-globe liked"></i></a>
+                                            </div>
+                                        @else
+                                            <div class="btn-group pull-right">
+                                                <a href="{{ url('/admin/news/translate/'.$new->id) }}" class="btn btn-xs btn-default">Translate</a>
+                                                <a href="{{ url('/newsread/'.$new->id) }}" class="btn btn-xs btn-default">View</a>
+                                                <a href="{{ url('/admin/new/edit/'.$new->id) }}" class="btn btn-xs btn-default">Edit</a>
+                                            </div>
+                                        @endif
+                                    @elseif(Auth::guard('admin')->user()->type == 'columnist')
+                                        @if($new->published)
+                                            <div class="btn-group pull-right">
+                                                <a href="#"><i class="fa fa-globe liked"></i></a>
+                                            </div>
+                                        @else
+                                            <div class="btn-group pull-right">
+                                                <a href="{{ url('/admin/news/translate/'.$new->id) }}" class="btn btn-xs btn-default">Translate</a>
+                                                <a href="{{ url('/newsread/'.$new->id) }}" class="btn btn-xs btn-default">View</a>
+                                                <a href="{{ url('/admin/new/edit/'.$new->id) }}" class="btn btn-xs btn-default">Edit</a>
+                                            </div>
+                                        @endif
+                                    @elseif(Auth::guard('admin')->user()->type == 'moderator')
+                                        <div class="btn-group pull-right">
+                                            <button class="btn btn-xs btn-default" onclick="set_as_sliderNew('{{$new->id}}')">Slider new</button>
+                                            <button class="btn btn-xs btn-default" onclick="set_as_mainNew('{{$new->id}}')">Main new</button>
+                                        </div>
+                                        <div class="btn-group pull-right">
+                                            <a href="{{ url('/newsread/'.$new->id) }}" class="btn btn-xs btn-default">View</a>
+                                            <a href="{{ url('/admin/new/edit/'.$new->id) }}" class="btn btn-xs btn-default">Edit</a>
+                                            <button class="btn btn-xs btn-default" onclick="delete_new('{{$new->id}}')"> Delete</button>
+                                        </div>
+                                    @endif
                                 </div>
                             </div>
                         </div>
@@ -199,7 +242,7 @@
                                     <a href="">
                                         <h4>{{ $new->title }}</h4>
                                     </a>
-                                    <p>{!! str_limit($new->text, 200)!!}</p>
+                                    <p>{{ $new->short_description }}</p>
                                     <div class="row">
                                         <div class="col-sm-4">
                                             <div class="">Авторы:</div>
@@ -273,6 +316,26 @@
         function searchFilter(){
             var types = $('input[name="new_text_types"]:checked').val();
             console.log(types);
+        }
+
+        function publishOrUnPublishNew(id){
+            var theme = "Published!",
+                    message = "New is successfully published. Thank\'s!";
+            if($('#action-content-'+id+' .fa-globe').hasClass('liked')) {
+                $('#' + id + ' .fa-globe').removeClass('liked');
+                theme = "Unpublished!";
+                message = "New is successfully unpublished. Thank\'s!";
+            }
+            else {
+                $('#action-content-' + id + ' .fa-globe').addClass('liked');
+            }
+            $.get('{{ url('/admin/news/publish') }}'+'/'+id, function(data) {
+                if(data=="OK"){
+                    swal(theme, message, "success");
+                }else{
+                    swal('Oops...', data.message, 'error');
+                }
+            });
         }
 
         function delete_new(id){

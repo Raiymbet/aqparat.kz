@@ -57,11 +57,11 @@
                                         </div>
 
                                         <div id="post_submit" class="form-group hidden m-t">
-
-                                            @if (Auth::guest())<span class="m-l-sm text-danger">Хабар жіберу үшін жүйеге кіріңіз!</span>@endif
                                             <button type="submit" id="post_btn" class="btn btn-info pull-right">
                                                 Хабарла
                                             </button>
+
+                                            @if (Auth::guest())<span class="m-r-xs text-danger pull-right" style="width: 45%;">Хабар жіберу үшін жүйеге кіріңіз!</span>@endif
 
                                             <div class="pull-left">
                                                 <input type="file" id="post-image" name="post-image" class="inputfile"
@@ -241,6 +241,7 @@
                 };
 
                 reader.readAsDataURL(input.files[0]);
+                $('#post-image').attr('disabled', 'disabled');
             }
         }
 

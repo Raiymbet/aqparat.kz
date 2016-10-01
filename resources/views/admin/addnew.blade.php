@@ -64,17 +64,18 @@
                         </div>
                         <div class="form-group">
                             <input id="keywords" data-role="tagsinput" class="form-control" type="text" name="keywords" placeholder="Жаңалыққа қатысты кілт сөздер">
-                            <span class="help-block m-b-none text-info">Please enter keywords through commas, for example: Kazakhstan, Boxing, GGG, Golovkyn</span>
+                            <span class="help-block m-b-none text-info">Please, enter max keywords 20 and keywords must be simple words.</span>
                         </div>
 
                         <div class="m-b-sm" style="border-bottom: 2px solid #cccccc;"></div>
 
                         <div class="m-b-sm">
-                            <button onclick="addParagraph(this)" type="button" class="btn btn-default">
+                            <button onclick="addParagraph()" type="button" class="btn btn-default">
                                 Add Paragraph
                             </button>
-                            <button class="btn btn-default" type="button" onclick="">Add Bloquote</button>
-                            <button class="btn btn-default" type="button" onclick="">Add Media Description</button>
+                            <button class="btn btn-default" type="button" onclick="showAddBloquote()">
+                                Add Bloquote
+                            </button>
                             <button onclick="showInsertImage()" type="button" class="btn btn-default">
                                 <i class="fa fa-picture-o"></i>
                             </button>
@@ -84,18 +85,31 @@
                             <button onclick="eraseContent()" type="button" class="btn btn-default">
                                 <i class="fa fa-eraser"></i>
                             </button>
-                            <button onclick="" type="button" class="btn btn-default">Remove Last Element</button>
+                            <button onclick="" type="button" class="btn btn-default">Remove Last Element(not worked)</button>
                             <button onclick="preview()" type="button" class="btn btn-default">
-                                Preview
+                                Preview(not worked)
                             </button>
                         </div>
 
                         <div class="m-b-sm" style="border-bottom: 2px solid #cccccc;"></div>
 
+                        <div id="add-bloquote-content" class="form-group m-t add-media-content">
+                            <input type="text" id="bloquote-text" class="form-control" placeholder="Bloquote text">
+                            <div class="input-group">
+                                <input type="text" id="bloquote-author" class="form-control" placeholder="Author">
+                                <a class="input-group-addon btn btn-default" role="button"
+                                   id="btn-addon" onclick="addBloquote()">Ok</a>
+                                <a class="input-group-addon btn btn-default" role="button"
+                                   onclick="hideAddBloquote()">Cancel</a>
+                            </div>
+                        </div>
+
                         <div id="post-video-content" class="form-group m-t add-media-content">
                             <label class="control-label">
                                 Видео жазба сілтемесі
                             </label>
+                            <input type="text" id="video-description" class="form-control" placeholder="Video description">
+                            <input type="text" id="add-video-auhtor" class="form-control" placeholder="Video author">
                             <div class="input-group">
                                 <input type="url" id="post-video-url" class="form-control"
                                        placeholder="Video url" aria-describedby="btn-addon">
@@ -110,6 +124,8 @@
                             <label class="control-label">
                                 Суретті таңдаңыз немесе сілтемесін енгізіңіз:
                             </label>
+                            <input type="text" id="image-description" class="form-control" placeholder="Image description">
+                            <input type="text" id="add-image-author" class="form-control" placeholder="Image author">
                             <input type="file" id="upload-image" name="upload-image" class="form-control"
                                    accept="image/gif, image/jpeg, image/png"
                                    onchange="readURL(this)">
@@ -140,6 +156,7 @@
     <script type="text/javascript">
         $(function () {
             // Initialize summernote plugin
+            hideAddBloquote();
             hideInsertVideo();
             hideInsertImage();
         });
@@ -151,7 +168,7 @@
         };
 
         var paragraph_count = 0, trashHasDocs = false, trashFiles = [];
-        function addParagraph(element){
+        function addParagraph(){
             paragraph_count+=1;
             $('#news-content').append('<div class="content-summernote" id="content-summernote-'+paragraph_count+'">' +
                     '<button type="button" onclick="addParagraphAccept('+paragraph_count+')" class="btn btn-default">Save</button>' +
@@ -164,6 +181,8 @@
                 toolbar: [
                     ['headline', ['style']],
                     ['style', ['bold', 'italic', 'underline', 'clear']],
+                    ['fontsize', ['fontsize']],
+                    ['color', ['color']],
                     ['alignment', ['ul', 'ol', 'paragraph']],
                     ['insert', ['link', 'table']],
                     ['misc', ['fullscreen', 'codeview', 'help']]
@@ -182,6 +201,8 @@
                 toolbar: [
                     ['headline', ['style']],
                     ['style', ['bold', 'italic', 'underline', 'clear']],
+                    ['fontsize', ['fontsize']],
+                    ['color', ['color']],
                     ['alignment', ['ul', 'ol', 'paragraph']],
                     ['insert', ['link', 'table']],
                     ['misc', ['fullscreen', 'codeview', 'help']]
@@ -200,16 +221,35 @@
         }
         function setImageUrl(){
             var image_url = $('#add-image-url').val(),
-                    $image = $('<img>')
+                    image_description = $('#image-description').val(),
+                    image_author = $('#add-image-author').val(),
+                    container = $('<div></div>').attr('class', 'main-news-image-content'),
+                    description = $('<p></p>').attr('class', 'image-description'),
+                    author = $('<span></span>').attr('class', 'image-author'),
+                    image = $('<img>')
                             .attr('src', image_url)
                             .attr('class', 'img-responsive');
-            $('#news-content').append($image);
+            container.append(image);
+            if(image_author){
+                author.text(image_author);
+                container.append(author);
+            }
+            $('#news-content').append(container);
+            if(image_description){
+                description.text(image_description);
+                $('#news-content').append(description);
+            }
             hideInsertImage();
         }
         function readURL(input) {
             if (input.files && input.files[0]) {
                 var formData = new FormData();
                 formData.append('file', $('#upload-image')[0].files[0]);
+                var image_description = $('#image-description').val(),
+                        image_author = $('#add-image-author').val(),
+                        container = $('<div></div>').attr('class', 'main-news-image-content'),
+                        description = $('<p></p>').attr('class', 'image-description'),
+                        author = $('<span></span>').attr('class', 'image-author');
                 $.ajax({
                     url: '{{ url('/admin/image/upload') }}',
                     type: 'post',
@@ -218,7 +258,16 @@
                     contentType: false,   // tell jQuery not to set contentType
                     success: function (response) {
                         console.log(response);
-                        $('#news-content').append($('<img>').attr('class', 'news-content-image').attr('src', response));
+                        container.append($('<img>').attr('class', 'news-content-image').attr('src', response));
+                        if(image_author){
+                            author.text(image_author);
+                            container.append(author);
+                        }
+                        $('#news-content').append(container);
+                        if(image_description){
+                            description.text(image_description);
+                            $('#news-content').append(description);
+                        }
                         if(!trashHasDocs){
                             trashHasDocs = true;
                         }
@@ -231,7 +280,21 @@
 
         var videoEmbed = {
             invoke: function (url) {
-                $('#news-content').append(videoEmbed.convertMedia(url));
+                var video_description = $('#video-description').val(),
+                        video_author = $('#add-video-auhtor').val(),
+                        container = $('<div></div>').attr('class', 'main-news-image-content'),
+                        description = $('<p></p>').attr('class', 'image-description'),
+                        author = $('<span></span>').attr('class', 'image-author');
+                container.append(videoEmbed.convertMedia(url));
+                if(video_author){
+                    author.text(video_author);
+                    container.append(author);
+                }
+                $('#news-content').append(container);
+                if(video_description){
+                    description.text(video_description);
+                    $('#news-content').append(description);
+                }
             },
             convertMedia: function (url) {
 
@@ -273,12 +336,12 @@
                     $video = $('<iframe>')
                             .attr('frameborder', 0)
                             .attr('src', '//www.youtube.com/embed/' + youtubeId)
-                            .attr('width', '640').attr('height', '360');
+                            .attr('width', '100%').attr('height', '460');
                 }else if(fbMatch && fbMatch[2].length){
                     $video = $('<div>')
                             .attr('data-href', url)
                             .attr('data-allowfullscreen', 'true')
-                            .attr('data-width', '500')
+                            .attr('data-width', '740')
                             .attr('class', 'fb-video');
                     //console.log($video);
                 } else if (igMatch && igMatch[0].length) {
@@ -357,6 +420,26 @@
             }
         }
 
+        function showAddBloquote(){
+            $('#add-bloquote-content').show();
+        }
+        function hideAddBloquote(){
+            $('#bloquote-text').val('');
+            $('#bloquote-author').val('');
+            $('#add-bloquote-content').hide();
+        }
+        function addBloquote() {
+            var bloquote_text = $('#bloquote-text').val(),
+                    bloquote_author = $('#bloquote-author').val(),
+                    bloquote = $('<p></p>').attr('class', 'quote'),
+                    author = $('<p></p>').attr('class', 'bloquote-author');
+            if(bloquote_text && bloquote_author){
+                author.text(bloquote_author);
+                bloquote.text(bloquote_text);
+                $('#news-content').append(bloquote, author);
+            }
+            hideAddBloquote();
+        }
 
         $('#add_new').submit(function(event) {
             /* stop form from submitting normally */

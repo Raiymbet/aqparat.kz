@@ -40,6 +40,16 @@
 </head>
 
 <body id="app-layout" class="fixed-navbar blank">
+<!-- Including GOOGLE UNIVERSAL ANALYTICS -->
+<script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+                (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+            m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+    ga('create', 'UA-82670042-1', 'auto');
+    ga('send', 'pageview');
+</script>
+
 <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 header-one">
     <div class="row header-row">
         <div class="col-sm-12 col-md-12 col-lg-12">
@@ -62,7 +72,7 @@
                                     <i class="fa fa-bell-o" ></i>
                                 </a>
                             @endif
-                            <ul class="dropdown-menu hdropdown notification animated flipInX">
+                            <ul class="dropdown-menu hdropdown notification">
                                 <li class="summary"><a href="#">Notifications:</a></li>
                                 @if(Auth::user()->notifications()->unread()->get()->count()>0)
                                     @foreach(Auth::user()->notifications()->unread()->get() as $notification)
@@ -85,7 +95,7 @@
                                 @else
                                     <li class="no-notification"><a href="#" class="text-muted">You don't have new notifications.</a></li>
                                 @endif
-                                <li class="summary"><a href="#">See all notifications.</a></li>
+                                <!--<li class="summary"><a href="#">See all notifications.</a></li>-->
                             </ul>
                         </li>
                         <li class="dropdown">
