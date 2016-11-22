@@ -57,9 +57,12 @@
                                     <a class="btn btn-info btn-block margin-bottom-10" href="{{ url('socialite/google') }}" style="background-color: #df4a32">
                                         <i class="fa fa-google-plus fa-lg pull-left"></i> Login with Google
                                     </a>
-                                    <!--<a class="btn btn-info btn-block margin-bottom-10" href="{{ url('socialite/vk') }}" style="background-color: #54769a">
+                                    <a class="btn btn-info btn-block margin-bottom-10" href="{{ url('socialite/vkontakte') }}" style="background-color: #54769a">
                                         <i class="fa fa-vk fa-lg pull-left"></i> Login with Vk
-                                    </a>-->
+                                    </a>
+                                    <a class="btn btn-info btn-block margin-bottom-10" href="{{ url('socialite/instagram') }}" style="background-color: #79523f;">
+                                        <i class="fa fa-instagram fa-lg pull-left"></i> Login with Instagram
+                                    </a>
                                     <div class="checkbox">
                                         <!-- Squared FOUR -->
                                         <div class="m-l-md">

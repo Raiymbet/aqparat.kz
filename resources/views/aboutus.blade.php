@@ -102,8 +102,11 @@
 
                 </div>
 
-                <div id="jarnama" class="col-xs-12 col-sm-12 col-md-3 col-lg-3">
-                    <!-- AdSense -->
+                <div id="jarnama" class="col-xs-12 col-sm-6 col-md-3 col-lg-3 pull-right p-r-xs">
+                    <!-- Jarnama ushin arnalgan oryn -->
+                    <div class="">
+                        <img src="{{ asset('img/adsense.png') }}" class="img-responsive" style="height: 368px">
+                    </div>
                 </div>
             </div>
         </div>

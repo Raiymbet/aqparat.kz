@@ -38,7 +38,6 @@ class HomeController extends Controller
     {
         //$main_news = $this->new_repository->getMainNews();
         $slider_news = $this->new_repository->getSliderNews();
-
         //$last_news = $this->new_repository->getLastNews(12);
         //$last_posts = $this->post_repository->getLastPosts();
         //$more_readed_news = $this->new_repository->getMoreReadedNews(12);
@@ -48,6 +47,9 @@ class HomeController extends Controller
         $round_table_categories = Category::ofType('point')->get();
         $focus_categories = Category::ofType('focus')->get();
 
+        $json_toArray = json_decode($focus_categories, true);
+        $array_ids = array_column($json_toArray, 'id');
+        $focuses = $this->new_repository->getFocuses(1, $array_ids);
         //$unreadNotifications = null;
 
         return view('home', [
@@ -60,7 +62,8 @@ class HomeController extends Controller
             //'last_news' => $last_news,
             //'last_posts' => $last_posts,
             //'more_readed_news' => $more_readed_news,
-            'columnists' => $columnists
+            'columnists' => $columnists,
+            'focuses' => $focuses
         ]);
     }
 
@@ -186,8 +189,8 @@ class HomeController extends Controller
         //$news = $this->new_repository->getCategoryNews($id);
 
         // $slider_news = $this->new_repository->getCategoryNewsForSlider($id);
-        $last_news = $this->new_repository->getLastNews(4);
-        $more_readed_news = $this->new_repository->getMoreReadedNews(4);
+        //$last_news = $this->new_repository->getLastNews(4);
+        //$more_readed_news = $this->new_repository->getMoreReadedNews(4);
 
         //$point_categories = Category::where('type', 'point')->get();
         //$json_toArray = json_decode($point_categories, true);

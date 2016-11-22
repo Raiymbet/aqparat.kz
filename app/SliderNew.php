@@ -6,13 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class SliderNew extends Model
 {
-
-    /**
-     * The attributes excluded from the model's JSON form.
-     *
-     * @var array
-     */
-    protected $hidden = ['new_id'];
+    protected $fillable = ['new_id'];
 
     public function news(){
         return $this->hasOne(News::class,'id', 'new_id');

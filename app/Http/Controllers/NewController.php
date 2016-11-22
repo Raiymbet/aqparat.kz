@@ -165,7 +165,7 @@ class NewController extends Controller
             'category' => Category::find($id),
             'columnists' => $columnists,
             //'news' => $news,
-            'latestNewsPerCategory' => Category::ofExceptCategory('simple', $id)->first()->latestNewsPerCategory()->get()//$array_news
+            'latestNewsPerCategory' => $array_news
             //'last_news' => $last_news,
             //'last_posts' => $last_posts,
             //'more_readed_news' => $more_readed_news,

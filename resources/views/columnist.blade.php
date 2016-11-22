@@ -80,7 +80,7 @@
                             <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 m-t-md" style="">
                                 <div class="row">
                                     <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-                                        <h4><strong>Жазылымдары:</strong> <span class="text-info">{{ $columnist->newsCount() }}</span></h4>
+                                        <h4><strong>Жазылымдары:</strong> <span class="text-info">{{ $columnist->publishedNewsCount() }}</span></h4>
                                         <div class="row" id="columnist-news">
 
                                         </div>

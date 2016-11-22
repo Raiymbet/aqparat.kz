@@ -17,17 +17,36 @@
         <div class="row header-row">
             <div class="row-content">
 
-                <div id="jarnama" class="col-xs-12 col-sm-6 col-md-3 col-lg-3 pull-right m-t">
+                <div id="jarnama" class="col-xs-12 col-sm-6 col-md-3 col-lg-3 pull-right m-t p-r-xs">
                     <!-- Jarnama ushin arnalgan oryn -->
-                    @foreach(\App\AdSense::sliderRight()->published()->get() as $ads)
-                        {!! $ads->code !!}
-                    @endforeach
+                    <div class="chapter-blue">
+                        <span>Focus</span>
+                    </div>
+                    <div class="m-t-md">
+                        <a href="#" style="position: relative; display: block">
+                            @foreach($focuses as $focus)
+                                <img style="" class="img-responsive" src="{{ asset($focus->avatar_picture) }}" alt="{{$focus->title}}">
+                                @if(!is_null($focus->media_author))
+                                    <span class="image-author">{{$focus->media_author}}</span>
+                                @endif
+                                @if(!is_null($focus->video_url))
+                                    <span class="image-has-video">
+                                         <i class="fa fa-video-camera"></i>
+                                    </span>
+                                @endif
+                            @endforeach
+                        </a>
+                    </div>
+                    <div class="m-t-md">
+                        <img src="{{ asset('img/adsense.png') }}" class="img-responsive" style="height: 368px">
+                    </div>
                 </div>
 
                 <div class="col-xs-12 col-sm-12 col-md-9 col-lg-9 pull-left">
                     <div class="">
                         <div class="panel-body m-b-lg m-t-none border-none form-post-panel-sm">
                             <div class="row">
+                                <!--
                                 <div class="col-xs-12 col-sm-8 col-md-8 col-lg-8 pull-left"
                                      style="padding-bottom: 10px; padding-left: 0; border-bottom: 1px solid #e4e5e7;">
                                     <form id="post_form">
@@ -84,25 +103,27 @@
 
                                     </form>
                                 </div>
-                                <div class="col-sm-4 col-md-4 col-lg-4 pull-right" id="slider-tab-wrapper">
-                                    <ul class="list-unstyled nav nav-tabs" id="slider_tabs" style="">
-                                        @foreach($slider_news as $index => $slider_new)
-                                            <li role="presentation" class="text-center @if($index==0) active @endif">
-                                                <a href="#menu-slider-{{$index}}"  aria-controls="menu-slider-{{$index}}" role="tab" data-toggle="tab">
-                                                    <span class="text-uppercase {{ $colors[$index%4] }}">{{ $slider_new->news->category->name }}</span>
-                                                    <p class="slider-tab-title"><strong>{{ $slider_new->news->title }}</strong></p>
-                                                    <p class="m-b-none">By <span class="text-uppercase"><u>{{ $slider_new->news->author->name }}</u></span></p>
-                                                </a>
-                                            </li>
-                                        @endforeach
-                                    </ul>
-                                </div>
+                                -->
+                                <div class="col-lg-12 p-l-none">
 
-                                <div class="col-sm-8 col-md-8 col-lg-8 p-l-none" id="slider-tab-content">
-                                    <div class="tab-content">
+                                    <div class="col-sm-4 col-md-4 col-lg-4 pull-right" id="slider-tab-wrapper">
+                                        <ul class="list-unstyled nav nav-tabs" id="slider_tabs" style="">
+                                            @foreach($slider_news as $index => $slider_new)
+                                                <li class="text-center @if($index==0) active @endif" id="{{$slider_new->news->id}}">
+                                                    <a href="{{ url('/newsread/'.$slider_new->news->id) }}">
+                                                        <span class="text-uppercase {{ $colors[$index%4] }}">{{ $slider_new->news->category->name }}</span>
+                                                        <p class="slider-tab-title"><strong>{{ $slider_new->news->title }}</strong></p>
+                                                        <p class="m-b-none">By <span class="text-uppercase"><u>{{ $slider_new->news->author->name }}</u></span></p>
+                                                    </a>
+                                                </li>
+                                            @endforeach
+                                        </ul>
+                                    </div>
+
+                                    <div class="col-sm-8 col-md-8 col-lg-8 p-l-none" id="slider-tab-content">
                                         @foreach($slider_news as $index => $slider_new)
-                                            <div role="tabpanel" id="menu-slider-{{$index}}"
-                                                 class="tab-pane slider-tab fade @if($index==0) in active @endif">
+                                            <div id="menu-slider-{{$index}}"
+                                                 class="slider-tab  @if($index==0)active @endif" style="@if($index!=0) display:none; @endif">
                                                 <a href="{{ url('/categorynews/'.$slider_new->news->category->id) }}">
                                                     <h4 class="text-uppercase {{ $colors[$index%4] }}">
                                                         <strong>
@@ -145,7 +166,9 @@
                                             </div>
                                         @endforeach
                                     </div>
+
                                 </div>
+
 
                             </div>
                         </div>
@@ -154,9 +177,7 @@
 
                 <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
                     <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 row-recommend">
-                        @foreach(\App\AdSense::sliderBottom()->published()->get() as $ads)
-                            {!! $ads->code !!}
-                        @endforeach
+
                     </div>
 
                     <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 m-t-md m-b-sm news-content-sm" style="padding: 0;">
@@ -259,13 +280,33 @@
 
             var tabCarousel = setInterval(function () {
                 var tabs = $('#slider_tabs>li'),
+                        menuTabs = $('#slider-tab-content .slider-tab'),
+                        active = tabs.filter('.active'),
+                        next = active.next('li'),
+                        toactive = next.length ? next : tabs.eq(0),
+                        menuActive = menuTabs.filter('.active'),
+                        menuNext = menuActive.next('.slider-tab'),
+                        menuToActive = menuNext.length ? menuNext : menuTabs.eq(0);
+
+                active.removeClass('active');
+                toactive.addClass('active');
+                menuActive.removeClass('active').hide();
+                if(menuToActive.hasClass('hidden'))
+                    menuToActive.removeClass('hidden');
+                menuToActive.addClass('active').fadeIn('');
+                //console.log(active.id);
+                //console.log('Changed Slider');
+            }, 6000);
+
+            /*var tabCarousel = setInterval(function () {
+                var tabs = $('#slider_tabs>li'),
                         active = tabs.filter('.active'),
                         next = active.next('li'),
                         toClick = next.length ? next.find('a') : tabs.eq(0).find('a');
 
                 toClick.tab('show');
                 //console.log('Changed Slider');
-            }, 6000);
+            }, 6000);*/
 
             $('#news_tabs a').click(function (e) {
                 e.preventDefault();

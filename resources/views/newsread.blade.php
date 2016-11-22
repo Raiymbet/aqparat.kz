@@ -74,7 +74,7 @@
                                 <div class="pull-left">
                                     {{ $new->created_at->format('F j, Y, H:i') }}
                                 </div>
-                                <a href="{{ url('/print/'.$new->id) }}" id="print" class="btn btn-default pull-right">
+                                <a href="{{ url('/print/'.$new->id) }}" id="print-btn" class="btn btn-default pull-right">
                                     <i class="fa fa-print fa-lg"></i>
                                 </a>
 
@@ -406,7 +406,7 @@
                 $('#new_text').html(data.text);
                 var selected_content = $('#language-'+language).html();
                 $('#selected-language').html(selected_content);
-                $('#print').attr('href', '{{url('/print')}}'+'/'+id);
+                $('#print-btn').attr('href', '{{url('/print')}}'+'/'+id);
             });
         }
 

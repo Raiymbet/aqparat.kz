@@ -21,4 +21,8 @@ class Like extends Model
      * @var array
      */
     protected $dates = ['deleted_at'];
+
+    public function news(){
+        return $this->belongsTo(News::class);
+    }
 }

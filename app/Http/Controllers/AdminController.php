@@ -117,8 +117,8 @@ class AdminController extends Controller
                         $destinationPath = base_path().'/public/trash/'.$directory;
 
                         $request->file('file')->move($destinationPath, $imageName);
-                        //$image = Image::make(public_path('trash\\'.$directory.'\\'.$imageName));
-                        //$image->resize(700, 500)->save(public_path('\\trash\\'.$directory.'\\'.$imageName));
+                        $image = Image::make(public_path('trash\\'.$directory.'\\'.$imageName));
+                        $image->resize(741, 388)->save(public_path('\\trash\\'.$directory.'\\'.$imageName));
                         $src = url('/trash/'.$directory.'/'.$imageName);
                         return $src;
                     }

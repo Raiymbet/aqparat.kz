@@ -45,6 +45,10 @@ class Comment extends Model
         return $this->likes()->where('deleted_at', null)->count();
     }
 
+    public function commentLikes(){
+        return $this->hasMany(CommentLikes::class);
+    }
+
     public function replies(){
         return $this->hasMany(CommentReplies::class, 'comment_id', 'id')->orderBy('created_at', 'desc');
     }

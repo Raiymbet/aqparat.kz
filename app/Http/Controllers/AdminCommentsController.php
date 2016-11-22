@@ -28,6 +28,21 @@ class AdminCommentsController extends Controller
         if($request->ajax()){
             //$this->authorize('destroy', $post);
             $comment = Comment::find($id);
+            //dd($comment->replies()->get(), $comment->commentLikes()->withTrashed()->get());
+            if($comment->replies()->get()->count() > 0){
+                foreach ($comment->replies()->get() as $replies){
+                    //dd($replies->delete());
+                    $replies->delete();
+                }
+            }
+            //dd($comment, $comment->commentLikes()->withTrashed()->get());
+            if($comment->commentLikes()->withTrashed()->get()->count() > 0){
+                //dd($comment->commentLikes()->get());
+                foreach ($comment->commentLikes()->withTrashed()->get() as $like){
+                    //dd($likes->delete());
+                    $like->forceDelete();
+                }
+            }
             $comment->delete();
             return "Пікір сәтті өшірілді!";
         }

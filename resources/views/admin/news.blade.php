@@ -183,8 +183,17 @@
                                 <div class="col-sm-12 m-t-md" id="action-content-{{$new->id}}">
                                     @if(Auth::guard('admin')->user()->type == 'admin')
                                         <div class="btn-group pull-right">
-                                            <button class="btn btn-xs btn-default" onclick="set_as_sliderNew('{{$new->id}}')">Slider new</button>
-                                            <button class="btn btn-xs btn-default" onclick="set_as_mainNew('{{$new->id}}')">Main new</button>
+                                            @if(count($new->sliderNew)>0)
+                                                <button class="btn btn-xs btn-default" onclick="set_as_sliderNew('{{$new->id}}')"><i class="fa fa-slideshare liked"></i> Slider new</button>
+                                            @else
+                                                <button class="btn btn-xs btn-default" onclick="set_as_sliderNew('{{$new->id}}')"><i class="fa fa-slideshare"></i> Slider new</button>
+                                            @endif
+
+                                            @if($new->ismainnew)
+                                                <button class="btn btn-xs btn-default" onclick="set_as_mainNew('{{$new->id}}')"><i class="fa fa-check liked"></i>Main new</button>
+                                            @else
+                                                <button class="btn btn-xs btn-default" onclick="set_as_mainNew('{{$new->id}}')">Main new</button>
+                                            @endif
                                             <a href="{{ url('/admin/news/translate/'.$new->id) }}" class="btn btn-xs btn-default">Translate</a>
                                         </div>
                                         <div class="btn-group pull-right">
@@ -223,7 +232,11 @@
                                         @endif
                                     @elseif(Auth::guard('admin')->user()->type == 'moderator')
                                         <div class="btn-group pull-right">
-                                            <button class="btn btn-xs btn-default" onclick="set_as_sliderNew('{{$new->id}}')">Slider new</button>
+                                            @if(count($new->sliderNew)>0)
+                                                <button class="btn btn-xs btn-default" onclick="set_as_sliderNew('{{$new->id}}')"><i class="fa fa-slideshare liked"></i> Slider new</button>
+                                            @else
+                                                <button class="btn btn-xs btn-default" onclick="set_as_sliderNew('{{$new->id}}')"><i class="fa fa-slideshare"></i> Slider new</button>
+                                            @endif
                                             <button class="btn btn-xs btn-default" onclick="set_as_mainNew('{{$new->id}}')">Main new</button>
                                         </div>
                                         <div class="btn-group pull-right">
@@ -349,10 +362,17 @@
         }
 
         function set_as_sliderNew(id){
+            if($('#action-content-'+id+' .fa-slideshare').hasClass('liked')) {
+                $('#' + id + ' .fa-slideshare').removeClass('liked');
+            }
+            else {
+                $('#action-content-' + id + ' .fa-slideshare').addClass('liked');
+            }
             $.get('{{ url('/admin/news/slider') }}'+'/'+id, function(data) {
                 if(data.message_type == 'success'){
                     swal("Қабылданды!", data.message, "success");
                 }else{
+                    $('#action-content-'+id).append(data);
                     swal("Woops...", data.message, "error");
                 }
             });

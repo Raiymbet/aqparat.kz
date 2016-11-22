@@ -35,6 +35,7 @@ return [
         'secret' => env('STRIPE_SECRET'),
     ],
 
+    // Socialite Providers
     'github' => [
         'client_id' => '33c8cbab9def00c1a1f2',
         'client_secret' => '8a4615b33e5d56156396e2bb22835897d51b2b47',
@@ -54,5 +55,10 @@ return [
         'client_id' => 'UCf9uMLZuxvslY5giPzFhS8vf',
         'client_secret' => 'DZ3gxVWtVsOA2tLBY2ZZb9HqM9xz8My4jkgI6ByJNgxzKKx9b1',
         'redirect' => 'http://localhost:8080/aqparat.kz/public/socialite/callback/twitter',
+    ],
+    'vkontakte' => [
+        'client_id' => '5661749',
+        'client_secret' => 'ntD228BZpbxiUFvXsMZv',
+        'redirect' => 'http://localhost:8080/aqparat.kz/public/socialite/callback/vkontakte',
     ],
 ];

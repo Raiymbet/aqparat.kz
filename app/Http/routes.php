@@ -26,6 +26,7 @@ Route::group(['middleware' => ['web']], function () {
     Route::get('/google18945143611ffadd.html', 'HomeController@getGoogleSiteConfirm');
 
     Route::get('/columnist/{columnistId}', 'HomeController@getColumnist');
+    Route::get('/journalist/{journalistId}', 'HomeController@getColumnist');
     Route::get('/roundtable/{categoryId}', 'HomeController@getRoundTable');
     Route::get('/onfocus/{categoryId}', 'HomeController@getFocus');
 
@@ -86,6 +87,7 @@ Route::group(['middleware' => ['web']], function () {
     Route::get('/admin/posts/writenew/{postId}', 'AdminPostsController@getWriteNew');
 
     Route::get('/admin/news', 'AdminNewsController@getNews');
+    Route::get('/admin/news/publish/{newId}', 'AdminNewsController@getPublishNew');
     Route::get('/admin/news/delete/{newId}', 'AdminNewsController@getDestroy');
     Route::get('/admin/news/slider/{newId}', 'AdminNewsController@getSetAsSliderNew');
     Route::get('/admin/news/main/{newId}', 'AdminNewsController@getSetAsMainNew');

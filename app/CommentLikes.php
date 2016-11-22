@@ -21,5 +21,8 @@ class CommentLikes extends Model
      * @var array
      */
     protected $dates = ['deleted_at'];
-    
+
+    public function comment(){
+        $this->belongsTo(Comment::class);
+    }
 }

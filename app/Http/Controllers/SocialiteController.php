@@ -12,7 +12,7 @@ use Illuminate\Http\Request;
 use App\Repositories\UserRepository;
 use App\User;
 use Auth;
-use Socialite;
+use Laravel\Socialite\Facades\Socialite;
 
 class SocialiteController extends Controller{
 
@@ -28,6 +28,7 @@ class SocialiteController extends Controller{
 
     public function getSocialiteAuth($provider=null)
     {
+        //return Socialite::with($provider)->redirect();
         if(!config("services.$provider")) abort('404');
 
         return Socialite::driver($provider)->redirect();
@@ -66,7 +67,7 @@ class SocialiteController extends Controller{
         $newUser->newNotification()
             ->withType('NewUser')
             ->withSubject('Welcome new user.')
-            ->withBody($user->name.' welcome to Apqrat.kz and please ')
+            ->withBody($user->name.' welcome to Apqarat.kz!')
             ->deliver();
 
         return $newUser;

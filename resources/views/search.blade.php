@@ -12,7 +12,14 @@
         <div class="row header-row">
             <div class="row-content">
 
-                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-9">
+                <div id="jarnama" class="col-xs-12 col-sm-12 col-md-3 col-lg-3 pull-right p-r-xs">
+                    <!-- Jarnama ushin arnalgan oryn -->
+                    <div class="">
+                        <img src="{{ asset('img/adsense.png') }}" class="img-responsive">
+                    </div>
+                </div>
+
+                <div class="col-xs-12 col-sm-12 col-md-9 col-lg-9">
                     <div class="hpanel forum-box">
                         <div class="panel-body">
                             <form id="advanced_search_form" class="form-horizontal">

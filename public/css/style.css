@@ -2210,6 +2210,24 @@ input.form-control, textarea.form-control, select.form-control{
   padding-bottom: 10px;
   border-bottom: 1px solid #ede9e0;
 }
+.main-news-image-content {
+  position: relative;
+  display: block;
+}
+.image-description{
+  font-style: italic;
+}
+.quote {
+  font-size: 18px;
+  font-family: Lato;
+  font-style: italic;
+  font-weight: 400;
+}
+.bloquote-author{
+  text-align: right;
+  font-weight: bold;
+  text-decoration: underline;
+}
 .image-author{
   position: absolute;
   bottom: 0;
@@ -2235,7 +2253,7 @@ input.form-control, textarea.form-control, select.form-control{
 .news-content-image {
   display: block;
   outline: none;
-  width: 80%;
+  width: 100%;
   margin-right: auto;
   margin-left: auto;
   margin-top: 10px;
@@ -2260,7 +2278,7 @@ input.form-control, textarea.form-control, select.form-control{
   margin-top: 0;
   margin-bottom: 20px;
   min-width: 16.25em;
-  max-width: 91.5625em;
+  max-width: 740.73px;
 }
 .content-summernote .hide-btn{
   display: none;

@@ -20,6 +20,7 @@ class CreateNewsTable extends Migration
             $table->string('short_description', 400);
             $table->text('text');
             $table->boolean('ismainnew')->default(false);
+            $table->boolean('published')->default(false);
             $table->string('video_url')->nullable();
             $table->string('avatar_picture');
             $table->string('media_author');

@@ -39,6 +39,10 @@ class Admin extends Authenticatable
         return $this->news()->count();
     }
 
+    public function publishedNewsCount(){
+        return $this->news()->where('published', true)->count();
+    }
+
     public function scopeColumnists($query){
         return $query->where('type', 'columnist');
     }

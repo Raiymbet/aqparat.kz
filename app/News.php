@@ -18,7 +18,7 @@ class News extends Model
      *
      * @var array
      */
-    protected $hidden = ['author_id', 'category_id', 'views', 'shares', 'likes', 'ismainnew'];
+    protected $hidden = ['author_id', 'category_id', 'views', 'shares', 'likes', 'ismainnew', 'published'];
 
     public function author(){
         return $this->belongsTo(Admin::class, 'author_id');
@@ -44,8 +44,12 @@ class News extends Model
         return $this->belongsToMany('App\User', 'likes');
     }
 
-    public function SliderNew(){
-        return $this->belongsTo(SliderNew::class,'new_id');
+    public function newLikes(){
+        return $this->hasMany(Like::class);
+    }
+
+    public function sliderNew(){
+        return $this->belongsTo(SliderNew::class,'id', 'new_id');
     }
 
     public function translates(){
@@ -58,6 +62,14 @@ class News extends Model
 
     public function scopeLatest($query){
         return $query->orderBy('created_at', 'desc');
+    }
+
+    public function scopePublished($query){
+        return $query->where('published', true);
+    }
+
+    public function scopeUnPublished($query){
+        return $query->where('published', false);
     }
     
     /**

@@ -9,6 +9,8 @@ use App\SliderNew;
 use App\Translate;
 use Illuminate\Http\Request;
 
+use ReflectionClass;
+
 use App\Http\Requests;
 use App\Admin;
 use Illuminate\Support\Facades\File;
@@ -35,10 +37,16 @@ class AdminNewsController extends Controller
 
     public function getNews(Request $request)
     {
-        $news = News::orderBy('created_at', 'desc')->paginate(6);
-        $columnists = Admin::columnistsAndJournalists()->get();
+        if(Auth::guard('admin')->user()->type == 'admin' || Auth::guard('admin')->user()->type == 'moderator'){
+            $news = News::orderBy('created_at', 'desc')->paginate(6);
+            $columnists = Admin::columnistsAndJournalists()->get();
+            return view('admin.news', ['news' => $news, 'categories' => Category::all(), 'columnists' => $columnists]);
+        }else{
+            $news = News::where('author_id', '=', Auth::guard('admin')->id())->orderBy('created_at', 'desc')->paginate(6);
+            $columnists = Admin::columnistsAndJournalists()->get();
+            return view('admin.news', ['news' => $news, 'categories' => Category::all()]);
+        }
         //dd($columnists);
-        return view('admin.news', ['news' => $news, 'categories' => Category::all(), 'columnists' => $columnists]);
     }
 
     public function getAddNew()
@@ -210,6 +218,8 @@ class AdminNewsController extends Controller
                 $new->short_description = $request->input('short_description');
                 $new->text = $request->input('text');
                 $new->language = $request->input('language');
+                $new->media_author = $request->input('media_author');
+                $new->tags = $request->input('tags');
                 //$new->views = 0;
                 //$new->shares = 0;
                 //$new->likes = 0;
@@ -224,27 +234,94 @@ class AdminNewsController extends Controller
 
     public function getDestroy(Request $request, $id)
     {
-        if($request->ajax()){
+        $new = News::find($id);
+        $new_avatar = $new->avatar_picture;
+        //Delete all relational data of this new -> comments - replies, likes; likes, translates, post
+        //dd($new->comments(), $new->likes(), $new->translates(), $new->posts(), $new->sliderNew());
+        if($new->comments()->get()->count() > 0){
+            $comments = $new->comments()->get();
+            foreach ($comments as $comment){
+                //dd($comment->replies()->get()->count(), $comment->likes()->get()->count());
+                if($comment->replies()->get()->count()>0){
+                    foreach ($comment->replies()->get() as $replies){
+                        //dd($replies->delete());
+                        $replies->delete();
+                    }
+                }
+                //dd($comment, $comment->commentLikes()->withTrashed()->get());
+                if($comment->commentLikes()->withTrashed()->get()->count() > 0){
+                    //dd($comment->commentLikes()->get());
+                    foreach ($comment->commentLikes()->withTrashed()->get() as $like){
+                        //dd($likes->delete());
+                        $like->forceDelete();
+                    }
+                }
+                $comment->delete();
+            }
+        }
+        if($new->newLikes()->withTrashed()->get()->count() > 0){
+            $likes = $new->newLikes()->withTrashed()->get();
+            //dd($likes);
+            foreach ($likes as $like){
+                //dd($like->forceDelete());
+                $like->forceDelete();
+            }
+        }
+        if($new->translates()->get()->count() > 0){
+            $translates = $new->translates()->get();
+            //dd($translates);
+            foreach ($translates as $translate){
+                //dd($translate->delete());
+                $translate->delete();
+            }
+        }
+        if($new->posts()->get()->count() > 0){
+            $posts = $new->posts()->get();
+            //dd($posts);
+            foreach ($posts as $post){
+                //dd($translate->delete());
+                $post->delete();
+            }
+        }
+        if($new->sliderNew()->get()->count() > 0){
+            //dd($new->sliderNew()->get());
+            foreach ($new->sliderNew()->get() as $slider){
+                //dd($slider->delete());
+                $slider->delete();
+            }
+        }
+        $new->delete();
+        File::delete($new_avatar);
+        return "OK";
+    }
+
+    public function getPublishNew(Request $request, $id){
+        if($request->ajax() && Auth::guard('admin')->user()->type == 'admin'){
             $new = News::find($id);
-            File::delete($new->avatar_picture);
-            //$new->posts()->delete();
-            //$new->comments()->delete();
-            $new->delete();
+            $new->published=!$new->published;
+            $new->save();
             return "OK";
+        }else{
+            return response()->json(['message' => 'You can\'t change status!']);
         }
     }
 
     public function getSetAsSliderNew(Request $request, $id){
-        $destinationOfImage = 'data0\\images\\';
-        $destinationOfThumbnail = 'data0\\tooltips\\';
+        //$destinationOfImage = 'data0\\images\\';
+        //$destinationOfThumbnail = 'data0\\tooltips\\';
 
         $new = News::find($id);
-        $sliders = SliderNew::all();
         if(SliderNew::where('new_id', $new->id)->exists()){
-            $message = "Жаңалық слайд ретінде таңдалып қойылған!";
-            $message_type = "error";
-        }else if(count($sliders)>=5){
+            $slider = SliderNew::where('new_id', '=', $new->id)->first();
+            //dd($slider, $new);
+            //dd($slider->delete());
+            $slider->delete();
+
+            $message = "Жаңалық слайд жаңылығынан алынып тасталды.";
+            $message_type = "success";
+        }else if(count(SliderNew::all())>=5){
             $slider = SliderNew::orderBy('updated_at', 'asc')->first();
+            $slider->delete();
             //Delete image and thumbnail from slider
             //File::delete(public_path($destinationOfImage.$slider->news->id.'.jpg'));
             //File::delete(public_path($destinationOfThumbnail.$slider->news->id.'.jpg'));
@@ -253,7 +330,9 @@ class AdminNewsController extends Controller
             //$image->resize(1600, 900)->save(public_path($destinationOfImage.$new->id.'.jpg'));
             //$image->resize(85, 48)->save(public_path($destinationOfThumbnail.$new->id.'.jpg'));
             //update slider data
-            $slider->new_id = $new->id;
+
+            $newslider = new SliderNew();
+            $newslider->new_id = $new->id;
             $slider->save();
 
             $message = "Жаңалық слайды ретінде қабылданып жаңартылды.";
@@ -303,6 +382,9 @@ class AdminNewsController extends Controller
             $new_translate->text = $request->input('text');
             $new_translate->language = $request->input('language');
             $new_translate->avatar_picture = $new->avatar_picture;
+            $new_translate->short_description = $request->input('short_description');
+            $new_translate->tags = $request->input('keywords');
+            $new_translate->media_author = $new->media_author;
             $new_translate->views = 0;
             $new_translate->shares = 0;
             $new_translate->likes = 0;
